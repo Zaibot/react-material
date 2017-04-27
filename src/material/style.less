@@ -1,0 +1,83 @@
+.component {
+    background: #fff;
+    padding: 10px;
+    position: relative;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    overflow: hidden;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.shadow(@elevation) {
+  &.ambient {
+      box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12);
+    }
+  &.key {
+    box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12), 0 @elevation*0.5px @elevation*1px 0 rgba(0,0,0,0.24);
+    }
+}
+
+.switch {
+    .shadow(1);
+}
+
+.card {
+    .shadow(2);
+}
+
+.indicator {
+    .shadow(3);
+}
+
+.appbar {
+    .shadow(4);
+}
+
+.snackbar {
+    .shadow(6);
+}
+
+.menu {
+    .shadow(8);
+}
+
+.submenu {
+    .shadow(9);
+}
+
+.floating {
+    .shadow(12);
+}
+
+.drawer {
+    .shadow(16);
+}
+
+.dialog {
+    .shadow(24);
+}
+
+.rounded {
+  border-radius: 3px;
+}
+
+.slim {
+  padding: 0;
+}
+
+.ripple {
+    background: #000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.round {
+    border-radius: 50%;
+}
+
+.inline {
+    display: inline-block;
+}

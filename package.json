@@ -1,0 +1,56 @@
+{
+  "name": "@zaibot/react-material",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env NODE_ENV=production npm run compile",
+    "compile": "webpack",
+    "tslint": "tslint --config tslint.json --project tsconfig.json --type-check",
+    "tslint:fix": "tslint --config tslint.json --project tsconfig.json --type-check --fix",
+    "lint": "npm run tslint",
+    "lint:fix": "npm run tslint:fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zaibot/react-material.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zaibot/react-material/issues"
+  },
+  "homepage": "https://github.com/Zaibot/react-material#readme",
+  "devDependencies": {
+    "@types/react": "^15.0.23",
+    "@types/react-dom": "^15.5.0",
+    "@zaibot/tslint-preset": "github:zaibot/tslint-preset",
+    "autoprefixer": "^6.7.7",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "classnames-loader": "^2.0.0",
+    "cross-env": "^4.0.0",
+    "css-loader": "^0.28.0",
+    "cssnano": "^3.10.0",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.3",
+    "postcss": "^5.2.17",
+    "postcss-loader": "^1.3.3",
+    "style-loader": "^0.16.1",
+    "ts-loader": "^2.0.3",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2",
+    "uglifyjs": "^2.4.10",
+    "webpack": "^2.4.1",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  }
+}
