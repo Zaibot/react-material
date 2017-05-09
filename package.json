@@ -10,8 +10,8 @@
     "build": "cross-env NODE_ENV=production npm run compile",
     "dev": "webpack-dev-server --config webpack.demo.js",
     "compile": "webpack",
-    "tslint": "tslint --config tslint.json --project tsconfig.json --type-check",
-    "tslint:fix": "tslint --config tslint.json --project tsconfig.json --type-check --fix",
+    "tslint": "tslint --config tslint.json --project src/tsconfig.json --type-check",
+    "tslint:fix": "tslint --config tslint.json --project src/tsconfig.json --type-check --fix",
     "lint": "npm run tslint",
     "lint:fix": "npm run tslint:fix"
   },

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Material, Button, NavButton, Menu, AnimationRoot, ToggleMenu } from '..';
+import { AnimationRoot, Button, Material, Menu, NavButton, ToggleMenu } from '..';
 import './style.less';
 const Demo = () => (
     <AnimationRoot>

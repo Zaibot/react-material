@@ -1,4 +1,5 @@
 import React from 'react';
+import { Animated } from '../animationroot';
 import Ripple from './ripple';
 import cx from './style.less';
 
@@ -31,18 +32,18 @@ let materials: Material[] = [];
 let queued: any = 0;
 function registerRipple(material: Material) {
     materials.push(material);
-    if (!queued && materials.length === 1) {
-        queued = window.requestAnimationFrame(updateRipple);
-    }
+    // if (!queued && materials.length === 1) {
+    //     queued = window.requestAnimationFrame(updateRipple);
+    // }
 }
 
 const releaseMaterials = () => {
     for (const material of materials) {
         material._pressed = false;
     }
-    if (!queued) {
-        queued = window.requestAnimationFrame(updateRipple);
-    }
+    // if (!queued) {
+    //     queued = window.requestAnimationFrame(updateRipple);
+    // }
 };
 
 document.addEventListener(`mouseup`, releaseMaterials);
@@ -56,17 +57,68 @@ const rippleFadeMultiplier = .5;
 // const rippleOpacity = 0.12;
 const rippleOpacity = 0.24;
 // const rippleFadeRange = rippleEnd - rippleFade;
-function updateRipple() {
-    queued = 0;
-    for (const m of materials) {
-        const { width, height } = m._panel.getBoundingClientRect();
+// function updateRipple() {
+//     queued = 0;
+//     for (const m of materials) {
+//         const { width, height } = m._panel.getBoundingClientRect();
+//         // tslint:disable-next-line
+//         const max = Math.sqrt(width * width + height * height) * 2;
+//         const rippleIncrement = max / rippleFrames;
+//         const rippleEnd = max;
+//         const rippleFade = max * rippleFadeMultiplier;
+//         const rippleFadeRange = rippleEnd - rippleFade;
+//         m._ripples = m._ripples
+//             .filter((r: any) => r.props.z < rippleEnd)
+//             .map((r: any, idx, arr) => (
+//                 <Ripple
+//                     key={r.key}
+//                     className={r.props.className}
+//                     color={r.props.color}
+//                     x={r.props.x}
+//                     y={r.props.y}
+//                     z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && m._pressed ? 0 : rippleIncrement))}
+//                     opacity={(r.props.z < rippleFade
+//                         ? 1
+//                         : r.props.z > rippleEnd
+//                             ? 0
+//                             : ((rippleFadeRange - (r.props.z - rippleFade)) / rippleFadeRange)) * rippleOpacity} /> as any
+//             ));
+//         m.forceUpdate();
+//     }
+//     materials = materials.filter((x) => x._ripples.length);
+//
+//     if (!queued && materials.length) {
+//         queued = window.requestAnimationFrame(updateRipple);
+//     }
+// }
+
+export type MaterialState = {
+};
+
+@Animated
+export default class Material extends React.Component<MaterialProps, MaterialState> {
+    public _ripples: React.ReactChild[] = [];
+    public _panel: HTMLDivElement;
+    public _pressed: boolean;
+    public state = {
+    };
+
+    public onPreAnimate(time: number, advance: number, state: ClientRect): ClientRect {
+        if (!this._panel) { return state; }
+        return this._panel.getBoundingClientRect();
+    }
+
+    public onAnimate(time: number, advance: number, state: ClientRect): ClientRect {
+        if (!state) { return state; }
+        if (!this._ripples.length) { return state; }
+        const { width, height } = state;
         // tslint:disable-next-line
         const max = Math.sqrt(width * width + height * height) * 2;
         const rippleIncrement = max / rippleFrames;
         const rippleEnd = max;
         const rippleFade = max * rippleFadeMultiplier;
         const rippleFadeRange = rippleEnd - rippleFade;
-        m._ripples = m._ripples
+        this._ripples = this._ripples
             .filter((r: any) => r.props.z < rippleEnd)
             .map((r: any, idx, arr) => (
                 <Ripple
@@ -75,31 +127,16 @@ function updateRipple() {
                     color={r.props.color}
                     x={r.props.x}
                     y={r.props.y}
-                    z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && m._pressed ? 0 : rippleIncrement))}
+                    z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && this._pressed ? 0 : rippleIncrement))}
                     opacity={(r.props.z < rippleFade
                         ? 1
                         : r.props.z > rippleEnd
                             ? 0
                             : ((rippleFadeRange - (r.props.z - rippleFade)) / rippleFadeRange)) * rippleOpacity} /> as any
             ));
-        m.forceUpdate();
+        this.setState({});
+        return state;
     }
-    materials = materials.filter((x) => x._ripples.length);
-
-    if (!queued && materials.length) {
-        queued = window.requestAnimationFrame(updateRipple);
-    }
-}
-
-export type MaterialState = {
-};
-
-export default class Material extends React.Component<MaterialProps, MaterialState> {
-    public _ripples: React.ReactChild[] = [];
-    public _panel: HTMLDivElement;
-    public _pressed: boolean;
-    public state = {
-    };
 
     public render() {
         // tslint:disable

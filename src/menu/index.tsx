@@ -1,7 +1,7 @@
 import React from 'react';
-import { RootSymbol, GetRoot, Animated } from '../animationroot';
-import Material from '../material';
+import { Animated } from '../animationroot';
 import Content from '../content';
+import Material from '../material';
 import cx from './style.less';
 
 export type MenuProps = {
@@ -26,9 +26,9 @@ export default class Menu extends React.Component<MenuProps, MenuState> {
         height: 0,
         width: 0,
         toggle: 0,
-    }
+    };
 
-    public onPreAnimate(time: number, advance: number) {
+    public onPreAnimate(time: number, advance: number, state: any): any {
         // asd
         // if (this.__div) {
         //     const height = this.__div.scrollHeight;
@@ -37,15 +37,17 @@ export default class Menu extends React.Component<MenuProps, MenuState> {
         //         this.setState({ height, width });
         //     }
         // }
+        return state;
     }
 
-    public onAnimate(time: number, advance: number) {
+    public onAnimate(time: number, advance: number, state: any): any {
         const currentw = Math.round(this.state.currentw + ((this.props.open ? this.state.width : 0) - this.state.currentw) * (advance / 100));
         const currenth = Math.round(this.state.currenth + ((this.props.open ? this.state.height : 0) - this.state.currenth) * (advance / 100));
         if (currentw !== this.state.currentw || currenth !== this.state.currenth) {
           console.log(currentw, currenth);
-            this.setState({ currentw, currenth });
+          this.setState({ currentw, currenth });
         }
+        return state;
     }
 
     public render() {
@@ -66,14 +68,6 @@ export default class Menu extends React.Component<MenuProps, MenuState> {
                 </Content>
             </Material>
         );
-    }
-
-    protected componentDidMount() {
-        GetRoot(this).add(this);
-    }
-
-    protected componentWillUnmount() {
-        GetRoot(this).remove(this);
     }
 
     private __div: HTMLDivElement;
