@@ -5,6 +5,7 @@ import cx from './style.less';
 export type ButtonProps = {
     disabled?: boolean;
     round?: boolean;
+    ambient?: boolean;
     floating?: boolean;
     big?: boolean;
     raised?: boolean;
@@ -24,7 +25,7 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
 
     public render() {
         const { onClick, disabled, children } = this.props;
-        const { round, raised, accent, floating, big } = this.props;
+        const { round, raised, accent, floating, big, ambient } = this.props;
         const { hover, pressed } = this.state;
         const css = cx('component', { round, hover, pressed, big });
         const colorAccent = '#ff4081';
@@ -42,6 +43,7 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
                 card={(raised || floating) && !(pressed || hover)}
                 menu={(raised || floating) && (pressed || hover)}
                 round={round}
+                ambient={ambient}
                 floating={floating}
                 inline
                 rounded

@@ -24,12 +24,18 @@
     "rewriteTsconfig": true
   },
   "files": [
+    "prop-types.d.ts",
     "style.d.ts",
+    "animationroot/index.tsx",
     "button/index.tsx",
+    "content/index.tsx",
+    "demo/index.tsx",
     "index.tsx",
     "input/index.tsx",
     "material/index.tsx",
     "material/ripple.tsx",
-    "navbutton/index.tsx"
+    "menu/index.tsx",
+    "navbutton/index.tsx",
+    "togglemenu/index.tsx"
   ]
 }

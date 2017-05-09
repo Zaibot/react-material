@@ -3,6 +3,7 @@ import Ripple from './ripple';
 import cx from './style.less';
 
 export type MaterialProps = {
+    divRef?: (el: HTMLDivElement) => void;
     ambient?: boolean;
     aswitch?: boolean;
     card?: boolean;
@@ -34,6 +35,18 @@ function registerRipple(material: Material) {
         queued = window.requestAnimationFrame(updateRipple);
     }
 }
+
+const releaseMaterials = () => {
+    for (const material of materials) {
+        material._pressed = false;
+    }
+    if (!queued) {
+        queued = window.requestAnimationFrame(updateRipple);
+    }
+};
+
+document.addEventListener(`mouseup`, releaseMaterials);
+document.addEventListener(`touchend`, releaseMaterials);
 // const rippleIncrement = 8;
 // const rippleIncrement = 6;
 // const rippleEnd = 200;
@@ -91,11 +104,12 @@ export default class Material extends React.Component<MaterialProps, MaterialSta
     public render() {
         // tslint:disable
         const {
-            ripple,
+            ripple, rippleClassName,
             onMouseDown, onMouseUp, style,
             className, color, rippleColor,
             ambient, inline, round, rounded, slim,
             aswitch, card, indicator, appbar, snackbar, menu, submenu, floating, drawer, dialog, children,
+            divRef,
             ...divAttributes,
           } = this.props;
         // tslint:enable
@@ -120,6 +134,7 @@ export default class Material extends React.Component<MaterialProps, MaterialSta
 
     private setRef = (e: HTMLDivElement) => {
         this._panel = e;
+        if (this.props.divRef) { this.props.divRef(e); }
     }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         this._pressed = true;
