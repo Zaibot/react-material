@@ -2,7 +2,8 @@ import React from 'react';
 import Material from '../material';
 import cx from './style.less';
 
-export type ButtonProps = {
+export interface ButtonProps {
+    className?: string;
     disabled?: boolean;
     round?: boolean;
     ambient?: boolean;
@@ -11,11 +12,11 @@ export type ButtonProps = {
     raised?: boolean;
     accent?: boolean;
     onClick?: any;
-};
-export type ButtonState = {
+}
+export interface ButtonState {
     hover: boolean;
     pressed: boolean;
-};
+}
 
 export default class Button extends React.Component<ButtonProps, ButtonState> {
     public state = {
@@ -24,19 +25,18 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     public render() {
-        const { onClick, disabled, children } = this.props;
+        const { className, onClick, disabled, children } = this.props;
         const { round, raised, accent, floating, big, ambient } = this.props;
         const { hover, pressed } = this.state;
-        const css = cx('component', { round, hover, pressed, big });
+        const css = cx('component', className, { round, hover, pressed, big });
         const colorAccent = '#ff4081';
         const colorText = '#fff';
+        // style={{ color: accented ? colorText : colorAccent }}
         const accented = raised !== accent;
         return (
             <Material
                 ripple={!disabled}
-                color={accented ? colorAccent : colorText}
                 className={css}
-                rippleColor={accented ? colorText : colorAccent}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
                 onClick={onClick}
@@ -47,7 +47,8 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
                 floating={floating}
                 inline
                 rounded
-                style={{ color: accented ? colorText : colorAccent }}>
+                color={accented ? colorAccent : colorText}
+                rippleColor={accented ? colorText : colorAccent}>
                 {children}
             </Material>
         );

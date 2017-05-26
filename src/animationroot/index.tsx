@@ -3,7 +3,7 @@ import React from 'react';
 import Material from '../material';
 import cx from './style.less';
 
-export const RootSymbol = `asdasd`; //Symbol(`@zaibot/material/animationroot`);
+export const RootSymbol = `@zaibot/material/animationroot`; //Symbol(`@zaibot/material/animationroot`);
 
 export const GetRoot = (e: React.Component<any, any>) => e.context[RootSymbol] as AnimationRoot;
 
@@ -11,28 +11,6 @@ export interface IAnimatable<T> {
     onPreAnimate(time: number, advance: number, state: T): T;
     onAnimate(time: number, advance: number, state: T): T;
 }
-
-// export function Animated(target: any) {
-//     target.contextTypes = target.contextTypes || {};
-//     target.contextTypes[RootSymbol] = PropTypes.any.isRequired;
-// }
-// export const Animated: ClassDecorator = (target: any) => {
-//     target.contextTypes = target.contextTypes || {};
-//     target.contextTypes[RootSymbol] = PropTypes.any.isRequired;
-// };
-export const Animated: ClassDecorator = <T extends IAnimatable<any> & React.Component<any, any>>(constructor: T): T => {
-    return class extends (constructor as any as { new (): IAnimatable<any> & React.Component<any, any> }) {
-        public static contextTypes = { ...(constructor as any).contextTypes, [RootSymbol]: PropTypes.any.isRequired };
-
-        protected componentDidMount() {
-            GetRoot(this).add(this);
-        }
-
-        protected componentWillUnmount() {
-            GetRoot(this).remove(this);
-        }
-    } as any as T;
-};
 
 export default class AnimationRoot extends React.Component<{}, {}> {
     public static childContextTypes = {
@@ -47,14 +25,13 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     public add(component: IAnimatable<any>) {
-        if (this._registrations.findIndex((x) => x.component === component) > -1) { return; }
+        if (this._registrations.some((x) => x.component === component)) { return; }
         const state: any = undefined;
-        this._registrations.push({ component, state });
+        this._registrations = [...this._registrations, { component, state }];
     }
 
     public remove(component: IAnimatable<any>) {
-        const idx = this._registrations.findIndex((x) => x.component === component);
-        delete this._registrations[idx];
+        this._registrations = this._registrations.filter((x) => x.component !== component);
     }
 
     public render() {
@@ -62,7 +39,7 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     protected getChildContext() {
-        return { [RootSymbol]: this };
+        return { [RootSymbol]: this as AnimationRoot };
     }
 
     protected componentDidMount() {
@@ -78,7 +55,7 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     private run(time: number, advance: number) {
-        const regs = this._registrations.slice(0);
+        const regs = this._registrations;
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             try {

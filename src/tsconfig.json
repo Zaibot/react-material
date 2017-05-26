@@ -3,7 +3,7 @@
     "module": "es6",
     "target": "es6",
     "noImplicitAny": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "isolatedModules": false,
@@ -24,10 +24,14 @@
     "rewriteTsconfig": true
   },
   "files": [
+    "css.d.ts",
+    "material-design-color-palette.d.ts",
     "prop-types.d.ts",
     "style.d.ts",
+    "animated/index.tsx",
     "animationroot/index.tsx",
     "button/index.tsx",
+    "colors/index.tsx",
     "content/index.tsx",
     "demo/index.tsx",
     "index.tsx",

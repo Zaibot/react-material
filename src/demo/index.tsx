@@ -1,7 +1,13 @@
+// tslint:disable-next-line
+/// <reference path="../material-design-color-palette.d.ts" />
+
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AnimationRoot, Button, Material, Menu, NavButton, ToggleMenu } from '..';
-import './style.less';
+import colors from '../colors';
+import cx from './style.less';
+
 const Demo = () => (
     <AnimationRoot>
         <div>
@@ -15,26 +21,26 @@ const Demo = () => (
             <Material rounded ambient ripple card>Panel</Material>
 
             <h2>Button</h2>
-            <Button>Button</Button>
-            <Button accent>Button</Button>
+            <Button className={mdc(colors.bg.indigo.n500, colors.text.white)}>Button</Button>
+            <Button className={mdc(colors.bg.indigo.n500, colors.text.white)} accent>Button</Button>
 
             <h2>Floating Button</h2>
-            <Button floating>Button</Button>
-            <Button floating accent>Button</Button>
+            <Button className={mdc(colors.bg.cyan.n600, colors.text.white)} floating>Button</Button>
+            <Button className={mdc(colors.bg.cyan.n600, colors.text.white)} floating accent>Button</Button>
 
             <h2>Floating Ambient Button</h2>
-            <Button floating ambient>Button</Button>
-            <Button floating ambient accent>Button</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} floating ambient>Button</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} floating ambient accent>Button</Button>
 
             <h2>Round Button</h2>
-            <Button round>B</Button>
-            <Button round accent>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round accent>B</Button>
 
             <h2>Floating Round Button</h2>
-            <Button round floating>B</Button>
-            <Button round floating big>B</Button>
-            <Button round floating accent>B</Button>
-            <Button round floating big accent>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round floating>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round floating big>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round floating accent>B</Button>
+            <Button className={mdc(colors.bg.red.n500, colors.text.white)} round floating big accent>B</Button>
 
             <h2>Nav Button</h2>
             <NavButton>B</NavButton>
@@ -64,6 +70,55 @@ const Demo = () => (
                 )}>
                 Test
                 </ToggleMenu>
+            </div>
+
+            <h2>Dialog</h2>
+            <div style={{ height: 200 }}>
+              <Material className={cx(`dialog`)} dialog style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
+                <h2 className={cx(`dialogtitle`)}>Title goes here</h2>
+                <p className={cx(`dialogcontent`)}>
+                  I'm a thing. But like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making.
+                </p>
+              </Material>
+            </div>
+
+            <h2>Dialog Ambient</h2>
+            <div style={{ height: 200 }}>
+              <Material className={cx(`dialog`)} dialog ambient style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
+                <h2 className={cx(`dialogtitle`)}>Title goes here</h2>
+                <p className={cx(`dialogcontent`)}>
+                  I'm a thing. But like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making.
+                </p>
+              </Material>
+            </div>
+
+            <h2>Elevations</h2>
+            <div style={{ height: 200 }}>
+              <Material style={{width: 40, height: 40}} inline round>0</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={1}>1</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={2}>2</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={3}>3</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={4}>4</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={6}>6</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={8}>8</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={9}>9</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={12}>12</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={16}>16</Material>
+              <Material style={{width: 40, height: 40}} inline round elevation={24}>24</Material>
+            </div>
+            <h2>Elevations</h2>
+            <div style={{ height: 200 }}>
+              <Material style={{width: 40, height: 40}} ambient inline round>0</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={1}>1</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={2}>2</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={3}>3</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={4}>4</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={6}>6</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={8}>8</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={9}>9</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={12}>12</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={16}>16</Material>
+              <Material style={{width: 40, height: 40}} ambient inline round elevation={24}>24</Material>
             </div>
         </div>
     </AnimationRoot>

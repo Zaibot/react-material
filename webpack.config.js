@@ -5,6 +5,14 @@ const NodeExternals = require(`webpack-node-externals`);
 const prodFn = (yes) => process.env.NODE_ENV === `production` ? yes : function() {};
 const prodIf = (yes, no) => process.env.NODE_ENV === `production` ? yes : no;
 
+const babelOptions = {
+  cacheDirectory: true,
+  presets: [
+    ["es2015", {
+      "modules": false
+    }]
+  ]
+};
 const cssLoaderOptions = {
   modules: true,
   importLoaders: 1,
@@ -25,12 +33,25 @@ module.exports = {
   },
   module: {
     loaders: [{
-        test: /.tsx?$/,
-        loaders: [`ts-loader`]
+        test: /\.tsx?$/,
+        loaders: [{
+          loader: `babel-loader`,
+          options: babelOptions
+        }, `ts-loader`]
       },
       {
-        test: /.less$/,
-        loaders: [`classnames-loader`, `style-loader`, { loader: `css-loader`, options: cssLoaderOptions }, `postcss-loader`, `less-loader`]
+        test: /\.less$/,
+        loaders: [`classnames-loader`, `style-loader`, {
+          loader: `css-loader`,
+          options: cssLoaderOptions
+        }, `postcss-loader`, `less-loader`]
+      },
+      {
+        test: /\.css$/,
+        loaders: [`classnames-loader`, `style-loader`, {
+          loader: `css-loader`,
+          options: cssLoaderOptions
+        }, `postcss-loader`]
       }
     ]
   },
@@ -42,17 +63,16 @@ module.exports = {
     libraryTarget: `commonjs2`,
   },
   externals: [
-    prodIf(NodeExternals()),
+    prodIf(NodeExternals({ whitelist: [/material-design-color-palette/] })),
   ].filter(Boolean),
   resolve: {
     extensions: [`.webpack.js`, `.tsx`, `.ts`, `.js`, `.json`],
-    alias: {
-    }
+    alias: {}
   },
   plugins: [
     prodFn(new webpack.DefinePlugin({
       'process.env': {
-      'NODE_ENV': `"production"`
+        'NODE_ENV': `"production"`
       }
     })),
     prodFn(new webpack.LoaderOptionsPlugin({

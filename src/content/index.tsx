@@ -1,14 +1,14 @@
 import React from 'react';
+import Animated from '../animated';
 import Material from '../material';
 import cx from './style.less';
-import { Animated } from '../animationroot';
 
 export type SizeCallback = (dimensions: { x: number; y: number; }) => void;
-export type ContentProps = {
+export interface ContentProps {
     onSize?: SizeCallback;
-};
-export type ContentState = {
-};
+}
+export interface ContentState {
+}
 
 @Animated
 export default class Content extends React.Component<ContentProps, ContentState> {

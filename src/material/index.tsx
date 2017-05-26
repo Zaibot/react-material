@@ -1,9 +1,28 @@
 import React from 'react';
-import { Animated } from '../animationroot';
+import Animated from '../animated';
 import Ripple from './ripple';
 import cx from './style.less';
 
-export type MaterialProps = {
+// tslint:disable-next-line
+export type Elevation = 1 | 2 | 3 | 4 | 6 | 8 | 9 | 12 | 16 | 24;
+
+const elevationToCss = (el: Elevation) => {
+    // tslint:disable
+    if (el >= 24) { return 'dialog'; }
+    if (el >= 16) { return 'drawer'; }
+    if (el >= 12) { return 'floating'; }
+    if (el >= 9) { return 'submenu'; }
+    if (el >= 8) { return 'menu'; }
+    if (el >= 6) { return 'snackbar'; }
+    if (el >= 4) { return 'appbar'; }
+    if (el >= 3) { return 'indicator'; }
+    if (el >= 2) { return 'card'; }
+    if (el >= 1) { return 'switch'; }
+    return '';
+    // tslint:enable
+};
+
+export interface IMaterialProps extends React.HTMLProps<HTMLDivElement> {
     divRef?: (el: HTMLDivElement) => void;
     ambient?: boolean;
     aswitch?: boolean;
@@ -25,11 +44,12 @@ export type MaterialProps = {
     rippleColor?: string;
     className?: string;
     rippleClassName?: string;
-} & React.HTMLProps<HTMLDivElement>;
+    elevation?: Elevation;
+}
 
 let magicNumber = 0;
-let materials: Material[] = [];
-let queued: any = 0;
+const materials: Material[] = [];
+const queued: any = 0;
 function registerRipple(material: Material) {
     materials.push(material);
     // if (!queued && materials.length === 1) {
@@ -48,60 +68,16 @@ const releaseMaterials = () => {
 
 document.addEventListener(`mouseup`, releaseMaterials);
 document.addEventListener(`touchend`, releaseMaterials);
-// const rippleIncrement = 8;
-// const rippleIncrement = 6;
-// const rippleEnd = 200;
-// const rippleFade = 100;
+
 const rippleFrames = 45;
 const rippleFadeMultiplier = .5;
-// const rippleOpacity = 0.12;
-const rippleOpacity = 0.24;
-// const rippleFadeRange = rippleEnd - rippleFade;
-// function updateRipple() {
-//     queued = 0;
-//     for (const m of materials) {
-//         const { width, height } = m._panel.getBoundingClientRect();
-//         // tslint:disable-next-line
-//         const max = Math.sqrt(width * width + height * height) * 2;
-//         const rippleIncrement = max / rippleFrames;
-//         const rippleEnd = max;
-//         const rippleFade = max * rippleFadeMultiplier;
-//         const rippleFadeRange = rippleEnd - rippleFade;
-//         m._ripples = m._ripples
-//             .filter((r: any) => r.props.z < rippleEnd)
-//             .map((r: any, idx, arr) => (
-//                 <Ripple
-//                     key={r.key}
-//                     className={r.props.className}
-//                     color={r.props.color}
-//                     x={r.props.x}
-//                     y={r.props.y}
-//                     z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && m._pressed ? 0 : rippleIncrement))}
-//                     opacity={(r.props.z < rippleFade
-//                         ? 1
-//                         : r.props.z > rippleEnd
-//                             ? 0
-//                             : ((rippleFadeRange - (r.props.z - rippleFade)) / rippleFadeRange)) * rippleOpacity} /> as any
-//             ));
-//         m.forceUpdate();
-//     }
-//     materials = materials.filter((x) => x._ripples.length);
-//
-//     if (!queued && materials.length) {
-//         queued = window.requestAnimationFrame(updateRipple);
-//     }
-// }
-
-export type MaterialState = {
-};
+const rippleOpacity = 0.36;
 
 @Animated
-export default class Material extends React.Component<MaterialProps, MaterialState> {
+export default class Material extends React.Component<IMaterialProps, any> {
     public _ripples: React.ReactChild[] = [];
     public _panel: HTMLDivElement;
     public _pressed: boolean;
-    public state = {
-    };
 
     public onPreAnimate(time: number, advance: number, state: ClientRect): ClientRect {
         if (!this._panel) { return state; }
@@ -141,7 +117,7 @@ export default class Material extends React.Component<MaterialProps, MaterialSta
     public render() {
         // tslint:disable
         const {
-            ripple, rippleClassName,
+            ripple, rippleClassName, elevation,
             onMouseDown, onMouseUp, style,
             className, color, rippleColor,
             ambient, inline, round, rounded, slim,
@@ -149,19 +125,19 @@ export default class Material extends React.Component<MaterialProps, MaterialSta
             divRef,
             ...divAttributes,
           } = this.props;
-        // tslint:enable
-        const css = cx('component', className, {
+        const css = cx('component', className, elevationToCss(elevation), {
             ambient, key: !ambient,
             inline, round, rounded, slim,
             aswitch, card, indicator, appbar, snackbar, menu, submenu, floating, drawer, dialog,
         });
+        // tslint:enable
         return (
             <div
                 className={css}
                 onMouseDown={onMouseDown || ripple ? this.onMouseDown : null}
                 onMouseUp={onMouseUp || ripple ? this.onMouseUp : null}
                 ref={this.setRef}
-                style={{ backgroundColor: color, ...style }}
+                style={style}
                 {...divAttributes}>
                 {children}
                 {this._ripples}

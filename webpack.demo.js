@@ -25,14 +25,24 @@ module.exports = {
   },
   module: {
     loaders: [{
-        test: /.tsx?$/,
+        test: /\.tsx?$/,
         loaders: [`ts-loader`]
       },
       {
-        test: /.less$/,
-        loaders: [`classnames-loader`, `style-loader`, { loader: `css-loader`, options: cssLoaderOptions }, `postcss-loader`, `less-loader`]
+        test: /\.less$/,
+        loaders: [`classnames-loader`, `style-loader`, {
+          loader: `css-loader`,
+          options: cssLoaderOptions
+        }, `postcss-loader`, `less-loader`]
+      },
+      {
+        test: /\.css$/,
+        loaders: [`classnames-loader`, `style-loader`, {
+          loader: `css-loader`,
+          options: cssLoaderOptions
+        }, `postcss-loader`]
       }
-    ]
+    ],
   },
   output: {
     path: path.resolve(__dirname, `./demo`),
@@ -41,6 +51,5 @@ module.exports = {
   resolve: {
     extensions: [`.webpack.js`, `.tsx`, `.ts`, `.js`, `.json`],
   },
-  plugins: [
-  ]
+  plugins: []
 };

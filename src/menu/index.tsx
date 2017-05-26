@@ -1,22 +1,22 @@
 import React from 'react';
-import { Animated } from '../animationroot';
+import Animated from '../animated';
 import Content from '../content';
 import Material from '../material';
 import cx from './style.less';
 
-export type MenuProps = {
+export interface MenuProps {
     disabled?: boolean;
     accent?: boolean;
     onClick?: any;
     open: boolean;
-};
-export type MenuState = {
+}
+export interface MenuState {
     currentw: number;
     currenth: number;
     height: number;
     width: number;
     toggle: number;
-};
+}
 
 @Animated
 export default class Menu extends React.Component<MenuProps, MenuState> {

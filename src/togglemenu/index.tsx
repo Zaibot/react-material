@@ -1,16 +1,16 @@
 import React from 'react';
-import { Animated, GetRoot, RootSymbol } from '../animationroot';
+import Animated from '../animated';
 import Button from '../button';
 import Material from '../material';
 import Menu from '../menu';
 import cx from './style.less';
 
-export type MenuProps = {
-    menu: React.ReactElement<any>,
-};
-export type MenuState = {
+export interface MenuProps {
+    menu: React.ReactElement<any>;
+}
+export interface MenuState {
     open: boolean;
-};
+}
 
 export default class ToggleMenu extends React.Component<MenuProps, MenuState> {
     public state = {

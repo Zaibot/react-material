@@ -2,17 +2,17 @@ import React from 'react';
 import Material from '../material';
 import cx from './style.less';
 
-export type ButtonProps = {
+export interface ButtonProps {
     disabled?: boolean;
     round?: boolean;
     raised?: boolean;
     accent?: boolean;
     onClick?: any;
-};
-export type ButtonState = {
+}
+export interface ButtonState {
     hover: boolean;
     pressed: boolean;
-};
+}
 
 export default class Button extends React.Component<ButtonProps, ButtonState> {
     public state = {

@@ -1,0 +1,45 @@
+// tslint:disable
+export default {
+    bg: {
+        red: {
+            n50: `mdc-bg-red-50`,
+            n100: `mdc-bg-red-100`,
+            n200: `mdc-bg-red-200`,
+            n300: `mdc-bg-red-300`,
+            n400: `mdc-bg-red-400`,
+            n500: `mdc-bg-red-500`,
+            n600: `mdc-bg-red-600`,
+            n700: `mdc-bg-red-700`,
+            n800: `mdc-bg-red-800`,
+            n900: `mdc-bg-red-900`,
+        },
+        indigo: {
+            n50: `mdc-bg-indigo-50`,
+            n100: `mdc-bg-indigo-100`,
+            n200: `mdc-bg-indigo-200`,
+            n300: `mdc-bg-indigo-300`,
+            n400: `mdc-bg-indigo-400`,
+            n500: `mdc-bg-indigo-500`,
+            n600: `mdc-bg-indigo-600`,
+            n700: `mdc-bg-indigo-700`,
+            n800: `mdc-bg-indigo-800`,
+            n900: `mdc-bg-indigo-900`,
+        },
+        cyan: {
+            n50: `mdc-bg-cyan-50`,
+            n100: `mdc-bg-cyan-100`,
+            n200: `mdc-bg-cyan-200`,
+            n300: `mdc-bg-cyan-300`,
+            n400: `mdc-bg-cyan-400`,
+            n500: `mdc-bg-cyan-500`,
+            n600: `mdc-bg-cyan-600`,
+            n700: `mdc-bg-cyan-700`,
+            n800: `mdc-bg-cyan-800`,
+            n900: `mdc-bg-cyan-900`,
+        },
+    },
+    text: {
+        black: `mdc-text-black-darker`,
+        white: `mdc-text-white-darker`,
+    },
+};
