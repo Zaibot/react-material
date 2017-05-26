@@ -69,9 +69,10 @@ const releaseMaterials = () => {
 document.addEventListener(`mouseup`, releaseMaterials);
 document.addEventListener(`touchend`, releaseMaterials);
 
+const rippleTime = 800; // about 800ms
 const rippleFrames = 45;
 const rippleFadeMultiplier = .5;
-const rippleOpacity = 0.36;
+const rippleOpacity = 0.16;
 
 @Animated
 export default class Material extends React.Component<IMaterialProps, any> {
@@ -89,8 +90,8 @@ export default class Material extends React.Component<IMaterialProps, any> {
         if (!this._ripples.length) { return state; }
         const { width, height } = state;
         // tslint:disable-next-line
-        const max = Math.sqrt(width * width + height * height) * 2;
-        const rippleIncrement = max / rippleFrames;
+        const max = Math.sqrt(width * width + height * height) * Math.PI;
+        const rippleIncrement = advance * max / rippleTime;
         const rippleEnd = max;
         const rippleFade = max * rippleFadeMultiplier;
         const rippleFadeRange = rippleEnd - rippleFade;

@@ -74,7 +74,7 @@ const Demo = () => (
 
             <h2>Dialog</h2>
             <div style={{ height: 200 }}>
-              <Material className={cx(`dialog`)} dialog style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
+              <Material className={cx(`dialog`)} dialog ripple style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
                 <h2 className={cx(`dialogtitle`)}>Title goes here</h2>
                 <p className={cx(`dialogcontent`)}>
                   I'm a thing. But like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making.
@@ -84,7 +84,7 @@ const Demo = () => (
 
             <h2>Dialog Ambient</h2>
             <div style={{ height: 200 }}>
-              <Material className={cx(`dialog`)} dialog ambient style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
+              <Material className={cx(`dialog`)} dialog ripple ambient style={{position: 'absolute', left: '50%', transform: `translate(-50%, 0)` }}>
                 <h2 className={cx(`dialogtitle`)}>Title goes here</h2>
                 <p className={cx(`dialogcontent`)}>
                   I'm a thing. But like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making.
