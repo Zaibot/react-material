@@ -52,18 +52,12 @@ const materials: Material[] = [];
 const queued: any = 0;
 function registerRipple(material: Material) {
     materials.push(material);
-    // if (!queued && materials.length === 1) {
-    //     queued = window.requestAnimationFrame(updateRipple);
-    // }
 }
 
 const releaseMaterials = () => {
     for (const material of materials) {
         material._pressed = false;
     }
-    // if (!queued) {
-    //     queued = window.requestAnimationFrame(updateRipple);
-    // }
 };
 
 document.addEventListener(`mouseup`, releaseMaterials);

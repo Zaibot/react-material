@@ -94,8 +94,8 @@ module.exports = {
         pure_getters: true,
         if_return: true,
         join_vars: true,
-        unsafe: true,
-        unsafe_comps: true,
+        unsafe: false,
+        unsafe_comps: false,
       },
       output: {
         comments: false,

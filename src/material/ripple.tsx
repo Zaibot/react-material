@@ -17,7 +17,7 @@ export default class Ripple extends React.Component<IRippleProps, any> {
         return (
             <div
                 className={cx('ripple', className)}
-                style={{ backgroundColor: color, clipPath, opacity, webkitClipPath: clipPath }} />
+                style={{ backgroundColor: color, clipPath, opacity, WebkitClipPath: clipPath }} />
         );
     }
 
