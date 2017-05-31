@@ -4,9 +4,11 @@ import Button from '../button';
 import Material from '../material';
 import Menu from '../menu';
 import cx from './style.less';
+import colors from '../colors';
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 export interface MenuProps {
-    menu: React.ReactElement<any>;
+    menu: (onClick: () => void) => React.ReactElement<any>;
 }
 export interface MenuState {
     open: boolean;
@@ -20,8 +22,11 @@ export default class ToggleMenu extends React.Component<MenuProps, MenuState> {
     public render() {
         return (
             <span>
-                <Button onClick={() => this.setState({ open: !this.state.open })}>{this.props.children}</Button>
-                {React.cloneElement(this.props.menu, { open: this.state.open })}
+                <Button
+                    className={mdc(colors.bg.indigo.n500, colors.text.white.dark)}
+                    rippleClassName={mdc(colors.bg.indigo.n50)}
+                     onClick={() => this.setState({ open: !this.state.open })}>{this.props.children}</Button>
+                {React.cloneElement(this.props.menu(() => this.setState({ open: false })), { open: this.state.open })}
             </span>
         );
     }

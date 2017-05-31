@@ -1,6 +1,8 @@
 import React from 'react';
 import Material from '../material';
 import cx from './style.less';
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
+import colors from '../colors';
 
 export interface ButtonProps {
     disabled?: boolean;
@@ -14,7 +16,7 @@ export interface ButtonState {
     pressed: boolean;
 }
 
-export default class Button extends React.Component<ButtonProps, ButtonState> {
+export default class NavButton extends React.Component<ButtonProps, ButtonState> {
     public state = {
         hover: false,
         pressed: false,
@@ -24,23 +26,22 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
         const { onClick, disabled, children } = this.props;
         const { round, raised, accent } = this.props;
         const { hover, pressed } = this.state;
-        const css = cx('component', { round, hover, pressed });
-        const colorAccent = '#222';
-        const colorText = '#fff';
+        const css = cx('component', mdc(colors.bg.grey.n50), mdc(colors.text.black.darker), { round, hover, pressed });
+        const cssRipple = mdc(colors.bg.grey.n800);
+        // const colorAccent = '#222';
+        // const colorText = '#fff';
         const accented = raised !== accent;
         return (
             <Material
                 ripple={!disabled}
-                color={accented ? colorAccent : colorText}
                 className={css}
-                rippleColor={accented ? colorText : colorAccent}
+                rippleClassName={cssRipple}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
                 onClick={onClick}
                 card={raised && !(pressed || hover)}
                 menu={raised && (pressed || hover)}
-                round={round}
-                style={{ color: accented ? colorText : colorAccent }}>
+                round={round}>
                 {children}
             </Material>
         );

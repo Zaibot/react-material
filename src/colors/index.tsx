@@ -51,7 +51,17 @@ export default {
         },
     },
     text: {
-        black: `mdc-text-black-darker`,
-        white: `mdc-text-white-darker`,
+        black: {
+          darker: `mdc-text-black-darker`,
+          dark: `mdc-text-black-dark`,
+          light: `mdc-text-black-light`,
+          lighter: `mdc-text-black-lighter`,
+        },
+        white: {
+          darker: `mdc-text-white-darker`,
+          dark: `mdc-text-white-dark`,
+          light: `mdc-text-white-light`,
+          lighter: `mdc-text-white-lighter`,
+        }
     },
 };

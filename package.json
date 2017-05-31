@@ -59,6 +59,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "@zaibot/css-reset": "^1.0.6",
     "classnames": "^2.2.5"
   },
   "peerDependencies": {
