@@ -46,6 +46,10 @@ export interface IMaterialProps extends React.HTMLProps<HTMLDivElement> {
     rippleClassName?: string;
     elevation?: Elevation;
 }
+export interface IMaterialState {
+    pressed: boolean;
+    ripples: JSX.Element[];
+}
 
 let magicNumber = 0;
 const materials: Material[] = [];
@@ -55,8 +59,9 @@ function registerRipple(material: Material) {
 }
 
 const releaseMaterials = () => {
+    const pressed = false;
     for (const material of materials) {
-        material._pressed = false;
+        material.setState({ pressed });
     }
 };
 
@@ -66,13 +71,15 @@ document.addEventListener(`touchend`, releaseMaterials);
 const rippleTime = 800; // about 800ms
 const rippleFrames = 45;
 const rippleFadeMultiplier = .5;
-const rippleOpacity = 0.16;
+const rippleOpacity = 0.36;
 
 @Animated
-export default class Material extends React.Component<IMaterialProps, any> {
-    public _ripples: React.ReactChild[] = [];
+export default class Material extends React.Component<IMaterialProps, IMaterialState> {
+    public state: IMaterialState = {
+        pressed: false,
+        ripples: [],
+    };
     public _panel: HTMLDivElement;
-    public _pressed: boolean;
 
     public onPreAnimate(time: number, advance: number, state: ClientRect): ClientRect {
         if (!this._panel) { return state; }
@@ -80,8 +87,10 @@ export default class Material extends React.Component<IMaterialProps, any> {
     }
 
     public onAnimate(time: number, advance: number, state: ClientRect): ClientRect {
+        let { ripples } = this.state;
         if (!state) { return state; }
-        if (!this._ripples.length) { return state; }
+        if (!ripples.length) { return state; }
+        const { pressed } = this.state;
         const { width, height } = state;
         // tslint:disable-next-line
         const max = Math.sqrt(width * width + height * height) * Math.PI;
@@ -89,7 +98,7 @@ export default class Material extends React.Component<IMaterialProps, any> {
         const rippleEnd = max;
         const rippleFade = max * rippleFadeMultiplier;
         const rippleFadeRange = rippleEnd - rippleFade;
-        this._ripples = this._ripples
+        ripples = this.state.ripples
             .filter((r: any) => r.props.z < rippleEnd)
             .map((r: any, idx, arr) => (
                 <Ripple
@@ -98,14 +107,14 @@ export default class Material extends React.Component<IMaterialProps, any> {
                     color={r.props.color}
                     x={r.props.x}
                     y={r.props.y}
-                    z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && this._pressed ? 0 : rippleIncrement))}
+                    z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && pressed ? 0 : rippleIncrement))}
                     opacity={(r.props.z < rippleFade
                         ? 1
                         : r.props.z > rippleEnd
                             ? 0
                             : ((rippleFadeRange - (r.props.z - rippleFade)) / rippleFadeRange)) * rippleOpacity} /> as any
             ));
-        this.setState({});
+        this.setState({ ripples });
         return state;
     }
 
@@ -120,6 +129,9 @@ export default class Material extends React.Component<IMaterialProps, any> {
             divRef,
             ...divAttributes,
           } = this.props;
+        const {
+          ripples
+        } = this.state;
         const css = cx('component', className, elevationToCss(elevation), {
             ambient, key: !ambient,
             inline, round, rounded, slim,
@@ -135,7 +147,7 @@ export default class Material extends React.Component<IMaterialProps, any> {
                 style={style}
                 {...divAttributes}>
                 {children}
-                {this._ripples}
+                {ripples}
             </div>
         );
     }
@@ -145,9 +157,9 @@ export default class Material extends React.Component<IMaterialProps, any> {
         if (this.props.divRef) { this.props.divRef(e); }
     }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        this._pressed = true;
-
         const { rippleClassName } = this.props;
+        let { ripples } = this.state;
+        const pressed = true;
         const ripple = (
             <Ripple
                 key={++magicNumber}
@@ -158,18 +170,19 @@ export default class Material extends React.Component<IMaterialProps, any> {
                 z={0}
                 opacity={1} />
         );
-        this._ripples.push(ripple);
-        if (this._ripples.length === 1) {
+        ripples = [...ripples, ripple];
+        if (ripples.length === 1) {
             registerRipple(this);
         }
+        this.setState({ pressed, ripples });
         const { onMouseDown } = this.props;
         if (onMouseDown) {
             onMouseDown(e);
         }
     }
     private onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-        this._pressed = false;
-
+        const pressed = false;
+        this.setState({ pressed });
         const { onMouseUp } = this.props;
         if (onMouseUp) {
             onMouseUp(e);

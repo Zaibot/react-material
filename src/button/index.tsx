@@ -2,8 +2,9 @@ import React from 'react';
 import Material from '../material';
 import cx from './style.less';
 
-export interface ButtonProps {
+export interface IButtonProps {
     className?: string;
+    rippleClassName?: string;
     disabled?: boolean;
     round?: boolean;
     ambient?: boolean;
@@ -13,12 +14,12 @@ export interface ButtonProps {
     accent?: boolean;
     onClick?: any;
 }
-export interface ButtonState {
+export interface IButtonState {
     hover: boolean;
     pressed: boolean;
 }
 
-export default class Button extends React.Component<ButtonProps, ButtonState> {
+export default class Button extends React.Component<IButtonProps, IButtonState> {
     public state = {
         hover: false,
         pressed: false,
@@ -26,16 +27,13 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
 
     public render() {
         const { className, onClick, disabled, children } = this.props;
-        const { round, raised, accent, floating, big, ambient } = this.props;
+        const { round, raised, accent, floating, big, ambient, rippleClassName } = this.props;
         const { hover, pressed } = this.state;
         const css = cx('component', className, { round, hover, pressed, big });
-        const colorAccent = '#ff4081';
-        const colorText = '#fff';
-        // style={{ color: accented ? colorText : colorAccent }}
-        const accented = raised !== accent;
         return (
             <Material
                 ripple={!disabled}
+                rippleClassName={rippleClassName}
                 className={css}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
@@ -46,9 +44,7 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
                 ambient={ambient}
                 floating={floating}
                 inline
-                rounded
-                color={accented ? colorAccent : colorText}
-                rippleColor={accented ? colorText : colorAccent}>
+                rounded>
                 {children}
             </Material>
         );

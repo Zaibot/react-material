@@ -25,6 +25,18 @@ export default {
             n800: `mdc-bg-indigo-800`,
             n900: `mdc-bg-indigo-900`,
         },
+        grey: {
+            n50: `mdc-bg-grey-50`,
+            n100: `mdc-bg-grey-100`,
+            n200: `mdc-bg-grey-200`,
+            n300: `mdc-bg-grey-300`,
+            n400: `mdc-bg-grey-400`,
+            n500: `mdc-bg-grey-500`,
+            n600: `mdc-bg-grey-600`,
+            n700: `mdc-bg-grey-700`,
+            n800: `mdc-bg-grey-800`,
+            n900: `mdc-bg-grey-900`,
+        },
         cyan: {
             n50: `mdc-bg-cyan-50`,
             n100: `mdc-bg-cyan-100`,
