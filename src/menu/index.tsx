@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated from '../animated';
 import colors from '../colors';
-import Content from '../content';
+import Content, { ISize } from '../content';
 import Material from '../material';
 import cx from './style.less';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
@@ -47,22 +47,17 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
     private _canAni = true;
 
     public onPreAnimate(time: number, advance: number, state: IMenuAnimation = { width: 0, height: 0 }): IMenuAnimation {
-        if (this._div) {
-            const height = this._div.scrollHeight;
-            const width = this._div.scrollWidth;
-            state = { ...state, height, width };
-        }
         return state;
     }
 
     public onAnimate(time: number, advance: number, state: IMenuAnimation): IMenuAnimation {
-        const { width, height } = state;
-        const { opening, toggle } = this.state;
-        const opened = width === this.state.currentw && height === this.state.currenth;
+        const { width, height, opening, toggle } = this.state;
+        const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
         const currentw = snap(Math.round(this.state.currentw + ((this.props.open ? width : 0) - this.state.currentw) * (advance / 50)), width, 4);
         const currenth = snap(Math.round(this.state.currenth + ((this.props.open ? height : 0) - this.state.currenth) * (advance / 50)), height, 4);
-        const stepWeight = (advance / 250);
-        const progress = opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : constrain(this.state.progress - special * 4 * stepWeight, 0, 1);
+        const stepWeight = (advance / 500);
+        const stepWeight2 = (advance / 200);
+        const progress = opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : constrain(this.state.progress - special * stepWeight2, 0, 1);
         if (currentw !== this.state.currentw
             || currenth !== this.state.currenth
             || progress !== this.state.progress) {
@@ -83,10 +78,8 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
                 menu
                 slim
                 style={{ maxWidth: this.state.currentw, maxHeight: this.state.currenth, opacity: this.state.currentw > 3 ? 1 : 0 }}>
-                <Content>
-                    <div style={{ opacity: this.state.progress }} ref={this._height}>
-                        {children}
-                    </div>
+                <Content opacity={this.state.progress} onSize={this._height}>
+                    {children}
                 </Content>
             </Material>
         );
@@ -100,14 +93,9 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         }
     }
 
-    private _height = (d: HTMLDivElement) => {
-        this._div = d;
-        // if (this._div) {
-        //     const height = this._div.scrollHeight;
-        //     const width = this._div.scrollWidth;
-        //     if (this.state.width !== width || this.state.height !== height) {
-        //         this.setState({ height, width });
-        //     }
-        // }
+    private _height = (d: ISize) => {
+        const width = d.x;
+        const height = d.y;
+        this.setState({ width, height });
     }
 }
