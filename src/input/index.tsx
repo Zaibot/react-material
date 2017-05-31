@@ -55,8 +55,8 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         const stepWeight1 = (advance / 75);
         const { focused } = this.state;
         const { helper } = state;
-        const label = step(this.state.label, focused ? 0 : 1, 100, 0.16);
-        const input = step(this.state.input, focused && label < 0.1 ? 1 : 0, 100, 0.24);
+        const label = step(this.state.label, focused || this.state.input > 0.25 ? 0 : 1, 100, 0.32);
+        const input = step(this.state.input, focused && this.state.label < 0.25 ? 1 : 0, 100, 0.18);
         this.setState({ helper, input, label });
         return state;
     }
@@ -67,7 +67,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         return (
             <Material slim className={cx('component', { contents: value })}>
                 <label className={cx('label')} style={{ transform: `translateY(${this.state.label * 16}px)`, fontSize: 12 + this.state.label * 4 }}>{label}</label>
-                <input className={cx('input')} style={{ opacity: this.state.input }} type="text" value={value} onFocus={this.onFocus} onBlur={this.onBlur} />
+                <input className={cx('input')} style={{ transform: `translateY(${4 + this.state.input * -4}px)`, opacity: this.state.input }} type="text" value={value} onFocus={this.onFocus} onBlur={this.onBlur} />
             </Material>
         );
     }
