@@ -12,6 +12,7 @@ export interface IButtonProps {
     big?: boolean;
     raised?: boolean;
     accent?: boolean;
+    slim?: boolean;
     onClick?: any;
 }
 export interface IButtonState {
@@ -27,9 +28,9 @@ export default class Button extends React.Component<IButtonProps, IButtonState> 
 
     public render() {
         const { className, onClick, disabled, children } = this.props;
-        const { round, raised, accent, floating, big, ambient, rippleClassName } = this.props;
+        const { round, raised, accent, floating, big, slim, ambient, rippleClassName } = this.props;
         const { hover, pressed } = this.state;
-        const css = cx('component', className, { round, hover, pressed, big });
+        const css = cx('component', className, { round, hover, pressed, big, slim });
         return (
             <Material
                 ripple={!disabled}
