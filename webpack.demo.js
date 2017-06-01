@@ -5,6 +5,14 @@ const NodeExternals = require(`webpack-node-externals`);
 const prodFn = (yes) => process.env.NODE_ENV === `production` ? yes : function() {};
 const prodIf = (yes, no) => process.env.NODE_ENV === `production` ? yes : no;
 
+const babelOptions = {
+  cacheDirectory: true,
+  presets: [
+    ["es2015", {
+      "modules": false
+    }]
+  ]
+};
 const cssLoaderOptions = {
   modules: true,
   importLoaders: 1,
@@ -26,7 +34,10 @@ module.exports = {
   module: {
     loaders: [{
         test: /\.tsx?$/,
-        loaders: [`ts-loader`]
+        loaders: [{
+          loader: `babel-loader`,
+          options: babelOptions
+        }, `ts-loader`]
       },
       {
         test: /\.less$/,
@@ -51,5 +62,37 @@ module.exports = {
   resolve: {
     extensions: [`.webpack.js`, `.tsx`, `.ts`, `.js`, `.json`],
   },
-  plugins: []
+  plugins: [
+    prodFn(new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': `"production"`
+      }
+    })),
+    prodFn(new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    })),
+    prodFn(new webpack.optimize.AggressiveMergingPlugin()),
+    prodFn(new webpack.optimize.OccurrenceOrderPlugin()),
+    prodFn(new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        pure_getters: true,
+        if_return: true,
+        join_vars: true,
+        unsafe: false,
+        unsafe_comps: false,
+      },
+      output: {
+        comments: false,
+      }
+    }))
+  ]
 };

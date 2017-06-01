@@ -56,10 +56,18 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         const stepWeight2 = (advance / 250);
 
         const { width, height, opening, toggle } = this.state;
-        const opened = this.state.currentw > width*.8 && this.state.currenth > height*.8;
-        const currentw = snap(this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1, width, 1);
-        const currenth = snap(this.state.currenth + ((this.props.open ? height : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currenth)) * stepWeight1, height, 1);
-        const progress = opening ? (opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : this.state.progress) : constrain(this.state.progress - special * stepWeight2, 0, 1);
+        const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
+        const currentw = snap(
+            this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1,
+            width,
+            1);
+        const currenth = snap(
+            this.state.currenth + ((this.props.open ? height : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currenth)) * stepWeight1,
+            height,
+            1);
+        const progress = opening
+            ? (opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : this.state.progress)
+            : constrain(this.state.progress - special * stepWeight2, 0, 1);
         if (currentw !== this.state.currentw
             || currenth !== this.state.currenth
             || progress !== this.state.progress) {

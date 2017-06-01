@@ -152,6 +152,32 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         );
     }
 
+    private componentShouldUpdate(nextProps: IMaterialProps, nextState: IMaterialState) {
+        return nextState.pressed !== this.state.pressed
+            || nextState.ripples !== this.state.ripples
+            || nextProps.ambient !== this.props.ambient
+            || nextProps.aswitch !== this.props.aswitch
+            || nextProps.card !== this.props.card
+            || nextProps.indicator !== this.props.indicator
+            || nextProps.appbar !== this.props.appbar
+            || nextProps.snackbar !== this.props.snackbar
+            || nextProps.menu !== this.props.menu
+            || nextProps.submenu !== this.props.submenu
+            || nextProps.floating !== this.props.floating
+            || nextProps.drawer !== this.props.drawer
+            || nextProps.dialog !== this.props.dialog
+            || nextProps.color !== this.props.color
+            || nextProps.inline !== this.props.inline
+            || nextProps.slim !== this.props.slim
+            || nextProps.round !== this.props.round
+            || nextProps.rounded !== this.props.rounded
+            || nextProps.ripple !== this.props.ripple
+            || nextProps.rippleColor !== this.props.rippleColor
+            || nextProps.className !== this.props.className
+            || nextProps.rippleClassName !== this.props.rippleClassName
+            || nextProps.elevation !== this.props.elevation;
+    }
+
     private setRef = (e: HTMLDivElement) => {
         this._panel = e;
         if (this.props.divRef) { this.props.divRef(e); }

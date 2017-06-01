@@ -3,16 +3,25 @@
 .component {
   box-sizing: border-box;
   padding-top: 8/@rem;
+  padding-bottom: 8/@rem;
 }
 .label {
   color: rgba(0,0,0,0.5);
-  line-height: 16/@rem;
+  line-height: 12/@rem;
   // transition: font-size 0.3s ease, margin-top 0.3s ease, transform 0.3s ease;
   font-size: 16/@rem;
   position: relative;
   display: inline-block;
   z-index: 1;
+  pointer-events: none;
+  margin-top: 8/@rem;
 }
 .input {
-  display: block;
+  margin-top: 8/@rem;
+  width: 100%;
+  line-height: 16/@rem;
+  font-weight: 400;
+}
+.bar {
+  margin-top: 8/@rem
 }

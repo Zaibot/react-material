@@ -15,31 +15,36 @@
   },
   "compileOnSave": false,
   "buildOnSave": false,
+  "exclude": [
+    "node_modules",
+    "platforms"
+  ],
   "filesGlob": [
-    "**/*.ts",
-    "**/*.tsx",
-    "!node_modules/**"
+    "!../node_modules",
+    "./**/*.ts",
+    "./**/*.tsx"
   ],
   "atom": {
     "rewriteTsconfig": true
   },
   "files": [
-    "css.d.ts",
-    "material-design-color-palette.d.ts",
-    "prop-types.d.ts",
-    "style.d.ts",
-    "animated/index.tsx",
-    "animationroot/index.tsx",
-    "button/index.tsx",
-    "colors/index.tsx",
-    "content/index.tsx",
-    "demo/index.tsx",
-    "index.tsx",
-    "input/index.tsx",
-    "material/index.tsx",
-    "material/ripple.tsx",
-    "menu/index.tsx",
-    "navbutton/index.tsx",
-    "togglemenu/index.tsx"
+    "./css.d.ts",
+    "./material-design-color-palette.d.ts",
+    "./prop-types.d.ts",
+    "./style.d.ts",
+    "./animated/index.tsx",
+    "./animationroot/index.tsx",
+    "./button/index.tsx",
+    "./colors/index.tsx",
+    "./content/index.tsx",
+    "./demo/index.tsx",
+    "./focusbar/index.tsx",
+    "./index.tsx",
+    "./input/index.tsx",
+    "./material/index.tsx",
+    "./material/ripple.tsx",
+    "./menu/index.tsx",
+    "./navbutton/index.tsx",
+    "./togglemenu/index.tsx"
   ]
 }

@@ -34,6 +34,16 @@ const Demo = () => (
             <h2>Input</h2>
             <Input label="Label" value="Hello" />
 
+            <h2>Form</h2>
+            <Material
+                className={cx(`form`, mdc(colors.bg.grey.n50, colors.text.black.dark))}
+                rippleClassName={mdc(colors.bg.grey.n500)}
+                rounded card>
+                <Input label="First name" value="Tobias" />
+                <Input label="Last name" value="de Groen" />
+                <Input label="City" value="Arnhem" />
+            </Material>
+
             <h2>Button</h2>
             <Button className={mdc(colors.bg.indigo.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.indigo.n100)}>Button</Button>
             &nbsp;

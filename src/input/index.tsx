@@ -2,6 +2,9 @@ import React from 'react';
 import Material from '../material';
 import cx from './style.less';
 import Animated from '../animated';
+import FocusBar from '../focusbar';
+import colors from '../colors';
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 export interface IInputProps {
     label: string;
@@ -10,6 +13,7 @@ export interface IInputProps {
 export interface IInputState {
     helper: number;
     input: number;
+    inputControl: HTMLInputElement;
     label: number;
     focused: boolean;
 }
@@ -25,14 +29,14 @@ const emptyAnimation: IInputAnimation = {
 };
 
 const snap = (val: number, target: number, distance: number) => {
-  return Math.abs(val - target) <= distance ? target : val;
+    return Math.abs(val - target) <= distance ? target : val;
 };
 const step = (val: number, target: number, scale: number, velocity: number) => {
-  // console.log(val, target, velocity);
+    // console.log(val, target, velocity);
     if (target > val) {
-        return snap(val + Math.ceil((target - val) * velocity * scale) / scale, target, 1/scale);
+        return snap(val + Math.ceil((target - val) * velocity * scale) / scale, target, 1 / scale);
     } else if (target < val) {
-        return snap(val - Math.ceil((val - target) * velocity * scale) / scale, target, 1/scale);
+        return snap(val - Math.ceil((val - target) * velocity * scale) / scale, target, 1 / scale);
     } else {
         return target;
     }
@@ -40,11 +44,12 @@ const step = (val: number, target: number, scale: number, velocity: number) => {
 
 @Animated
 export default class Input extends React.Component<IInputProps, IInputState> {
-    public state = {
+    public state: IInputState = {
+        focused: false,
         helper: 0,
         input: 0,
+        inputControl: null,
         label: 0,
-        focused: false,
     };
 
     public onPreAnimate(time: number, advance: number, state: IInputAnimation = emptyAnimation): IInputAnimation {
@@ -65,9 +70,26 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         const { label, value } = this.props;
 
         return (
-            <Material slim className={cx('component', { contents: value })}>
-                <label className={cx('label')} style={{ transform: `translateY(${this.state.label * 16}px)`, fontSize: 12 + this.state.label * 4 }}>{label}</label>
-                <input className={cx('input')} style={{ transform: `translateY(${4 + this.state.input * -4}px)`, opacity: this.state.input }} type="text" value={value} onFocus={this.onFocus} onBlur={this.onBlur} />
+            <Material slim className={cx('component', mdc(colors.bg.grey.n50), { contents: value })} onClick={this.onClick}>
+                <label
+                    className={cx('label', mdc(colors.text.black.dark))}
+                    style={{ transform: `translateY(${this.state.label * 24}px)`, fontSize: 12 + this.state.label * 4 }}>
+                    {label}
+                </label>
+                <input
+                    className={cx('input', mdc(colors.text.black.darker))}
+                    style={{ transform: `translateY(${4 + this.state.input * -4}px)`, opacity: this.state.input }}
+                    type="text"
+                    value={value}
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
+                    ref={this.onInput} />
+                <FocusBar
+                    state={this.state.focused ? 'focus' : 'idle'}
+                    idleClassName={cx(`bar`, mdc(colors.bg.grey.n300))}
+                    focusClassName={mdc(colors.bg.indigo.n500)}
+                    errorClassName={mdc(colors.bg.grey.n500)}
+                />
             </Material>
         );
     }
@@ -75,6 +97,14 @@ export default class Input extends React.Component<IInputProps, IInputState> {
     private onFocus = () => {
         const focused = true;
         this.setState({ focused });
+    }
+    private onInput = (inputControl: HTMLInputElement) => {
+        this.setState({ inputControl });
+    }
+    private onClick = () => {
+        if (this.state.inputControl) {
+            this.state.inputControl.focus();
+        }
     }
     private onBlur = () => {
         const focused = false;
