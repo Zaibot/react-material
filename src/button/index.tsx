@@ -33,6 +33,7 @@ export default class Button extends React.Component<IButtonProps, IButtonState> 
         const css = cx('component', className, { round, hover, pressed, big, slim });
         return (
             <Material
+                base={<button />}
                 ripple={!disabled}
                 rippleClassName={rippleClassName}
                 className={css}

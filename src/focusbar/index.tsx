@@ -56,8 +56,10 @@ export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarS
 
     public onAnimate(time: number, advance: number, state: IFocusBarAnimation): IFocusBarAnimation {
         const stepWeight1 = (advance / 75);
-        const error = step(this.state.error, this.props.state === 'error' && this.state.focus === 0 ? 1 : 0, 100, stepWeight1);
-        const focus = step(this.state.focus, this.props.state === 'focus' && this.state.error === 0 ? 1 : 0, 100, stepWeight1);
+        const error = step(this.state.error, this.props.state === 'error' ? 1 : 0, 100, stepWeight1);
+        const focus = step(this.state.focus, this.props.state === 'focus' ? 1 : 0, 100, stepWeight1);
+        // const error = step(this.state.error, this.props.state === 'error' && this.state.focus === 0 ? 1 : 0, 100, stepWeight1);
+        // const focus = step(this.state.focus, this.props.state === 'focus' && this.state.error === 0 ? 1 : 0, 100, stepWeight1);
         this.setState({ error, focus });
         return state;
     }
@@ -68,8 +70,8 @@ export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarS
         const styleBar = this.getStyle();
         return (
             <div className={cx(`component`, cssComponent)}>
-                <div className={cx(`bar`, cssBar)} style={styleBar}>
-                </div>
+                {this.state.focus ? <div className={cx(`bar`, this.props.focusClassName)} style={{ transform: `translateX(-50%) scaleX(${this.state.focus})`, opacity: 0.36 + this.state.focus*.64  }} /> : null}
+                {this.state.error ? <div className={cx(`bar`, this.props.errorClassName)} style={{ transform: `translateX(-50%) scaleX(${this.state.error})`, opacity: 0.36 + this.state.error*.64  }} /> : null}
             </div>
         );
     }
@@ -79,8 +81,8 @@ export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarS
         if (this.state.focus) { return this.props.focusClassName; }
     }
     private getStyle() {
-        if (this.state.error) { return { transform: `translateX(-50%) scaleX(${this.state.error})` }; }
-        if (this.state.focus) { return { transform: `translateX(-50%) scaleX(${this.state.focus})` }; }
+        if (this.state.error) { return { transform: `translateX(-50%) scaleX(${this.state.error})`, opacity: 0.36 + this.state.error*.64  }; }
+        if (this.state.focus) { return { transform: `translateX(-50%) scaleX(${this.state.focus})`, opacity: 0.36 + this.state.focus*.64  }; }
         return { transform: `translateX(-50%) scaleX(0%)` };
     }
 }

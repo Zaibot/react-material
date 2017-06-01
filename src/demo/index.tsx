@@ -6,9 +6,77 @@ import mdc from 'material-design-color-palette/css/material-design-color-palette
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AnimationRoot, Button, Material, Menu, NavButton, ToggleMenu } from '..';
+import Dialog, { DialogHeader, DialogSubheader, DialogContents, DialogActions } from '../dialog';
 import Input from '../input';
 import colors from '../colors';
 import cx from './style.less';
+
+class Form extends React.Component<any, any> {
+    public state = {
+        firstName: 'Tobias',
+        lastName: 'de Groen',
+        city: 'Arnhem',
+        phoneNumber: '0633883156',
+        email: 'tdgroen@zaibot.net',
+    };
+    public render() {
+        return (
+            <div className={cx(`form`)}>
+                <Dialog>
+                    <span style={{ position: 'absolute', right: 0, zIndex: 2, width: 67 }}>
+                        <ToggleMenu menu={(e) => (
+                            <Menu open>
+                                <NavButton onClick={e}>Option 1</NavButton>
+                                <NavButton onClick={e}>Option 2</NavButton>
+                                <NavButton onClick={e}>Option 3</NavButton>
+                                <NavButton onClick={e}>Option 4</NavButton>
+                            </Menu>
+                        )}>Test</ToggleMenu>
+                  </span>
+                    <DialogHeader>
+                        Add new contact
+                    </DialogHeader>
+                    <DialogSubheader>
+                        Enter the contact's details below and press save to continue
+                </DialogSubheader>
+                    <DialogContents>
+                        <Input
+                            label="First name"
+                            value={this.state.firstName}
+                            error={/\w{2,}/.test(this.state.firstName) ? null : 'Enter a first name'}
+                            onChange={(val) => this.setState({ firstName: val })} />
+                        <Input
+                            label="Last name"
+                            value={this.state.lastName}
+                            error={/\w{2,}/.test(this.state.lastName) ? null : 'Enter a last name'}
+                            onChange={(val) => this.setState({ lastName: val })} />
+                        <Input
+                            label="City"
+                            value={this.state.city}
+                            error={/\w{2,}/.test(this.state.city) ? null : 'Enter a city name'}
+                            onChange={(val) => this.setState({ city: val })} />
+                        <Input
+                            label="Phone Number"
+                            helper="1234567890"
+                            value={this.state.phoneNumber}
+                            error={/\d{10}/i.test(this.state.phoneNumber) ? null : 'Invalid phonenumber'}
+                            onChange={(val) => this.setState({ phoneNumber: val })} />
+                        <Input
+                            label="E-mail"
+                            value={this.state.email}
+                            error={/@\w+\.\w{2,}/i.test(this.state.email) ? null : 'Invalid email address'}
+                            onChange={(val) => this.setState({ email: val })} />
+                    </DialogContents>
+                    <DialogActions>
+                        <Button className={mdc(colors.bg.grey.n300, colors.text.black.dark)} rippleClassName={mdc(colors.bg.grey.n100)} slim onClick={() => this.setState({ firstName: '', lastName: '', city: '', phoneNumber: '', email: '' })}>Annuleren</Button>
+                        &nbsp;
+                    <Button className={mdc(colors.bg.green.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.green.n100)} slim>Opslaan</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
 
 const Demo = () => (
     <AnimationRoot>
@@ -35,21 +103,7 @@ const Demo = () => (
             <Input label="Label" value="Hello" />
 
             <h2>Form</h2>
-            <Material
-                className={cx(`form`, mdc(colors.bg.grey.n50, colors.text.black.dark))}
-                rippleClassName={mdc(colors.bg.grey.n500)}
-                rounded card slim>
-                <div className={cx(`form-contents`)}>
-                  <Input label="First name" value="Tobias" />
-                  <Input label="Last name" value="de Groen" />
-                  <Input label="City" value="Arnhem" />
-                </div>
-                <div className={cx(`form-actions`)}>
-                  <Button className={mdc(colors.bg.grey.n300, colors.text.black.dark)} rippleClassName={mdc(colors.bg.grey.n100)} slim>Annuleren</Button>
-                  &nbsp;
-                  <Button className={mdc(colors.bg.green.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.green.n100)} slim>Opslaan</Button>
-                </div>
-            </Material>
+            <Form />
 
             <h2>Button</h2>
             <Button className={mdc(colors.bg.indigo.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.indigo.n100)}>Button</Button>

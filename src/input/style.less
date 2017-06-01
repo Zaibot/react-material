@@ -6,20 +6,35 @@
   padding-bottom: 8/@rem;
 }
 .label {
+  display: block;
+  height: 12/@rem;
   line-height: 12/@rem;
   font-size: 16/@rem;
   position: relative;
-  display: inline-block;
   z-index: 1;
   pointer-events: none;
   margin-top: 8/@rem;
+  font-weight: 400;
 }
 .input {
   margin-top: 8/@rem;
   width: 100%;
   line-height: 16/@rem;
   font-weight: 400;
+  z-index: 0;
 }
 .bar {
-  margin-top: 8/@rem
+}
+.helper {
+  display: block;
+  height: 12/@rem;
+  line-height: 12/@rem;
+  font-size: 12/@rem;
+  position: relative;
+  pointer-events: none;
+  margin-top: 8/@rem;
+  font-weight: 400;
+}
+.error {
+  color: #d32f2f;
 }

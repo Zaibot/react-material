@@ -24,6 +24,7 @@ const elevationToCss = (el: Elevation) => {
 
 export interface IMaterialProps extends React.HTMLProps<HTMLDivElement> {
     divRef?: (el: HTMLDivElement) => void;
+    base?: JSX.Element;
     ambient?: boolean;
     aswitch?: boolean;
     card?: boolean;
@@ -121,6 +122,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
     public render() {
         // tslint:disable
         const {
+            base,
             ripple, rippleClassName, elevation,
             onMouseDown, onMouseUp, style,
             className, color, rippleColor,
@@ -138,18 +140,14 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
             aswitch, card, indicator, appbar, snackbar, menu, submenu, floating, drawer, dialog,
         });
         // tslint:enable
-        return (
-            <div
-                className={css}
-                onMouseDown={onMouseDown || ripple ? this.onMouseDown : null}
-                onMouseUp={onMouseUp || ripple ? this.onMouseUp : null}
-                ref={this.setRef}
-                style={style}
-                {...divAttributes}>
-                {children}
-                {ripples}
-            </div>
-        );
+        return React.cloneElement(base || <div />, {
+            className: css,
+            onMouseDown: onMouseDown || ripple ? this.onMouseDown : null,
+            onMouseUp: onMouseUp || ripple ? this.onMouseUp : null,
+            ref: this.setRef,
+            style,
+            ...divAttributes,
+        }, [children, ...ripples]);
     }
 
     private componentShouldUpdate(nextProps: IMaterialProps, nextState: IMaterialState) {

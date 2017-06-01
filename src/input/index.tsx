@@ -7,8 +7,11 @@ import colors from '../colors';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 export interface IInputProps {
-    label: string;
+    helper?: React.ReactChild;
+    label: React.ReactChild;
     value: string;
+    error?: React.ReactChild;
+    onChange?: (val: string) => void;
 }
 export interface IInputState {
     helper: number;
@@ -59,15 +62,18 @@ export default class Input extends React.Component<IInputProps, IInputState> {
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
         const stepWeight1 = (advance / 75);
         const { focused } = this.state;
-        const { helper } = state;
-        const label = step(this.state.label, focused || this.state.input > 0.25 ? 0 : 1, 100, 0.32);
-        const input = step(this.state.input, focused && this.state.label < 0.25 ? 1 : 0, 100, 0.18);
+        const { } = state;
+        const label = step(this.state.label, focused || this.props.value || this.state.input === 1 ? 0 : 1, 100, 0.32);
+        const input = step(this.state.input, focused || (this.props.value && this.state.label === 0) ? 1 : 0, 100, 0.18);
+        // const label = step(this.state.label, this.props.value || this.state.input > 0.25 ? 0 : 1, 100, 0.32);
+        // const input = step(this.state.input, focused || (this.props.value && this.state.label < 0.25) ? 1 : 0, 100, 0.18);
+        const helper = step(this.state.helper, this.props.error || focused ? 1 : 0, 100, this.props.error || this.state.input > 0.5 ? 0.12 : 0.18);
         this.setState({ helper, input, label });
         return state;
     }
 
     public render() {
-        const { label, value } = this.props;
+        const { label, helper, value, error } = this.props;
 
         return (
             <Material slim className={cx('component', mdc(colors.bg.grey.n50), { contents: value })} onClick={this.onClick}>
@@ -83,13 +89,19 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                     value={value}
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
+                    onChange={this.onChange}
                     ref={this.onInput} />
                 <FocusBar
-                    state={this.state.focused ? 'focus' : 'idle'}
+                    state={this.state.focused ? 'focus' : this.props.error ? 'error' : 'idle'}
                     idleClassName={cx(`bar`, mdc(colors.bg.grey.n300))}
-                    focusClassName={mdc(colors.bg.indigo.n500)}
-                    errorClassName={mdc(colors.bg.grey.n500)}
+                    focusClassName={mdc(colors.bg.blue.n700)}
+                    errorClassName={mdc(colors.bg.red.n700)}
                 />
+                <span
+                    className={cx('helper', { error }, mdc(colors.text.black.dark))}
+                    style={{ transform: `translateY(${-12 + this.state.helper * 12}px)`, opacity: this.state.helper }}>
+                    {error || helper}
+                </span>
             </Material>
         );
     }
@@ -100,6 +112,10 @@ export default class Input extends React.Component<IInputProps, IInputState> {
     }
     private onInput = (inputControl: HTMLInputElement) => {
         this.setState({ inputControl });
+    }
+    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(!this.props.onChange) { return; }
+        this.props.onChange(e.target.value);
     }
     private onClick = () => {
         if (this.state.inputControl) {
