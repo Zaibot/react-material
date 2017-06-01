@@ -23,7 +23,7 @@ class Form extends React.Component<any, any> {
         return (
             <div className={cx(`form`)}>
                 <Dialog>
-                    <span style={{ position: 'absolute', right: 0, zIndex: 2, width: 67 }}>
+                    <span style={{ position: 'absolute', right: 0, zIndex: 2, width: 105 }}>
                         <ToggleMenu menu={(e) => (
                             <Menu open>
                                 <NavButton onClick={e}>Option 1</NavButton>
