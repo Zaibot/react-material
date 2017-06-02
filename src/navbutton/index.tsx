@@ -1,8 +1,8 @@
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
+import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
-import colors from '../colors';
 
 export interface ButtonProps {
     disabled?: boolean;

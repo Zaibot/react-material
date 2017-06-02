@@ -1,10 +1,10 @@
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import Animated from '../animated';
 import colors from '../colors';
 import Content, { ISize } from '../content';
 import Material from '../material';
 import cx from './style.less';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 const constrain = (val: number, min: number, max: number) => val < min ? min : val > max ? max : val;
 

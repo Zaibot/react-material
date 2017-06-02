@@ -1,11 +1,11 @@
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import Animated from '../animated';
 import Button from '../button';
+import colors from '../colors';
 import Material from '../material';
 import Menu from '../menu';
 import cx from './style.less';
-import colors from '../colors';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 export interface MenuProps {
     menu: (onClick: () => void) => React.ReactElement<any>;

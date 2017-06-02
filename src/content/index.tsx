@@ -6,7 +6,7 @@ import cx from './style.less';
 const staticInterval = 500;
 const dynamicInterval = 100;
 
-export interface ISize { x: number; y: number; };
+export interface ISize { x: number; y: number; }
 export type SizeCallback = (dimensions: ISize) => void;
 export type ContentHint = 'static' | 'dynamic';
 export interface IContentProps {

@@ -1,8 +1,8 @@
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
+import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
-import colors from '../colors';
 
 export { default as DialogHeader } from './header';
 export { default as DialogSubheader } from './subheader';

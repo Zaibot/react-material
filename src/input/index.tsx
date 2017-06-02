@@ -1,10 +1,10 @@
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
+import Animated from '../animated';
+import colors from '../colors';
+import FocusBar from '../focusbar';
 import Material from '../material';
 import cx from './style.less';
-import Animated from '../animated';
-import FocusBar from '../focusbar';
-import colors from '../colors';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 
 export interface IInputProps {
     helper?: React.ReactChild;
@@ -114,7 +114,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         this.setState({ inputControl });
     }
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(!this.props.onChange) { return; }
+        if (!this.props.onChange) { return; }
         this.props.onChange(e.target.value);
     }
     private onClick = () => {
