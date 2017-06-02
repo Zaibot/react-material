@@ -80,6 +80,7 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
 
         const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
         const openeda = this.state.currentw > width * .5 && this.state.currenth > height * .5;
+        // HACK: Math.min
         const currentw = Math.min(this.state.width, snap(
             this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1,
             width,
