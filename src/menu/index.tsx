@@ -81,17 +81,17 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
         const openeda = this.state.currentw > width * .5 && this.state.currenth > height * .5;
         // HACK: Math.min
-        const currentw = Math.min(this.state.width, snap(
+        const currentw = constrain(snap(
             this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1,
             width,
-            1));
-        const currenth = Math.min(this.state.height, snap(
+            1), 0, this.state.width);
+        const currenth = constrain(snap(
             this.state.currenth + ((this.props.open ? height : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currenth)) * stepWeight1,
             height,
-            1));
+            1), 0, this.state.height);
         // const currentw = step(this.state.currentw, !open && this.state.progress > 0 ? 0 : this.state.width, 1, opening ? 0.06 : 0.18);
         // const currenth = step(this.state.currenth, !open && this.state.progress > 0 ? 0 : this.state.height, 1, opening ? 0.06 : 0.18);
-        const progress = step(this.state.progress, open && opened ? 1 : 0, 100, opening ? 0.06 : 0.18);
+        const progress = step(this.state.progress, open && opened ? 1 : 0, 100, opening ? 0.12 : 0.24);
         // const currentw = step(this.state.currentw, !opening && opened && this.state.progress > 0 ? 0 : this.state.width, 100, 0.32);
         // const currenth = step(this.state.currenth, !opening && opened && this.state.progress > 0 ? 0 : this.state.height, 100, 0.32);
         // const progress = opening
@@ -116,7 +116,7 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         const { onClick, disabled, children } = this.props;
         const { accent } = this.props;
         const css = cx('component', { open });
-        const style = { width: this.state.currentw + this.state.paddingw, height: this.state.currenth + this.state.paddingh };
+        const style = { width: this.state.currentw + this.state.paddingw, height: this.state.currenth + this.state.paddingh, opacity: Math.min(this.state.currentw, 20) / 20 };
         const accented = accent;
         return (
             <Material className={cx(css, mdc(colors.bg.grey.n50, colors.text.black.dark))} onClick={onClick} menu slim style={style} divRef={this._setDiv}>

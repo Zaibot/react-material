@@ -25,7 +25,8 @@ export default class ToggleMenu extends React.Component<MenuProps, MenuState> {
                 <Button
                     className={mdc(colors.bg.indigo.n500, colors.text.white.dark)}
                     rippleClassName={mdc(colors.bg.indigo.n50)}
-                     onClick={() => this.setState({ open: !this.state.open })}>{this.props.children}</Button>
+                     onClick={() => this.setState({ open: !this.state.open })}
+                     round>{this.props.children}</Button>
                 {React.cloneElement(this.props.menu(() => this.setState({ open: false })), { open: this.state.open })}
             </span>
         );
