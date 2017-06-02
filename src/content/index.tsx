@@ -53,8 +53,8 @@ export default class Content extends React.Component<IContentProps, IContentStat
         // Measure
         // const { scrollWidth, scrollHeight } = this._div;
         const rect = this._div.getBoundingClientRect();
-        const width = Math.ceil(rect.width);
-        const height = Math.ceil(rect.height);
+        const width = rect.width;
+        const height = rect.height;
         // Store
         // const width = scrollWidth;
         // const height = scrollHeight;
