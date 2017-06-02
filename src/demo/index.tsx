@@ -23,16 +23,16 @@ class Form extends React.Component<any, any> {
         return (
             <div className={cx(`form`)}>
                 <Dialog>
-                    <span style={{ position: 'absolute', right: 0, zIndex: 2, width: 105 }}>
-                        <ToggleMenu menu={(e) => (
-                            <Menu open>
-                                <NavButton onClick={e}>Option 1</NavButton>
-                                <NavButton onClick={e}>Option 2</NavButton>
-                                <NavButton onClick={e}>Option 3</NavButton>
-                                <NavButton onClick={e}>Option 4</NavButton>
-                            </Menu>
-                        )}>Test</ToggleMenu>
-                  </span>
+                    <span style={{ position: 'absolute', right: 0, zIndex: 2 }}>
+                    <ToggleMenu menu={(e) => (
+                        <Menu open>
+                            <NavButton onClick={e}>Option 1</NavButton>
+                            <NavButton onClick={e}>Option 2</NavButton>
+                            <NavButton onClick={e}>Option 3</NavButton>
+                            <NavButton onClick={e}>Option 4</NavButton>
+                        </Menu>
+                    )}>Test</ToggleMenu>
+                    </span>
                     <DialogHeader>
                         Add new contact
                     </DialogHeader>
@@ -68,9 +68,20 @@ class Form extends React.Component<any, any> {
                             onChange={(val) => this.setState({ email: val })} />
                     </DialogContents>
                     <DialogActions>
-                        <Button className={mdc(colors.bg.grey.n300, colors.text.black.dark)} rippleClassName={mdc(colors.bg.grey.n100)} slim onClick={() => this.setState({ firstName: '', lastName: '', city: '', phoneNumber: '', email: '' })}>Annuleren</Button>
+                        <Button
+                            className={mdc(colors.bg.grey.n300, colors.text.black.dark)}
+                            rippleClassName={mdc(colors.bg.grey.n100)}
+                            slim
+                            onClick={() => this.setState({ firstName: '', lastName: '', city: '', phoneNumber: '', email: '' })}>
+                            Annuleren
+                        </Button>
                         &nbsp;
-                    <Button className={mdc(colors.bg.green.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.green.n100)} slim>Opslaan</Button>
+                        <Button
+                            className={mdc(colors.bg.green.n500, colors.text.white.darker)}
+                            rippleClassName={mdc(colors.bg.green.n100)}
+                            slim>
+                            Opslaan
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

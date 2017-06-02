@@ -59,7 +59,7 @@ export default class Content extends React.Component<IContentProps, IContentStat
         // const width = scrollWidth;
         // const height = scrollHeight;
         const changed = width !== state.width || height !== state.height;
-        state = { width, height, lastTime, applied: !changed };
+        state = { width, height, lastTime, applied: false };
         // Restore
         this._div.style.display = null;
         this._div.style.position = null;
@@ -67,10 +67,13 @@ export default class Content extends React.Component<IContentProps, IContentStat
         this._div.style.height = storeHeight;
         this._div.style.width = storeMaxWidth;
         this._div.style.height = storeMaxHeight;
-        if (changed && this.props.onSize) {
-            const x = width;
-            const y = height;
-            this.props.onSize({ x, y });
+        if (changed) {
+            // this.setState({ width, height });
+            if (this.props.onSize) {
+                const x = width;
+                const y = height;
+                this.props.onSize({ x, y });
+            }
         }
         return state;
     }
@@ -85,6 +88,7 @@ export default class Content extends React.Component<IContentProps, IContentStat
 
     public render() {
         const { children, opacity } = this.props;
+        const { width, height } = this.state;
         return (
             <div className={cx(`component`)} style={{ opacity }} ref={this._store}>
                 {children}
