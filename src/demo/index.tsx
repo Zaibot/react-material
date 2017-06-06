@@ -24,14 +24,14 @@ class Form extends React.Component<any, any> {
             <div className={cx(`form`)}>
                 <Dialog>
                     <span style={{ position: 'absolute', right: 0, zIndex: 2 }}>
-                    <ToggleMenu menu={(e) => (
-                        <Menu open>
-                            <NavButton onClick={e}>Option 1</NavButton>
-                            <NavButton onClick={e}>Option 2</NavButton>
-                            <NavButton onClick={e}>Option 3</NavButton>
-                            <NavButton onClick={e}>Option 4</NavButton>
-                        </Menu>
-                    )}>Test</ToggleMenu>
+                        <ToggleMenu menu={(e) => (
+                            <Menu open>
+                                <NavButton onClick={e}>Option 1</NavButton>
+                                <NavButton onClick={e}>Option 2</NavButton>
+                                <NavButton onClick={e}>Option 3</NavButton>
+                                <NavButton onClick={e}>Option 4</NavButton>
+                            </Menu>
+                        )}>Test</ToggleMenu>
                     </span>
                     <DialogHeader>
                         Add new contact
@@ -89,6 +89,49 @@ class Form extends React.Component<any, any> {
     }
 }
 
+class Login extends React.Component<any, any> {
+    public state = {
+        username: '',
+        password: '',
+    };
+    public render() {
+        return (
+            <div className={cx(`form`)}>
+                <Dialog>
+                    <DialogContents>
+                        <Input
+                            label="Username"
+                            value={this.state.username}
+                            error={/\w{2,}/.test(this.state.username) ? null : 'Enter a username'}
+                            onChange={(val) => this.setState({ username: val })} />
+                        <Input
+                            label="Password"
+                            value={this.state.password}
+                            error={/\w{2,}/.test(this.state.password) ? null : 'Atleast 8 characters'}
+                            onChange={(val) => this.setState({ password: val })} />
+                    </DialogContents>
+                    <DialogActions>
+                        <Button
+                            className={mdc(colors.bg.grey.n300, colors.text.black.dark)}
+                            rippleClassName={mdc(colors.bg.grey.n100)}
+                            slim
+                            onClick={() => this.setState({ username: '', password: '' })}>
+                            Cancel
+                        </Button>
+                        &nbsp;
+                        <Button
+                            className={mdc(colors.bg.green.n500, colors.text.white.darker)}
+                            rippleClassName={mdc(colors.bg.green.n100)}
+                            slim>
+                            Continue
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
 const Demo = () => (
     <AnimationRoot>
         <div>
@@ -115,6 +158,9 @@ const Demo = () => (
 
             <h2>Form</h2>
             <Form />
+
+            <h2>Login</h2>
+            <Login />
 
             <h2>Button</h2>
             <Button className={mdc(colors.bg.indigo.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.indigo.n100)}>Button</Button>
@@ -204,7 +250,7 @@ const Demo = () => (
 
             <h2>Elevations</h2>
             <div style={{ height: 200 }}>
-                <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} inline round>0</Material>
+                <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} inline round>0</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} inline round elevation={1}>1</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} inline round elevation={2}>2</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} inline round elevation={3}>3</Material>&nbsp;
@@ -218,7 +264,7 @@ const Demo = () => (
             </div>
             <h2>Ambient Elevations</h2>
             <div style={{ height: 200 }}>
-                <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} ambient inline round>0</Material>
+                <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} ambient inline round>0</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} ambient inline round elevation={1}>1</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} ambient inline round elevation={2}>2</Material>&nbsp;
                 <Material style={{ width: 40, height: 40 }} className={mdc(`mdc-bg-grey-50`)} ambient inline round elevation={3}>3</Material>&nbsp;

@@ -78,7 +78,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         return (
             <Material slim className={cx('component', mdc(colors.bg.grey.n50), { contents: value })} onClick={this.onClick}>
                 <label
-                    className={cx('label', mdc(colors.text.black.dark))}
+                    className={cx('label', mdc(colors.text.black.dark), { error })}
                     style={{ transform: `translateY(${this.state.label * 24}px)`, fontSize: 12 + this.state.label * 4 }}>
                     {label}
                 </label>
@@ -98,7 +98,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                     errorClassName={mdc(colors.bg.red.n700)}
                 />
                 <span
-                    className={cx('helper', { error }, mdc(colors.text.black.dark))}
+                    className={cx('helper', mdc(colors.text.black.dark), { error })}
                     style={{ transform: `translateY(${-12 + this.state.helper * 12}px)`, opacity: this.state.helper }}>
                     {error || helper}
                 </span>
