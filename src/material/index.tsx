@@ -1,8 +1,10 @@
 import React from 'react';
 import Animated from '../animated';
+import Turn, { EngineContext, Spring } from '../animation';
 import Ripple from './ripple';
 import cx from './style.less';
 
+// tslint:disable no-magic-numbers
 // tslint:disable-next-line
 export type Elevation = 1 | 2 | 3 | 4 | 6 | 8 | 9 | 12 | 16 | 24;
 
@@ -21,6 +23,11 @@ const elevationToCss = (el: Elevation) => {
     return '';
     // tslint:enable
 };
+
+export class RippleItem {
+    public constructor(public x: number, public y: number, public z: Spring) {
+    }
+}
 
 export interface IMaterialProps extends React.HTMLProps<HTMLDivElement> {
     divRef?: (el: HTMLDivElement) => void;
@@ -48,11 +55,12 @@ export interface IMaterialProps extends React.HTMLProps<HTMLDivElement> {
     elevation?: Elevation;
 }
 export interface IMaterialState {
+    width: number;
+    height: number;
     pressed: boolean;
-    ripples: JSX.Element[];
+    ripples: RippleItem[];
 }
 
-let magicNumber = 0;
 const materials: Material[] = [];
 const queued: any = 0;
 function registerRipple(material: Material) {
@@ -69,54 +77,54 @@ const releaseMaterials = () => {
 document.addEventListener(`mouseup`, releaseMaterials);
 document.addEventListener(`touchend`, releaseMaterials);
 
+const constrain = (val: number, min: number, max: number) => val < min ? min : val > max ? max : val;
 const rippleTime = 800; // about 800ms
 const rippleFrames = 45;
 const rippleFadeMultiplier = .5;
 const rippleOpacity = 0.36;
 
+// const IsAbsLess = (m: number) => (v: number) => v < m && v > m * -1;
+// const rippleVelocityIdle = IsAbsLess(0.01);
+
+export interface IMaterialAnimation {
+    width: number;
+    height: number;
+    last: number;
+}
+const emptyAnimation: IMaterialAnimation = {
+    width: 0,
+    height: 0,
+    last: 0,
+};
+
 @Animated
 export default class Material extends React.Component<IMaterialProps, IMaterialState> {
     public state: IMaterialState = {
+        width: 0,
+        height: 0,
         pressed: false,
         ripples: [],
     };
     public _panel: HTMLDivElement;
 
-    public onPreAnimate(time: number, advance: number, state: ClientRect): ClientRect {
+    public onPreAnimate(time: number, advance: number, state: IMaterialAnimation = emptyAnimation): IMaterialAnimation {
         if (!this._panel) { return state; }
-        return this._panel.getBoundingClientRect();
+        const { width, height } = this._panel.getBoundingClientRect();
+        const { last } = state;
+        return { width, height, last };
     }
 
-    public onAnimate(time: number, advance: number, state: ClientRect): ClientRect {
-        let { ripples } = this.state;
+    public onAnimate(time: number, advance: number, state: IMaterialAnimation): IMaterialAnimation {
         if (!state) { return state; }
-        if (!ripples.length) { return state; }
+        if (!this.state.ripples.length && time < state.last + 1000) { return state; }
         const { pressed } = this.state;
         const { width, height } = state;
-        // tslint:disable-next-line
-        const max = Math.sqrt(width * width + height * height) * Math.PI;
-        const rippleIncrement = advance * max / rippleTime;
-        const rippleEnd = max;
-        const rippleFade = max * rippleFadeMultiplier;
-        const rippleFadeRange = rippleEnd - rippleFade;
-        ripples = this.state.ripples
-            .filter((r: any) => r.props.z < rippleEnd)
-            .map((r: any, idx, arr) => (
-                <Ripple
-                    key={r.key}
-                    className={r.props.className}
-                    color={r.props.color}
-                    x={r.props.x}
-                    y={r.props.y}
-                    z={r.props.z + (r.props.z < rippleFade ? rippleIncrement : (idx === arr.length - 1 && pressed ? 0 : rippleIncrement))}
-                    opacity={(r.props.z < rippleFade
-                        ? 1
-                        : r.props.z > rippleEnd
-                            ? 0
-                            : ((rippleFadeRange - (r.props.z - rippleFade)) / rippleFadeRange)) * rippleOpacity} /> as any
-            ));
-        this.setState({ ripples });
-        return state;
+
+        let ripples = this.state.ripples;
+        ripples = ripples.map((x) => new RippleItem(x.x, x.y, x.z.iterate(advance * 0.001)));
+        ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
+        this.setState({ width, height, ripples });
+        return { width, height, last: time };
     }
 
     public render() {
@@ -131,14 +139,21 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
             divRef,
             ...divAttributes,
           } = this.props;
-        const {
-          ripples
-        } = this.state;
         const css = cx('component', className, elevationToCss(elevation), {
             ambient, key: !ambient,
             inline, round, rounded, slim,
             aswitch, card, indicator, appbar, snackbar, menu, submenu, floating, drawer, dialog,
         });
+        const ripples = this.state.ripples.map((r, idx, arr) => (
+            <Ripple
+                key={idx}
+                className={this.props.rippleClassName}
+                color={null}
+                x={r.x}
+                y={r.y}
+                z={r.z.current}
+                opacity={Math.min(1, Math.max(0, r.z.velocity * 0.1)) * rippleFadeMultiplier} /> as any
+        ))
         // tslint:enable
         return React.cloneElement(base || <div />, {
             className: css,
@@ -150,51 +165,27 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         }, [children, ...ripples]);
     }
 
-    private shouldComponentUpdate(nextProps: IMaterialProps, nextState: IMaterialState) {
-        return true;
-        // return nextState.pressed !== this.state.pressed
-        //     || nextState.ripples !== this.state.ripples
-        //     || nextProps.ambient !== this.props.ambient
-        //     || nextProps.aswitch !== this.props.aswitch
-        //     || nextProps.card !== this.props.card
-        //     || nextProps.indicator !== this.props.indicator
-        //     || nextProps.appbar !== this.props.appbar
-        //     || nextProps.snackbar !== this.props.snackbar
-        //     || nextProps.menu !== this.props.menu
-        //     || nextProps.submenu !== this.props.submenu
-        //     || nextProps.floating !== this.props.floating
-        //     || nextProps.drawer !== this.props.drawer
-        //     || nextProps.dialog !== this.props.dialog
-        //     || nextProps.color !== this.props.color
-        //     || nextProps.inline !== this.props.inline
-        //     || nextProps.slim !== this.props.slim
-        //     || nextProps.round !== this.props.round
-        //     || nextProps.rounded !== this.props.rounded
-        //     || nextProps.ripple !== this.props.ripple
-        //     || nextProps.rippleColor !== this.props.rippleColor
-        //     || nextProps.className !== this.props.className
-        //     || nextProps.rippleClassName !== this.props.rippleClassName
-        //     || nextProps.elevation !== this.props.elevation;
-    }
-
     private setRef = (e: HTMLDivElement) => {
         this._panel = e;
         if (this.props.divRef) { this.props.divRef(e); }
     }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         const { rippleClassName } = this.props;
+        const { width, height } = this.state;
+        const { offsetX, offsetY } = e.nativeEvent as { offsetX: number, offsetY: number };
         let { ripples } = this.state;
+
+        const wl = constrain(offsetX, 0, width);
+        const wr = constrain(width - offsetX, 0, width);
+        const hl = constrain(offsetY, 0, height);
+        const hr = constrain(height - offsetY, 0, height);
+
+        const w = Math.max(wl, wr);
+        const h = Math.max(hl, hr);
+        const max = Math.sqrt(w * w + h * h) * 1.1;
+
         const pressed = true;
-        const ripple = (
-            <Ripple
-                key={++magicNumber}
-                className={rippleClassName}
-                color={this.props.rippleColor}
-                x={(e.nativeEvent as any).offsetX}
-                y={(e.nativeEvent as any).offsetY}
-                z={0}
-                opacity={1} />
-        );
+        const ripple = new RippleItem(offsetX, offsetY, new Spring(0, max, 0, 100));
         ripples = [...ripples, ripple];
         if (ripples.length === 1) {
             registerRipple(this);
