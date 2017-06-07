@@ -7,6 +7,12 @@ export default class Spring {
         public readonly springConstant: number,
     ) { }
 
+    public change(
+        target: number,
+    ) {
+        return new Spring(this.current, target, this.velocity, this.springConstant);
+    }
+
     public iterate(
         advance: number,
     ) {

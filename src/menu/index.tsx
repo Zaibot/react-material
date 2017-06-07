@@ -1,6 +1,7 @@
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import Animated from '../animated';
+import { Advance, Spring } from '../animation';
 import colors from '../colors';
 import Content, { ISize } from '../content';
 import Material from '../material';
@@ -15,13 +16,13 @@ export interface IMenuProps {
     open: boolean;
 }
 export interface IMenuState {
-    currentw: number;
-    currenth: number;
+    currentw: Spring;
+    currenth: Spring;
     paddingw: number;
     paddingh: number;
     height: number;
     width: number;
-    progress: number;
+    progress: Spring;
     toggle: number;
     opening: boolean;
 }
@@ -47,13 +48,13 @@ const step = (val: number, target: number, scale: number, velocity: number) => {
 @Animated
 export default class Menu extends React.Component<IMenuProps, IMenuState> {
     public state = {
-        currenth: 0,
-        currentw: 0,
+        currenth: new Spring(0, 0, 0, 500),
+        currentw: new Spring(0, 0, 0, 500),
         paddingh: 0,
         paddingw: 0,
         height: 0,
         opening: false,
-        progress: 0,
+        progress: new Spring(0, 0, 0, 200),
         toggle: 0,
         width: 0,
     };
@@ -68,36 +69,39 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         if (!this._div) { return state; }
 
         const { open } = this.props;
-        if (!open && this.state.currentw === 0) { return state; }
+        if (!open && this.state.currentw.current === 0) { return state; }
 
         const { opening, toggle, width, height } = this.state;
         // if (open && this.state.currentw === width && this.state.currenth === height) { return state; }
         // if (!open && this.state.currentw === 0 && this.state.currenth === 0) { return state; }
 
-        const stepWeight1 = (advance / 75);
-        const stepWeight = (advance / 200);
-        const stepWeight2 = (advance / 250);
-
-        const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
-        const openeda = this.state.currentw > width * .5 && this.state.currenth > height * .5;
-        // HACK: Math.min
-        const currentw = constrain(snap(
-            this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1,
-            width,
-            1), 0, this.state.width);
-        const currenth = constrain(snap(
-            this.state.currenth + ((this.props.open ? height : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currenth)) * stepWeight1,
-            height,
-            1), 0, this.state.height);
-        // const currentw = step(this.state.currentw, !open && this.state.progress > 0 ? 0 : this.state.width, 1, opening ? 0.06 : 0.18);
-        // const currenth = step(this.state.currenth, !open && this.state.progress > 0 ? 0 : this.state.height, 1, opening ? 0.06 : 0.18);
-        const progress = step(this.state.progress, open && opened ? 1 : 0, 100, opening ? 0.12 : 0.24);
-        // const currentw = step(this.state.currentw, !opening && opened && this.state.progress > 0 ? 0 : this.state.width, 100, 0.32);
-        // const currenth = step(this.state.currenth, !opening && opened && this.state.progress > 0 ? 0 : this.state.height, 100, 0.32);
-        // const progress = opening
-        //     ? (opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : this.state.progress)
-        //     : constrain(this.state.progress - special * stepWeight2, 0, 1);
-
+        // const stepWeight1 = (advance / 75);
+        // const stepWeight = (advance / 200);
+        // const stepWeight2 = (advance / 250);
+        //
+        // const opened = this.state.currentw > width * .8 && this.state.currenth > height * .8;
+        // const openeda = this.state.currentw > width * .5 && this.state.currenth > height * .5;
+        // // HACK: Math.min
+        // const currentw = constrain(snap(
+        //     this.state.currentw + ((this.props.open ? width : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currentw)) * stepWeight1,
+        //     width,
+        //     1), 0, this.state.width);
+        // const currenth = constrain(snap(
+        //     this.state.currenth + ((this.props.open ? height : 0) - (!opening && opened && this.state.progress > 0 ? 0 : this.state.currenth)) * stepWeight1,
+        //     height,
+        //     1), 0, this.state.height);
+        // // const currentw = step(this.state.currentw, !open && this.state.progress > 0 ? 0 : this.state.width, 1, opening ? 0.06 : 0.18);
+        // // const currenth = step(this.state.currenth, !open && this.state.progress > 0 ? 0 : this.state.height, 1, opening ? 0.06 : 0.18);
+        // const progress = step(this.state.progress, open && opened ? 1 : 0, 100, opening ? 0.12 : 0.24);
+        // // const currentw = step(this.state.currentw, !opening && opened && this.state.progress > 0 ? 0 : this.state.width, 100, 0.32);
+        // // const currenth = step(this.state.currenth, !opening && opened && this.state.progress > 0 ? 0 : this.state.height, 100, 0.32);
+        // // const progress = opening
+        // //     ? (opened ? constrain(this.state.progress + special * stepWeight, 0, 1) : this.state.progress)
+        // //     : constrain(this.state.progress - special * stepWeight2, 0, 1);
+        //
+        const currentw = this.state.currentw.change(open || this.state.progress.current > 0.2 ? this.state.width : 0).iterate(advance * 0.001);
+        const currenth = this.state.currenth.change(open || this.state.progress.current > 0.2 ? this.state.height : 0).iterate(advance * 0.001);
+        const progress = this.state.progress.change(open && (currentw.current / width) > 0.8 ? 1 : 0).iterate(advance * 0.001);
         const c = window.getComputedStyle(this._div);
         const paddingw = parseInt(c.paddingLeft, 10) + parseInt(c.paddingRight, 10);
         const paddingh = parseInt(c.paddingTop, 10) + parseInt(c.paddingBottom, 10);
@@ -112,15 +116,18 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
     }
 
     public render() {
-        if (!this.props.open && this.state.currentw === 0) { return null; }
+        if (!this.props.open && this.state.currentw.current === 0) { return null; }
         const { onClick, disabled, children } = this.props;
         const { accent } = this.props;
         const css = cx('component', { open });
-        const style = { width: this.state.currentw + this.state.paddingw, height: this.state.currenth + this.state.paddingh, opacity: Math.min(this.state.currentw, 20) / 20 };
+        const width = this.state.currentw.current + this.state.paddingw;
+        const height = this.state.currenth.current + this.state.paddingh;
+        const opacity = Math.min(this.state.currentw.current, 20) / 20;
+        const style = { width, height, opacity };
         const accented = accent;
         return (
             <Material className={cx(css, mdc(colors.bg.grey.n50, colors.text.black.dark))} onClick={onClick} menu slim style={style} divRef={this._setDiv}>
-                <Content opacity={this.state.progress} onSize={this._height}>
+                <Content opacity={this.state.progress.current} onSize={this._height}>
                     {children}
                 </Content>
             </Material>
