@@ -69,7 +69,11 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         // const label = step(this.state.label, this.props.value || this.state.input > 0.25 ? 0 : 1, 100, 0.32);
         // const input = step(this.state.input, focused || (this.props.value && this.state.label < 0.25) ? 1 : 0, 100, 0.18);
         const helper = step(this.state.helper, this.props.error || focused ? 1 : 0, 100, this.props.error || this.state.input > 0.5 ? 0.12 : 0.18);
-        this.setState({ helper, input, label });
+        if (helper !== this.state.helper
+            || input !== this.state.input
+            || label !== this.state.label) {
+            this.setState({ helper, input, label });
+        }
         return state;
     }
 

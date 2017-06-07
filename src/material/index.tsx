@@ -115,12 +115,17 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
     }
 
     public onAnimate(time: number, advance: number, state: IMaterialAnimation): IMaterialAnimation {
-        if (!state) { return state; }
-        if (!this.state.ripples.length && time < state.last + 1000) { return state; }
-        const { pressed } = this.state;
-        const { width, height } = state;
-
         let ripples = this.state.ripples;
+        const { width, height } = state;
+        if (!this.state.ripples.length) {
+            // short circuit
+            if (width !== this.state.width || height !== this.state.height) {
+                this.setState({ width, height, ripples });
+            }
+            return state;
+        }
+        const { pressed } = this.state;
+
         ripples = ripples.map((x) => new RippleItem(x.x, x.y, x.z.iterate(advance * 0.001)));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         this.setState({ width, height, ripples });
