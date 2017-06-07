@@ -95,13 +95,11 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     private trigger = () => {
-        ReactDOM.unstable_batchedUpdates(() => {
-            this._timer = null;
-            const time = Date.now();
-            const advance = time - this._last;
-            this.run(time, advance);
-            this._last = time;
-            if (!this._timer) { this._timer = window.requestAnimationFrame(this.trigger); }
-        });
+        this._timer = null;
+        const time = Date.now();
+        const advance = time - this._last;
+        ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
+        this._last = time;
+        if (!this._timer) { this._timer = window.requestAnimationFrame(this.trigger); }
     }
 }
