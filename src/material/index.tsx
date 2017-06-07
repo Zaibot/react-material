@@ -182,10 +182,10 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
 
         const w = Math.max(wl, wr);
         const h = Math.max(hl, hr);
-        const max = Math.sqrt(w * w + h * h) * 1.1;
+        const max = Math.sqrt(w * w + h * h) * 1.2;
 
         const pressed = true;
-        const ripple = new RippleItem(offsetX, offsetY, new Spring(0, max, 0, 100));
+        const ripple = new RippleItem(offsetX, offsetY, new Spring(0, max, 0, 150));
         ripples = [...ripples, ripple];
         if (ripples.length === 1) {
             registerRipple(this);

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Material from '../material';
 import cx from './style.less';
 
@@ -45,7 +46,7 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     public getAnimationTime() {
-      return this._last;
+        return this._last;
     }
 
     protected getChildContext() {
@@ -94,11 +95,13 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     }
 
     private trigger = () => {
-        this._timer = null;
-        const time = Date.now();
-        const advance = time - this._last;
-        this.run(time, advance);
-        this._last = time;
-        if (!this._timer) { this._timer = window.requestAnimationFrame(this.trigger); }
+        ReactDOM.unstable_batchedUpdates(() => {
+            this._timer = null;
+            const time = Date.now();
+            const advance = time - this._last;
+            this.run(time, advance);
+            this._last = time;
+            if (!this._timer) { this._timer = window.requestAnimationFrame(this.trigger); }
+        });
     }
 }
