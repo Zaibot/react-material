@@ -50,8 +50,8 @@ const step = (val: number, target: number, scale: number, velocity: number) => {
 @Animated
 export default class Menu extends React.Component<IMenuProps, IMenuState> {
     public state = {
-        currenth: Spring.flex(0, 0, 0, 500, 1.2),
-        currentw: Spring.flex(0, 0, 0, 500, 1.2),
+        currenth: Spring.flex(0, 0, 0, 400, 1.0),
+        currentw: Spring.flex(0, 0, 0, 800, 1.0),
         paddingh: 0,
         paddingw: 0,
         height: 0,
@@ -99,7 +99,7 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         const css = cx('component', { open });
         const width = this.state.currentw.current + this.state.paddingw;
         const height = this.state.currenth.current + this.state.paddingh;
-        const opacity = Math.min(this.state.currentw.current, 10) / 10;
+        const opacity = Math.min(Math.max(this.state.currentw.current, this.state.currenth.current), 10) / 10;
         const style = { width, height, opacity };
         const accented = accent;
         return (

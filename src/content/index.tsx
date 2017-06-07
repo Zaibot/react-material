@@ -41,34 +41,25 @@ export default class Content extends React.Component<IContentProps, IContentStat
         const storeHeight = this._div.style.height;
         const storeMaxWidth = this._div.style.maxWidth;
         const storeMaxHeight = this._div.style.maxHeight;
-        const storeDisplay = this._div.style.display;
         const lastTime = time;
         // Prep
+        this._div.style.position = 'absolute';
         this._div.style.width = null;
         this._div.style.height = null;
         this._div.style.maxWidth = null;
         this._div.style.maxHeight = null;
-        this._div.style.position = 'absolute';
-        this._div.style.display = 'inline-block';
         // Measure
-        // const { scrollWidth, scrollHeight } = this._div;
-        const rect = this._div.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
+        const { width, height } = this._div.getBoundingClientRect();
         // Store
-        // const width = scrollWidth;
-        // const height = scrollHeight;
         const changed = width !== state.width || height !== state.height;
         state = { width, height, lastTime, applied: false };
         // Restore
-        this._div.style.display = null;
         this._div.style.position = null;
         this._div.style.width = storeWidth;
         this._div.style.height = storeHeight;
-        this._div.style.width = storeMaxWidth;
-        this._div.style.height = storeMaxHeight;
+        this._div.style.maxWidth = storeMaxWidth;
+        this._div.style.maxHeight = storeMaxHeight;
         if (changed) {
-            // this.setState({ width, height });
             if (this.props.onSize) {
                 const x = width;
                 const y = height;

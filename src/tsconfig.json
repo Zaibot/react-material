@@ -54,6 +54,7 @@
     "./material/ripple.tsx",
     "./menu/index.tsx",
     "./navbutton/index.tsx",
+    "./theme/index.tsx",
     "./togglemenu/index.tsx"
   ]
 }

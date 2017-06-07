@@ -4,6 +4,7 @@ import Animated from '../animated';
 import colors from '../colors';
 import FocusBar from '../focusbar';
 import Material from '../material';
+import Theme from '../theme';
 import cx from './style.less';
 
 export interface IInputProps {
@@ -79,12 +80,12 @@ export default class Input extends React.Component<IInputProps, IInputState> {
             <Material slim className={cx('component', mdc(colors.bg.grey.n50), { contents: value })} onClick={this.onClick}>
                 <label
                     className={cx('label', mdc(colors.text.black.dark), { error })}
-                    style={{ transform: `translateY(${this.state.label * 24}px)`, fontSize: 12 + this.state.label * 4 }}>
+                    style={{ transform: `translateY(${Theme.rem(this.state.label * 24)}\)`, fontSize: Theme.rem(12 + this.state.label * 4) }}>
                     {label}
                 </label>
                 <input
                     className={cx('input', mdc(colors.text.black.darker))}
-                    style={{ transform: `translateY(${4 + this.state.input * -4}px)`, opacity: this.state.input }}
+                    style={{ transform: `translateY(${Theme.rem(4 + this.state.input * -4)}\)`, opacity: this.state.input }}
                     type="text"
                     value={value}
                     onFocus={this.onFocus}
@@ -99,7 +100,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                 />
                 <span
                     className={cx('helper', mdc(colors.text.black.dark), { error })}
-                    style={{ transform: `translateY(${-12 + this.state.helper * 12}px)`, opacity: this.state.helper }}>
+                    style={{ transform: `translateY(${Theme.rem(-12 + this.state.helper * 12)}\)`, opacity: this.state.helper }}>
                     {error || helper}
                 </span>
             </Material>
