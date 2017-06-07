@@ -1,47 +1,52 @@
 @import '../theme';
 
-.component {
-    box-sizing: border-box;
-    cursor: pointer;
-    padding: 0 16/@rem;
-    min-width: 64/@rem;
-    text-align: center;
-    text-transform: uppercase;
-    will-change: box-shadow;
-    line-height: 36/@rem;
-    font-size: 16/@rem;
-    font-weight: 500;
+// .component {
+//     box-sizing: border-box;
+//     cursor: pointer;
+//     padding: 0 16/@rem;
+//     min-width: 64/@rem;
+//     text-align: center;
+//     text-transform: uppercase;
+//     will-change: box-shadow;
+//     line-height: 36/@rem;
+//     font-size: 16/@rem;
+//     font-weight: 500;
+// }
+.dialog {
+  display:inline-block;
+  width: 100%;
 }
 
 .contents {
-    padding: 24/@rem;
+  margin:24/@rem;
 }
 
 .header {
-    font-size: 20/@rem;
-    line-height: 28/@rem;
-    font-weight: 600;
-    padding: 24/@rem 24/@rem 20/@rem;
-    user-select: none;
-    cursor: default;
+  font-size:20/@rem;
+  font-weight:600;
+  line-height:28/@rem;
+  margin:24/@rem 24/@rem 20/@rem;
+  cursor:default;
+  user-select:none;
 }
 
 .subheader {
-    padding: 16/@rem 24/@rem;
-    line-height: 16/@rem;
-    height: 16/@rem*2 + 16/@rem;
-    font-weight: 400;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    user-select: none;
-    cursor: default;
+  font-weight:400;
+  line-height:16/@rem;
+  overflow:hidden;
+  height:16/@rem*2 + 16/@rem;
+  padding:16/@rem 24/@rem;
+  cursor:default;
+  user-select:none;
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
 
 .actions {
-    user-select: none;
-    padding: 8/@rem;
-    display: flex;
-    justify-content: flex-end;
-    cursor: default;
+  display:flex;
+  margin:8/@rem;
+  cursor:default;
+  user-select:none;
+
+  justify-content:flex-end;
 }

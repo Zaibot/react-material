@@ -1,4 +1,5 @@
 import React from 'react';
+import Theme from '../theme';
 import cx from './style.less';
 
 export interface IRippleProps {
@@ -13,7 +14,7 @@ export interface IRippleProps {
 export default class Ripple extends React.Component<IRippleProps, any> {
     public render() {
         const { x, y, z, color, opacity, className } = this.props;
-        const clipPath = `ellipse(${z}px ${z}px at ${x}px ${y}px)`;
+        const clipPath = `ellipse(${z.toFixed(1)}px ${z.toFixed(1)}px at ${x.toFixed(1)}px ${y.toFixed(1)}px)`;
         return (
             <div
                 className={cx('ripple', className)}
