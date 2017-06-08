@@ -30,18 +30,27 @@ export default class Spring {
     public change(
         target: number,
     ) {
+        if (this.target === target) {
+          return this;
+        }
         return new Spring(this.current, target, this.velocity, this.springConstant, this.dampingConstant);
     }
 
     public jump(
         target: number,
     ) {
+        if (this.current === target && this.target === target && this.velocity === 0) {
+          return this;
+        }
         return new Spring(target, target, 0, this.springConstant, this.dampingConstant);
     }
 
     public iterate(
         advance: number,
     ) {
+        if (this.target === this.current && this.velocity === 0) {
+          return this;
+        }
         const currentToTarget = this.target - this.current;
         const springForce = currentToTarget * this.springConstant;
         const dampingForce = this.velocity * this.dampingConstant;

@@ -29,9 +29,9 @@ export interface IFocusBarAnimation {
 }
 const emptyAnimation: IFocusBarAnimation = {
     erroro: Spring.generic(0, 0, 0, 150),
-    errorw: Spring.generic(0, 0, 0, 400),
+    errorw: Spring.generic(0, 0, 0, 200),
     focuso: Spring.generic(0, 0, 0, 150),
-    focusw: Spring.generic(0, 0, 0, 400),
+    focusw: Spring.generic(0, 0, 0, 200),
 };
 
 @Animated
