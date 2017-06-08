@@ -132,6 +132,47 @@ class Login extends React.Component<any, any> {
     }
 }
 
+class Login2 extends React.Component<any, any> {
+    public state = {
+        username: '',
+        password: '',
+    };
+    public render() {
+        return (
+            <div className={cx(`form`)}>
+                <Dialog>
+                    <DialogContents>
+                        <Input
+                            label="Username"
+                            value={this.state.username}
+                            onChange={(val) => this.setState({ username: val })} />
+                        <Input
+                            label="Password"
+                            value={this.state.password}
+                            onChange={(val) => this.setState({ password: val })} />
+                    </DialogContents>
+                    <DialogActions>
+                        <Button
+                            className={mdc(colors.bg.grey.n300, colors.text.black.dark)}
+                            rippleClassName={mdc(colors.bg.grey.n100)}
+                            slim
+                            onClick={() => this.setState({ username: '', password: '' })}>
+                            Cancel
+                        </Button>
+                        &nbsp;
+                        <Button
+                            className={mdc(colors.bg.green.n500, colors.text.white.darker)}
+                            rippleClassName={mdc(colors.bg.green.n100)}
+                            slim>
+                            Continue
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
 const Demo = () => (
     <AnimationRoot>
         <div>
@@ -161,6 +202,9 @@ const Demo = () => (
 
             <h2>Login</h2>
             <Login />
+
+            <h2>Login</h2>
+            <Login2 />
 
             <h2>Button</h2>
             <Button className={mdc(colors.bg.indigo.n500, colors.text.white.darker)} rippleClassName={mdc(colors.bg.indigo.n100)}>Button</Button>

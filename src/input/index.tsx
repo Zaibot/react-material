@@ -1,11 +1,14 @@
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import Animated from '../animated';
+import { Advance, Spring } from '../animation';
 import colors from '../colors';
 import FocusBar from '../focusbar';
 import Material from '../material';
 import Theme from '../theme';
 import cx from './style.less';
+
+// tslint:disable no-magic-numbers
 
 export interface IInputProps {
     helper?: React.ReactChild;
@@ -22,28 +25,14 @@ export interface IInputState {
     focused: boolean;
 }
 export interface IInputAnimation {
-    helper: number;
-    input: number;
-    label: number;
+    helper: Spring;
+    input: Spring;
+    label: Spring;
 }
 const emptyAnimation: IInputAnimation = {
-    helper: 0,
-    input: 0,
-    label: 0,
-};
-
-const snap = (val: number, target: number, distance: number) => {
-    return Math.abs(val - target) <= distance ? target : val;
-};
-const step = (val: number, target: number, scale: number, velocity: number) => {
-    // console.log(val, target, velocity);
-    if (target > val) {
-        return snap(val + Math.ceil((target - val) * velocity * scale) / scale, target, 1 / scale);
-    } else if (target < val) {
-        return snap(val - Math.ceil((val - target) * velocity * scale) / scale, target, 1 / scale);
-    } else {
-        return target;
-    }
+    helper: Spring.generic(0, 0, 0, 300),
+    input: Spring.generic(0, 0, 0, 300),
+    label: Spring.generic(0, 0, 0, 500),
 };
 
 @Animated
@@ -61,29 +50,25 @@ export default class Input extends React.Component<IInputProps, IInputState> {
     }
 
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
-        const stepWeight1 = (advance / 75);
         const { focused } = this.state;
-        const { } = state;
-        const label = step(this.state.label, focused || this.props.value || this.state.input === 1 ? 0 : 1, 100, 0.32);
-        const input = step(this.state.input, focused || (this.props.value && this.state.label === 0) ? 1 : 0, 100, 0.18);
-        // const label = step(this.state.label, this.props.value || this.state.input > 0.25 ? 0 : 1, 100, 0.32);
-        // const input = step(this.state.input, focused || (this.props.value && this.state.label < 0.25) ? 1 : 0, 100, 0.18);
-        const helper = step(this.state.helper, this.props.error || focused ? 1 : 0, 100, this.props.error || this.state.input > 0.5 ? 0.12 : 0.18);
-        if (helper !== this.state.helper
-            || input !== this.state.input
-            || label !== this.state.label) {
-            this.setState({ helper, input, label });
+        const label = state.label.change(focused || this.props.value || state.input.current === 1 ? 0 : 1).iterate(advance * 0.001).constrain(0, 1);
+        const input = state.input.change(focused || (this.props.value && state.label.current === 0) ? 1 : 0).iterate(advance * 0.001).constrain(0, 1);
+        const helper = state.helper.change(focused || this.props.error ? 1 : 0).speed(this.props.error || this.state.input > 0.5 ? 100 : 150).iterate(advance * 0.001).constrain(0, 1);
+        if (this.state.helper !== helper.current
+            || this.state.input !== input.current
+            || this.state.label !== label.current) {
+            this.setState({ helper: helper.current, input: input.current, label: label.current });
         }
-        return state;
+        return { helper, input, label };
     }
 
     public render() {
         const { label, helper, value, error } = this.props;
-
+        const focus = this.state.focused;
         return (
             <Material slim className={cx('component', mdc(colors.bg.grey.n50), { contents: value })} onClick={this.onClick}>
                 <label
-                    className={cx('label', mdc(colors.text.black.dark), { error })}
+                    className={cx('label', mdc(colors.text.black.dark), { focus, error })}
                     style={{ transform: `translateY(${Theme.rem(this.state.label * 24)}\)`, fontSize: Theme.rem(12 + this.state.label * 4) }}>
                     {label}
                 </label>
@@ -104,7 +89,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                 />
                 <span
                     className={cx('helper', mdc(colors.text.black.dark), { error })}
-                    style={{ transform: `translateY(${Theme.rem(-12 + this.state.helper * 12)}\)`, opacity: this.state.helper }}>
+                    style={{ transform: `translateY(${Theme.rem(-12 + this.state.helper * 12)}\)`, opacity: this.state.helper * this.state.helper }}>
                     {error || helper}
                 </span>
             </Material>

@@ -68,6 +68,7 @@ export default class AnimationRoot extends React.Component<{}, {}> {
     private run(time: number, advance: number) {
         const regs = this._registrations;
         const ii = regs.length;
+        // console.time(`preanimate`);
         for (let i = 0; i < ii; i++) {
             try {
                 if ((regs[i].always) || (Date.now() < time + timeout) || (regs[i].last < time - maximumDelay)) {
@@ -82,6 +83,8 @@ export default class AnimationRoot extends React.Component<{}, {}> {
                 console.error(`Material Pre Animation`, ex);
             }
         }
+        // console.timeEnd(`preanimate`);
+        // console.time(`animate`);
         for (let i = 0; i < ii; i++) {
             try {
                 if ((regs[i].always) || (Date.now() < time + timeout) || (regs[i].last < time - maximumDelay)) {
@@ -92,6 +95,7 @@ export default class AnimationRoot extends React.Component<{}, {}> {
                 console.error(`Material Animation`, ex);
             }
         }
+        // console.timeEnd(`animate`);
     }
 
     private trigger = () => {

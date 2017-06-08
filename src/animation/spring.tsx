@@ -31,7 +31,7 @@ export default class Spring {
         target: number,
     ) {
         if (this.target === target) {
-          return this;
+            return this;
         }
         return new Spring(this.current, target, this.velocity, this.springConstant, this.dampingConstant);
     }
@@ -40,24 +40,43 @@ export default class Spring {
         target: number,
     ) {
         if (this.current === target && this.target === target && this.velocity === 0) {
-          return this;
+            return this;
         }
         return new Spring(target, target, 0, this.springConstant, this.dampingConstant);
+    }
+
+    public speed(
+        springConstant: number,
+        dampingConstant: number | false = false,
+    ) {
+        if (dampingConstant === false) {
+            return new Spring(this.current, this.target, this.velocity, springConstant, Math.sqrt(springConstant) * 2);
+        }
+        return new Spring(this.current, this.target, this.velocity, springConstant, dampingConstant);
+    }
+
+    public constrain(
+        min: number,
+        max: number,
+    ) {
+        if (this.current < min) { return new Spring(min, this.target, this.velocity, this.springConstant, this.dampingConstant); }
+        if (this.current > max) { return new Spring(max, this.target, this.velocity, this.springConstant, this.dampingConstant); }
+        return this;
     }
 
     public iterate(
         advance: number,
     ) {
         if (this.target === this.current && this.velocity === 0) {
-          return this;
+            return this;
         }
         const currentToTarget = this.target - this.current;
         const springForce = currentToTarget * this.springConstant;
         const dampingForce = this.velocity * this.dampingConstant;
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
-        if (currentToTarget > -0.001 && currentToTarget < 0.001) {
-          return new Spring(this.target, this.target, 0, this.springConstant, this.dampingConstant);
+        if (currentToTarget > -0.01 && currentToTarget < 0.01) {
+            return new Spring(this.target, this.target, 0, this.springConstant, this.dampingConstant);
         }
         return new Spring(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
     }
