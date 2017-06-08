@@ -157,7 +157,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
                 x={r.x}
                 y={r.y}
                 z={r.z.current}
-                opacity={Math.min(1, Math.max(0, r.z.velocity * 0.1)) * rippleFadeMultiplier} /> as any
+                opacity={constrain(r.z.velocity * 0.1, 0, 1) * Math.sqrt(4 - (r.z.current*4 / r.z.target)) * .5 * rippleFadeMultiplier} /> as any
         ))
         // tslint:enable
         return React.cloneElement(base || <div />, {
@@ -187,7 +187,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
 
         const w = Math.max(wl, wr);
         const h = Math.max(hl, hr);
-        const max = Math.sqrt(w * w + h * h) * 1.2;
+        const max = Math.sqrt(w * w + h * h);
 
         const pressed = true;
         const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 150));

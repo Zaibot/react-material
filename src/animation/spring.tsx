@@ -33,6 +33,12 @@ export default class Spring {
         return new Spring(this.current, target, this.velocity, this.springConstant, this.dampingConstant);
     }
 
+    public jump(
+        target: number,
+    ) {
+        return new Spring(target, target, 0, this.springConstant, this.dampingConstant);
+    }
+
     public iterate(
         advance: number,
     ) {
@@ -41,6 +47,9 @@ export default class Spring {
         const dampingForce = this.velocity * this.dampingConstant;
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
+        if (currentToTarget > -0.001 && currentToTarget < 0.001) {
+          return new Spring(this.target, this.target, 0, this.springConstant, this.dampingConstant);
+        }
         return new Spring(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
     }
 }

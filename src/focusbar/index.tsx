@@ -1,9 +1,12 @@
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import Animated from '../animated';
+import { Advance, Spring } from '../animation';
 import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
+
+// tslint:disable no-magic-numbers
 
 export type FocusBarState = 'idle' | 'focus' | 'error';
 export interface IFocusBarProps {
@@ -13,41 +16,31 @@ export interface IFocusBarProps {
     state: FocusBarState;
 }
 export interface IFocusBarState {
-    error: number;
-    focus: number;
-    idle: number;
+    erroro: number;
+    errorw: number;
+    focuso: number;
+    focusw: number;
 }
 export interface IFocusBarAnimation {
-    error: number;
-    focus: number;
-    idle: number;
+    erroro: Spring;
+    errorw: Spring;
+    focuso: Spring;
+    focusw: Spring;
 }
 const emptyAnimation: IFocusBarAnimation = {
-    error: 0,
-    focus: 0,
-    idle: 0,
-};
-
-const snap = (val: number, target: number, distance: number) => {
-    return Math.abs(val - target) <= distance ? target : val;
-};
-const step = (val: number, target: number, scale: number, velocity: number) => {
-    // console.log(val, target, velocity);
-    if (target > val) {
-        return snap(val + Math.ceil((target - val) * velocity * scale) / scale, target, 1 / scale);
-    } else if (target < val) {
-        return snap(val - Math.ceil((val - target) * velocity * scale) / scale, target, 1 / scale);
-    } else {
-        return target;
-    }
+    erroro: Spring.generic(0, 0, 0, 150),
+    errorw: Spring.generic(0, 0, 0, 400),
+    focuso: Spring.generic(0, 0, 0, 150),
+    focusw: Spring.generic(0, 0, 0, 400),
 };
 
 @Animated
 export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarState> {
     public state = {
-        error: 0,
-        focus: 0,
-        idle: 0,
+        erroro: 0,
+        errorw: 0,
+        focuso: 0,
+        focusw: 0,
     };
 
     public onPreAnimate(time: number, advance: number, state: IFocusBarAnimation = emptyAnimation): IFocusBarAnimation {
@@ -55,37 +48,43 @@ export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarS
     }
 
     public onAnimate(time: number, advance: number, state: IFocusBarAnimation): IFocusBarAnimation {
-        const stepWeight1 = (advance / 75);
-        const error = step(this.state.error, this.props.state === 'error' ? 1 : 0, 100, stepWeight1);
-        const focus = step(this.state.focus, this.props.state === 'focus' ? 1 : 0, 100, stepWeight1);
-        // const error = step(this.state.error, this.props.state === 'error' && this.state.focus === 0 ? 1 : 0, 100, stepWeight1);
-        // const focus = step(this.state.focus, this.props.state === 'focus' && this.state.error === 0 ? 1 : 0, 100, stepWeight1);
-        if (error !== this.state.error
-            || focus !== this.state.focus) {
-            this.setState({ error, focus });
+        const errorw = state.erroro.current === 0
+            ? state.errorw.jump(0)
+            : state.errorw.change(this.props.state === 'error' || state.errorw.current === 1 ? 1 : 0).iterate(advance * 0.001);
+        const focusw = state.focuso.current === 0
+            ? state.focusw.jump(0)
+            : state.focusw.change(this.props.state === 'focus' || state.focusw.current === 1 ? 1 : 0).iterate(advance * 0.001);
+        const erroro = state.erroro.change(this.props.state === 'error' ? 1 : 0).iterate(advance * 0.001);
+        const focuso = state.focuso.change(this.props.state === 'focus' ? 1 : 0).iterate(advance * 0.001);
+        if (erroro.current !== this.state.erroro
+            || errorw.current !== this.state.errorw
+            || focuso.current !== this.state.focuso
+            || focusw.current !== this.state.focusw) {
+            this.setState({
+                erroro: erroro.current,
+                errorw: errorw.current,
+                focuso: focuso.current,
+                focusw: focusw.current,
+            });
         }
-        return state;
+        return { erroro, errorw, focuso, focusw };
     }
 
     public render() {
         const cssComponent = this.props.idleClassName;
-        const cssBar = this.getClassName();
-        const styleBar = this.getStyle();
         return (
             <div className={cx(`component`, cssComponent)}>
-                {this.state.focus ? <div className={cx(`bar`, this.props.focusClassName)} style={{ transform: `translateX(-50%) scaleX(${this.state.focus})`, opacity: 0.36 + this.state.focus * .64 }} /> : null}
-                {this.state.error ? <div className={cx(`bar`, this.props.errorClassName)} style={{ transform: `translateX(-50%) scaleX(${this.state.error})`, opacity: 0.36 + this.state.error * .64 }} /> : null}
+                {this.state.focuso || this.state.focusw
+                    ? <div
+                        className={cx(`bar`, this.props.focusClassName)}
+                        style={{ transform: `translateX(-50%) scaleX(${this.state.focusw.toFixed(5)})`, opacity: this.state.focuso }} />
+                    : null}
+                {this.state.erroro || this.state.errorw
+                    ? <div
+                        className={cx(`bar`, this.props.errorClassName)}
+                        style={{ transform: `translateX(-50%) scaleX(${this.state.errorw.toFixed(5)})`, opacity: this.state.erroro }} />
+                    : null}
             </div>
         );
-    }
-
-    private getClassName() {
-        if (this.state.error) { return this.props.errorClassName; }
-        if (this.state.focus) { return this.props.focusClassName; }
-    }
-    private getStyle() {
-        if (this.state.error) { return { transform: `translateX(-50%) scaleX(${this.state.error})`, opacity: 0.36 + this.state.error * .64 }; }
-        if (this.state.focus) { return { transform: `translateX(-50%) scaleX(${this.state.focus})`, opacity: 0.36 + this.state.focus * .64 }; }
-        return { transform: `translateX(-50%) scaleX(0%)` };
     }
 }
