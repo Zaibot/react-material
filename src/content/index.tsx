@@ -39,17 +39,15 @@ export default class Content extends React.Component<IContentProps, IContentStat
         if (time < state.lastTime + interval) { return state; }
         const storeWidth = this._div.style.width;
         const storeHeight = this._div.style.height;
-        const storeMaxWidth = this._div.style.maxWidth;
-        const storeMaxHeight = this._div.style.maxHeight;
         const lastTime = time;
         // Prep
         this._div.style.position = 'absolute';
         this._div.style.width = null;
         this._div.style.height = null;
-        this._div.style.maxWidth = null;
-        this._div.style.maxHeight = null;
         // Measure
-        const { width, height } = this._div.getBoundingClientRect();
+        let { width, height } = this._div.getBoundingClientRect();
+        if (width > 10000) { width = 10000; }
+        if (height > 10000) { height = 10000; }
         // Store
         const changed = width !== state.width || height !== state.height;
         if (changed) {
@@ -62,12 +60,12 @@ export default class Content extends React.Component<IContentProps, IContentStat
         this._div.style.position = null;
         this._div.style.width = storeWidth;
         this._div.style.height = storeHeight;
-        this._div.style.maxWidth = storeMaxWidth;
-        this._div.style.maxHeight = storeMaxHeight;
         if (changed) {
             if (this.props.onSize) {
                 const x = width;
                 const y = height;
+                // console.log(this._div, x, y);
+                // console.log(this._div, width, height);
                 this.props.onSize({ x, y });
             }
         }

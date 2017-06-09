@@ -33,18 +33,10 @@ export interface IMenuAnimation {
     height: number;
 }
 
-const special = 1.61803398875;
-
-const snap = (val: number, target: number, distance: number) => Math.abs(val - target) <= distance ? target : val;
-const step = (val: number, target: number, scale: number, velocity: number) => {
-    // console.log(val, target, velocity);
-    if (target > val) {
-        return snap(val + Math.ceil((target - val) * velocity * scale) / scale, target, 1 / scale);
-    } else if (target < val) {
-        return snap(val - Math.ceil((val - target) * velocity * scale) / scale, target, 1 / scale);
-    } else {
-        return target;
-    }
+const parsePixels = (text: string) => {
+  const n = Number(text.substring(0, text.length - 2));
+  if (isNaN(n)) { return 0; }
+  return n;
 };
 
 @Animated
@@ -75,13 +67,13 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
 
         const { opening, toggle, width, height } = this.state;
 
-        const currentw = this.state.currentw.change(open || this.state.progress.current > 0.2 ? this.state.width : 0).iterate(advance * 0.001);
-        const currenth = this.state.currenth.change(open || this.state.progress.current > 0.2 ? this.state.height : 0).iterate(advance * 0.001);
+        const currentw = this.state.currentw.change(open || this.state.progress.current > 0.2 ? this.state.width : 0).iterate(advance * 0.001).constrain(0, width);
+        const currenth = this.state.currenth.change(open || this.state.progress.current > 0.2 ? this.state.height : 0).iterate(advance * 0.001).constrain(0, height);
         const progress = this.state.progress.change(open && (currentw.current / width) > 0.8 ? 1 : 0).iterate(advance * 0.001);
 
         const c = window.getComputedStyle(this._div);
-        const paddingw = Number(c.paddingLeft) + Number(c.paddingRight);
-        const paddingh = Number(c.paddingTop) + Number(c.paddingBottom);
+        const paddingw = parsePixels(c.paddingLeft) + parsePixels(c.paddingRight);
+        const paddingh = parsePixels(c.paddingTop) + parsePixels(c.paddingBottom);
         if (currentw !== this.state.currentw
             || currenth !== this.state.currenth
             || progress !== this.state.progress

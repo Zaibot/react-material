@@ -130,7 +130,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         const { width, height, measured } = state;
         const { pressed } = this.state;
         let ripples = this.state.ripples;
-        if (!this.state.ripples.length) {
+        if (!ripples.length) {
             // short circuit
             if (width !== this.state.width || height !== this.state.height) {
                 this.setState({ width, height });
