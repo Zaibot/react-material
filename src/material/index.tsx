@@ -94,9 +94,6 @@ const rippleFrames = 45;
 const rippleFadeMultiplier = .66;
 const rippleOpacity = 0.36;
 
-// const IsAbsLess = (m: number) => (v: number) => v < m && v > m * -1;
-// const rippleVelocityIdle = IsAbsLess(0.01);
-
 export interface IMaterialAnimation {
     width: number;
     height: number;
@@ -136,7 +133,6 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
             }
             return state;
         }
-
         ripples = ripples.map((x) => new RippleItem(x.x, x.y, x.z.iterate(advance * 0.001)));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         if (ripples.length === 0) { unregisterRipple(this); }
@@ -171,7 +167,6 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
                 z={r.z.current}
                 opacity={constrain(r.z.velocity * 0.1, 0, 1) * Math.sqrt(4 - (r.z.current * 4 / r.z.target)) * .5 * rippleFadeMultiplier} /> as any
         ))
-        //opacity={constrain(r.z.velocity * 0.01, 0, 0.67)} /> as any
         // tslint:enable
         return React.cloneElement(base || <div />, {
             className: css,
@@ -194,27 +189,15 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
     }
     private centerRipple() {
         if (this.state.pressed) { return; }
-
         const { rippleClassName } = this.props;
         const { width, height } = this.state;
         const offsetX = width * .5;
         const offsetY = height * .5;
+        const max = this.calcRippleMax(offsetX, offsetY);
         let { ripples } = this.state;
-
-        const wl = constrain(offsetX, 0, width);
-        const wr = constrain(width - offsetX, 0, width);
-        const hl = constrain(offsetY, 0, height);
-        const hr = constrain(height - offsetY, 0, height);
-
-        const w = Math.max(wl, wr);
-        const h = Math.max(hl, hr);
-        const max = Math.sqrt(w * w + h * h);
-
         const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 100));
         ripples = [...ripples, ripple];
-        if (ripples.length === 1) {
-            registerRipple(this);
-        }
+        if (ripples.length === 1) { registerRipple(this); }
         this.setState({ ripples });
     }
     private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -222,26 +205,25 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         const { onClick } = this.props;
         if (onClick) { onClick(e); }
     }
+    private calcRippleMax(x: number, y: number) {
+        const { width, height } = this.state;
+        const leftWidth = constrain(x, 0, width);
+        const rightWidth = constrain(width - x, 0, width);
+        const topHeight = constrain(y, 0, height);
+        const bottomHeight = constrain(height - y, 0, height);
+        const maxWidth = Math.max(leftWidth, rightWidth);
+        const maxHeight = Math.max(topHeight, bottomHeight);
+        const diagonal = Math.sqrt(maxWidth * maxWidth + maxHeight * maxHeight);
+        return diagonal;
+    }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         const { rippleClassName } = this.props;
-        const { width, height } = this.state;
         const { offsetX, offsetY } = e.nativeEvent as { offsetX: number, offsetY: number };
         let { ripples } = this.state;
-
-        const wl = constrain(offsetX, 0, width);
-        const wr = constrain(width - offsetX, 0, width);
-        const hl = constrain(offsetY, 0, height);
-        const hr = constrain(height - offsetY, 0, height);
-
-        const w = Math.max(wl, wr);
-        const h = Math.max(hl, hr);
-        const max = Math.sqrt(w * w + h * h);
-
-        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max*0.1, max, 0, 150));
+        const max = this.calcRippleMax(offsetX, offsetY);
+        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max * 0.1, max, 0, 150));
         ripples = [...ripples, ripple];
-        if (ripples.length === 1) {
-            registerRipple(this);
-        }
+        if (ripples.length === 1) { registerRipple(this); }
         const pressed = true;
         this.setState({ pressed, ripples });
         const { onMouseDown } = this.props;
