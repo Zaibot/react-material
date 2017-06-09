@@ -9,7 +9,58 @@ import { AnimationRoot, Button, Material, Menu, NavButton, ToggleMenu } from '..
 import colors from '../colors';
 import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
 import Input from '../input';
+import Space from '../space';
+import Surface from '../surface';
 import cx from './style.less';
+
+class MaterialSurfaceTest extends React.Component<any, any> {
+    public state = {
+        primary: true,
+    };
+
+    public render() {
+        const { primary } = this.state;
+        return (
+            <Space>
+                <Surface
+                    focus={{ x: 0, y: 0 }}
+                    center={primary ? 1 : 0}
+                    size={primary ? 1 : 0}
+                    front={primary ? 1 : 0}
+                    opacity={primary ? 1 : 0}
+                    shape={primary ? 1 : 0}
+                    type={'rectangle'} >
+                    <Button
+                        className={mdc(colors.bg.green.n500, colors.text.white.darker)}
+                        rippleClassName={mdc(colors.bg.green.n50)}
+                        onClick={this.onToggle}>
+                        Test 1
+                    </Button>
+                </Surface>
+                <Surface
+                    focus={{ x: 0, y: 0 }}
+                    center={primary ? 0 : 1}
+                    size={primary ? 0 : 1}
+                    front={primary ? 0 : 1}
+                    opacity={primary ? 0 : 1}
+                    shape={primary ? 0 : 1}
+                    type={'rectangle'} >
+                    <Button
+                        className={mdc(colors.bg.green.n500, colors.text.white.darker)}
+                        rippleClassName={mdc(colors.bg.green.n50)}
+                        onClick={this.onToggle}>
+                        Test<br/>234567890
+                    </Button>
+                </Surface>
+            </Space>
+        );
+    }
+
+    private onToggle = () => {
+        const primary = !this.state.primary;
+        this.setState({ primary });
+    }
+}
 
 class Form extends React.Component<any, any> {
     public state = {
@@ -176,6 +227,10 @@ class Login2 extends React.Component<any, any> {
 const Demo = () => (
     <AnimationRoot>
         <div>
+            <h2>MaterialSurfaceTest</h2>
+            <MaterialSurfaceTest />
+            <MaterialSurfaceTest />
+
             <h2>Rounded Card</h2>
             <Material
                 className={mdc(colors.bg.grey.n50, colors.text.black.dark)}
