@@ -91,7 +91,6 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
 
         const s =
             children.map(({ surface, idx }) => {
-                // const opacity = surface.props.opacity / maxOpacity;
                 const st = this.state.sizes[idx];
                 const position = 'absolute';
                 const top = (height - st.height) * .5;
@@ -115,23 +114,6 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
                         </Surface>
                     </span>
                 );
-                // return (
-                //     <span style={{ opacity: opacity.current, position, top, left }}>
-                //         <Surface
-                //             key={`${idx}`}
-                //             surfaceKey={`${idx}`}
-                //             focus={surface.props.focus}
-                //             center={surface.props.center}
-                //             size={surface.props.size}
-                //             front={surface.props.front}
-                //             opacity={surface.props.opacity}
-                //             shape={surface.props.shape}
-                //             type={surface.props.type}
-                //             onSize={this.onSize}>
-                //             {surface.props.children}
-                //         </Surface>
-                //     </span>
-                // );
             });
 
         return (
@@ -142,44 +124,36 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
     }
 
     protected componentWillMount() {
-        this.asdasd(this.props as any);
-        // let surfaces = this.state.surfaces;
-        // const children = this.props.children as Surface[];
-        // while (children.length > surfaces.length) {
-        //     surfaces = surfaces.concat([new SurfaceAnimation(0, 0, Spring.generic(0, 0, 0, 100))]);
-        // }
-        // if (surfaces !== this.state.surfaces) {
-        //     this.setState({ surfaces });
-        // }
+        this.onPropsChanging(this.props as any);
     }
 
     protected componentWillReceiveProps(nextProps: { children: React.ReactNode } & ISpaceProps) {
-        this.asdasd(nextProps);
+        this.onPropsChanging(nextProps as any);
     }
-    protected asdasd({ children }: { children: React.ReactNode } & ISpaceProps) {
+
+    protected onPropsChanging({ children }: { children: Surface[] }) {
         let surfaces = this.state.surfaces;
-        while ((children as any[]).length > surfaces.length) {
+        while (children.length > surfaces.length) {
             surfaces = surfaces.concat([new SurfaceAnimation(0, 0, Spring.generic(0, 0, 0, 100))]);
         }
         surfaces = surfaces.map((surface, idx) => {
             return new SurfaceAnimation(
                 surface.width,
                 surface.height,
-                surface.opacity.change((children as Surface[])[idx].props.opacity)
+                surface.opacity.change(children[idx].props.opacity)
             );
         });
         let sizes = this.state.sizes;
-        while ((children as any[]).length > sizes.length) {
+        while (children.length > sizes.length) {
             sizes = sizes.concat([new SurfaceAnimation(0, 0, Spring.generic(0, 0, 0, 100))]);
         }
         sizes = sizes.map((surface, idx) => {
             return new SurfaceAnimation(
                 surface.width,
                 surface.height,
-                surface.opacity.change((children as Surface[])[idx].props.opacity)
+                surface.opacity.change(children[idx].props.opacity)
             );
         });
-
         if (surfaces !== this.state.surfaces || sizes !== this.state.sizes) {
             this.setState({ sizes, surfaces });
         }
