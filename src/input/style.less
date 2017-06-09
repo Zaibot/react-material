@@ -1,43 +1,45 @@
 @import '../theme';
 
 .component {
-  box-sizing: border-box;
-  padding-top: 8/@rem;
-  padding-bottom: 8/@rem;
+  box-sizing:border-box;
+  padding-top:8/@rem;
+  padding-bottom:8/@rem;
+  user-select:none;
 }
 .label {
-  display: block;
-  height: 12/@rem;
-  line-height: 12/@rem;
-  font-size: 16/@rem;
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-  margin-top: 8/@rem;
-  font-weight: 400;
+  font-size:16/@rem;
+  font-weight:400;
+  line-height:12/@rem;
+  position:relative;
+  z-index:1;
+  display:block;
+  height:12/@rem;
+  margin-top:8/@rem;
+  pointer-events:none;
 }
 .input {
-  margin-top: 8/@rem;
-  width: 100%;
-  line-height: 16/@rem;
-  font-weight: 400;
-  z-index: 0;
+  font-weight:400;
+  line-height:16/@rem;
+  z-index:0;
+  width:100%;
+  margin-top:8/@rem;
+  user-select:initial;
 }
 .bar {
 }
 .helper {
-  display: block;
-  height: 12/@rem;
-  line-height: 12/@rem;
-  font-size: 12/@rem;
-  position: relative;
-  pointer-events: none;
-  margin-top: 8/@rem;
-  font-weight: 400;
+  font-size:12/@rem;
+  font-weight:400;
+  line-height:12/@rem;
+  position:relative;
+  display:block;
+  height:12/@rem;
+  margin-top:8/@rem;
+  pointer-events:none;
 }
 .focus {
-  color: #1976d2;
+  color:#1976d2;
 }
 .error {
-  color: #d32f2f;
+  color:#d32f2f;
 }

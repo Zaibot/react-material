@@ -52,7 +52,12 @@ export default class Content extends React.Component<IContentProps, IContentStat
         const { width, height } = this._div.getBoundingClientRect();
         // Store
         const changed = width !== state.width || height !== state.height;
-        state = { width, height, lastTime, applied: false };
+        if (changed) {
+            state = { width, height, lastTime, applied: false };
+        } else {
+            const { applied } = state;
+            state = { width, height, lastTime, applied };
+        }
         // Restore
         this._div.style.position = null;
         this._div.style.width = storeWidth;

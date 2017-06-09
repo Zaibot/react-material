@@ -82,7 +82,7 @@ export default class Input extends React.Component<IInputProps, IInputState> {
                     onChange={this.onChange}
                     ref={this.onInput} />
                 <FocusBar
-                    state={this.state.focused ? 'focus' : this.props.error ? 'error' : 'idle'}
+                    state={this.props.error ? 'error' : this.state.focused ? 'focus' : 'idle'}
                     idleClassName={cx(`bar`, mdc(colors.bg.grey.n300))}
                     focusClassName={mdc(colors.bg.blue.n700)}
                     errorClassName={mdc(colors.bg.red.n700)}
