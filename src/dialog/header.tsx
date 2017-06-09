@@ -4,11 +4,11 @@ import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
 
-export interface IDialogProps {
+export interface IHeaderProps {
 }
-export interface IDialogState {
+export interface IHeaderState {
 }
-export default class Dialog extends React.Component<IDialogProps, IDialogState> {
+export default class Header extends React.Component<IHeaderProps, IHeaderState> {
     public state = {
     };
 

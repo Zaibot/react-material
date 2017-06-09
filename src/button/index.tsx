@@ -39,7 +39,7 @@ export default class Button extends React.Component<IButtonProps, IButtonState> 
                 className={css}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
-                onClick={onClick}
+                onClick={this.props.onClick}
                 card={(raised || floating) && !(pressed || hover)}
                 menu={(raised || floating) && (pressed || hover)}
                 round={round}

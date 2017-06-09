@@ -4,11 +4,11 @@ import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
 
-export interface IDialogProps {
+export interface IActionsProps {
 }
-export interface IDialogState {
+export interface IActionsState {
 }
-export default class Dialog extends React.Component<IDialogProps, IDialogState> {
+export default class Actions extends React.Component<IActionsProps, IActionsState> {
     public state = {
     };
 

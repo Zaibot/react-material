@@ -64,13 +64,24 @@ export interface IMaterialState {
 const materials: Material[] = [];
 const queued: any = 0;
 function registerRipple(material: Material) {
-    materials.push(material);
+    const idx = materials.indexOf(material);
+    if (idx === -1) {
+        materials.push(material);
+    }
+}
+function unregisterRipple(material: Material) {
+    const idx = materials.indexOf(material);
+    if (idx > -1) {
+        materials.splice(idx, 1);
+    }
 }
 
 const releaseMaterials = () => {
     const pressed = false;
     for (const material of materials) {
-        material.setState({ pressed });
+        if (material.state.pressed !== pressed) {
+            material.setState({ pressed });
+        }
     }
 };
 
@@ -80,7 +91,7 @@ document.addEventListener(`touchend`, releaseMaterials);
 const constrain = (val: number, min: number, max: number) => val < min ? min : val > max ? max : val;
 const rippleTime = 800; // about 800ms
 const rippleFrames = 45;
-const rippleFadeMultiplier = .5;
+const rippleFadeMultiplier = .66;
 const rippleOpacity = 0.36;
 
 // const IsAbsLess = (m: number) => (v: number) => v < m && v > m * -1;
@@ -115,8 +126,9 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
     }
 
     public onAnimate(time: number, advance: number, state: IMaterialAnimation): IMaterialAnimation {
-        let ripples = this.state.ripples;
         const { width, height } = state;
+        const { pressed } = this.state;
+        let ripples = this.state.ripples;
         if (!this.state.ripples.length) {
             // short circuit
             if (width !== this.state.width || height !== this.state.height) {
@@ -124,10 +136,10 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
             }
             return state;
         }
-        const { pressed } = this.state;
 
         ripples = ripples.map((x) => new RippleItem(x.x, x.y, x.z.iterate(advance * 0.001)));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
+        if (ripples.length === 0) { unregisterRipple(this); }
         this.setState({ width, height, ripples });
         return { width, height, last: time };
     }
@@ -137,7 +149,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         const {
             base,
             ripple, rippleClassName, elevation,
-            onMouseDown, onMouseUp, style,
+            onClick, onMouseDown, onMouseUp, style,
             className, color, rippleColor,
             ambient, inline, round, rounded, slim,
             aswitch, card, indicator, appbar, snackbar, menu, submenu, floating, drawer, dialog, children,
@@ -157,11 +169,13 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
                 x={r.x}
                 y={r.y}
                 z={r.z.current}
-                opacity={constrain(r.z.velocity * 0.1, 0, 1) * Math.sqrt(4 - (r.z.current*4 / r.z.target)) * .5 * rippleFadeMultiplier} /> as any
+                opacity={constrain(r.z.velocity * 0.1, 0, 1) * Math.sqrt(4 - (r.z.current * 4 / r.z.target)) * .5 * rippleFadeMultiplier} /> as any
         ))
+        //opacity={constrain(r.z.velocity * 0.01, 0, 0.67)} /> as any
         // tslint:enable
         return React.cloneElement(base || <div />, {
             className: css,
+            onClick: onClick || ripple ? this.onClick : null,
             onMouseDown: onMouseDown || ripple ? this.onMouseDown : null,
             onMouseUp: onMouseUp || ripple ? this.onMouseUp : null,
             ref: this.setRef,
@@ -170,9 +184,43 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         }, [children, ...ripples]);
     }
 
+    protected componentWillUnmount() {
+        unregisterRipple(this);
+    }
+
     private setRef = (e: HTMLDivElement) => {
         this._panel = e;
         if (this.props.divRef) { this.props.divRef(e); }
+    }
+    private centerRipple() {
+        if (this.state.pressed) { return; }
+
+        const { rippleClassName } = this.props;
+        const { width, height } = this.state;
+        const offsetX = width * .5;
+        const offsetY = height * .5;
+        let { ripples } = this.state;
+
+        const wl = constrain(offsetX, 0, width);
+        const wr = constrain(width - offsetX, 0, width);
+        const hl = constrain(offsetY, 0, height);
+        const hr = constrain(height - offsetY, 0, height);
+
+        const w = Math.max(wl, wr);
+        const h = Math.max(hl, hr);
+        const max = Math.sqrt(w * w + h * h);
+
+        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 100));
+        ripples = [...ripples, ripple];
+        if (ripples.length === 1) {
+            registerRipple(this);
+        }
+        this.setState({ ripples });
+    }
+    private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // this.centerRipple();
+        const { onClick } = this.props;
+        if (onClick) { onClick(e); }
     }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         const { rippleClassName } = this.props;
@@ -189,24 +237,20 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         const h = Math.max(hl, hr);
         const max = Math.sqrt(w * w + h * h);
 
-        const pressed = true;
-        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 150));
+        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max*0.1, max, 0, 150));
         ripples = [...ripples, ripple];
         if (ripples.length === 1) {
             registerRipple(this);
         }
+        const pressed = true;
         this.setState({ pressed, ripples });
         const { onMouseDown } = this.props;
-        if (onMouseDown) {
-            onMouseDown(e);
-        }
+        if (onMouseDown) { onMouseDown(e); }
     }
     private onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
         const pressed = false;
         this.setState({ pressed });
         const { onMouseUp } = this.props;
-        if (onMouseUp) {
-            onMouseUp(e);
-        }
+        if (onMouseUp) { onMouseUp(e); }
     }
 }
