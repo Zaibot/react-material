@@ -80,8 +80,8 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         const progress = this.state.progress.change(open && (currentw.current / width) > 0.8 ? 1 : 0).iterate(advance * 0.001);
 
         const c = window.getComputedStyle(this._div);
-        const paddingw = parseInt(c.paddingLeft, 10) + parseInt(c.paddingRight, 10);
-        const paddingh = parseInt(c.paddingTop, 10) + parseInt(c.paddingBottom, 10);
+        const paddingw = Number(c.paddingLeft) + Number(c.paddingRight);
+        const paddingh = Number(c.paddingTop) + Number(c.paddingBottom);
         if (currentw !== this.state.currentw
             || currenth !== this.state.currenth
             || progress !== this.state.progress

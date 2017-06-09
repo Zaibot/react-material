@@ -1,6 +1,5 @@
 // tslint:disable no-magic-numbers
 export default class Spring {
-
     public static generic(
         current: number,
         target: number,
@@ -50,9 +49,9 @@ export default class Spring {
         dampingConstant: number | false = false,
     ) {
         if (dampingConstant === false) {
-            return new Spring(this.current, this.target, this.velocity, springConstant, Math.sqrt(springConstant) * 2);
+            return this.altered(this.current, this.target, this.velocity, springConstant, Math.sqrt(springConstant) * 2);
         }
-        return new Spring(this.current, this.target, this.velocity, springConstant, dampingConstant);
+        return this.altered(this.current, this.target, this.velocity, springConstant, dampingConstant);
     }
 
     public constrain(
@@ -76,8 +75,26 @@ export default class Spring {
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
         if (currentToTarget > -0.01 && currentToTarget < 0.01) {
-            return new Spring(this.target, this.target, 0, this.springConstant, this.dampingConstant);
+            return this.altered(this.target, this.target, 0, this.springConstant, this.dampingConstant);
         }
-        return new Spring(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
+        return this.altered(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
     }
+
+    private altered(
+        current: number,
+        target: number,
+        velocity: number,
+        springConstant: number,
+        dampingConstant: number,
+    ) {
+        if (this.current !== current
+            || this.target !== target
+            || this.velocity !== velocity
+            || this.springConstant !== springConstant
+            || this.dampingConstant !== dampingConstant) {
+            return new Spring(current, target, velocity, springConstant, dampingConstant);
+        }
+        return this;
+    }
+
 }

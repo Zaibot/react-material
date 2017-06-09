@@ -98,11 +98,13 @@ export interface IMaterialAnimation {
     width: number;
     height: number;
     last: number;
+    measured: number;
 }
 const emptyAnimation: IMaterialAnimation = {
     width: 0,
     height: 0,
     last: 0,
+    measured: 0,
 };
 
 @Animated
@@ -117,19 +119,21 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
 
     public onPreAnimate(time: number, advance: number, state: IMaterialAnimation = emptyAnimation): IMaterialAnimation {
         if (!this._panel) { return state; }
+        if (time < state.measured + 100) { return state; }
         const { width, height } = this._panel.getBoundingClientRect();
         const { last } = state;
-        return { width, height, last };
+        const measured = time;
+        return { width, height, last, measured };
     }
 
     public onAnimate(time: number, advance: number, state: IMaterialAnimation): IMaterialAnimation {
-        const { width, height } = state;
+        const { width, height, measured } = state;
         const { pressed } = this.state;
         let ripples = this.state.ripples;
         if (!this.state.ripples.length) {
             // short circuit
             if (width !== this.state.width || height !== this.state.height) {
-                this.setState({ width, height, ripples });
+                this.setState({ width, height });
             }
             return state;
         }
@@ -137,7 +141,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         if (ripples.length === 0) { unregisterRipple(this); }
         this.setState({ width, height, ripples });
-        return { width, height, last: time };
+        return { width, height, last: time, measured };
     }
 
     public render() {
