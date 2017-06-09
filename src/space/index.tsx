@@ -53,8 +53,16 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
         const height = children.reduce((s, surface, idx) => s + d(sizes[idx].height / surface.props.size), 0);
         const width = children.reduce((s, surface, idx) => s + d(sizes[idx].width / surface.props.size), 0);
 
-        sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
-        sizeWidth = sizeWidth.change(width).iterate(advance * 0.001);
+        if (sizeHeight.target === 0 && sizeHeight.current === 0) {
+            sizeHeight = sizeHeight.jump(height);
+        } else {
+            sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
+        }
+        if (sizeWidth.target === 0 && sizeWidth.current === 0) {
+            sizeWidth = sizeWidth.jump(width);
+        } else {
+            sizeWidth = sizeWidth.change(width).iterate(advance * 0.001);
+        }
         const surfaces = this.state.surfaces.map((x) => {
             return new SurfaceAnimation(
                 x.width,
@@ -84,9 +92,10 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
         const s =
             children.map(({ surface, idx }) => {
                 // const opacity = surface.props.opacity / maxOpacity;
+                const st = this.state.sizes[idx];
                 const position = 'absolute';
-                const top = 0;
-                const left = 0;
+                const top = (height - st.height) * .5;
+                const left = (width - st.width) * .5;
                 const { opacity } = this.state.surfaces[idx];
                 if (!opacity.current) { return null; }
                 return (
