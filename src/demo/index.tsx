@@ -23,19 +23,21 @@ class MaterialSurfaceTest extends React.Component<any, any> {
         return (
             <Space>
                 <Surface
-                    focus={{ x: 0, y: 0 }}
+                    focus={{ x: 1, y: 1 }}
                     center={primary ? 1 : 0}
                     size={primary ? 1 : 0}
+                    reserve={1}
                     front={primary ? 1 : 0}
                     opacity={primary ? 1 : 0}
                     shape={primary ? 1 : 0}
                     type={'circle'} >
-                    <Button round onClick={this.onToggle}>...</Button>
+                    <Button round rippleClassName={mdc(colors.bg.grey.n300)} onClick={this.onToggle}>...</Button>
                 </Surface>
                 <Surface
-                    focus={{ x: 0, y: 0 }}
+                    focus={{ x: 1, y: 1 }}
                     center={primary ? 0 : 1}
                     size={primary ? 0 : 1}
+                    reserve={0}
                     front={primary ? 0 : 1}
                     opacity={primary ? 0 : 1}
                     shape={primary ? 0 : 1}
@@ -45,6 +47,8 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                         <NavButton onClick={this.onToggle}>Option 2</NavButton>
                         <NavButton onClick={this.onToggle}>Option 3</NavButton>
                         <NavButton onClick={this.onToggle}>Option 4</NavButton>
+                        <NavButton onClick={this.onToggle}>Option 5</NavButton>
+                        <NavButton onClick={this.onToggle}>Option 6</NavButton>
                     </Menu>
                 </Surface>
             </Space>
@@ -221,11 +225,14 @@ class Login2 extends React.Component<any, any> {
 
 const Demo = () => (
     <AnimationRoot>
-        <div>
+        <div style={{margin: '10rem'}}>
             <h2>MaterialSurfaceTest</h2>
             <MaterialSurfaceTest />
-            <MaterialSurfaceTest />
-
+            </div>
+            </AnimationRoot>
+          );
+/*
+<MaterialSurfaceTest />
             <h2>Rounded Card</h2>
             <Material
                 className={mdc(colors.bg.grey.n50, colors.text.black.dark)}
@@ -373,4 +380,5 @@ const Demo = () => (
         </div>
     </AnimationRoot>
 );
+/***/
 document.addEventListener('DOMContentLoaded', () => { ReactDOM.render(<Demo />, document.body); });

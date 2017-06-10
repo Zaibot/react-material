@@ -11,6 +11,7 @@ export interface ISurfaceProps {
     surfaceKey?: string;
     center: number;
     size: number;
+    reserve: number;
     front: number;
     opacity: number;
     shape: number;

@@ -75,6 +75,7 @@ class Spring {
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
         if (currentToTarget > -0.01 && currentToTarget < 0.01) {
+            // snap
             return this.altered(this.target, this.target, 0, this.springConstant, this.dampingConstant);
         }
         return this.altered(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
