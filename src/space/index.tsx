@@ -56,11 +56,15 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         let { sizeHeight, sizeWidth } = this.state;
         const children = (this.props.children as Surface[]);
 
+        const maxShape = children.reduce((state, surface) => state + surface.props.shape, 0);
+        const totalCircle = children.reduce((state, surface) => state + (surface.props.type === 'circle' ? surface.props.shape : 0), 0);
+        const totalRectangle = children.reduce((state, surface) => state + (surface.props.type === 'rectangle' ? surface.props.shape : 0), 0);
+
         const maxSize = children.reduce((state, surface) => state + surface.props.size, 0);
 
         const d = (n: number) => isFinite(n) ? n : 0;
         const height = children.reduce((s, surface, idx) => s + d(sizes[idx].height * (surface.props.size / maxSize)), 0);
-        const width = children.reduce((s, surface, idx) => s + d(sizes[idx].width * (surface.props.size / maxSize)), 0);
+        const width = totalCircle / maxShape > 0.1 ? height : children.reduce((s, surface, idx) => s + d(sizes[idx].width * (surface.props.size / maxSize)), 0);
 
         if (sizeHeight.target === 0 && sizeHeight.current === 0) { sizeHeight = sizeHeight.jump(height); }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
@@ -76,6 +80,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
     public render() {
         const surfaces = this.state.surfaces;
         const sizes = this.state.sizes;
+        //const children = (this.props.children as Surface[]).map((surface, idx) => ({ surface, idx }));
         const children = (this.props.children as Surface[]).map((surface, idx) => ({ surface, idx })).sort((a, b) => a.surface.props.front - b.surface.props.front);
 
         const maxCenter = children.reduce((state, { surface }) => state + surface.props.center, 0);
@@ -83,6 +88,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const maxFront = children.reduce((state, { surface }) => state + surface.props.front, 0);
         const maxOpacity = children.reduce((state, { surface }) => state + surface.props.opacity, 0);
         const maxShape = children.reduce((state, { surface }) => state + surface.props.shape, 0);
+        const totalCircle = children.reduce((state, { surface }) => state + (surface.props.type === 'circle' ? surface.props.shape : 0), 0);
+        const totalRectangle = children.reduce((state, { surface }) => state + (surface.props.type === 'rectangle' ? surface.props.shape : 0), 0);
 
         const spaceWidth = this.state.sizeWidth.current;
         const spaceHeight = this.state.sizeHeight.current;
@@ -97,7 +104,9 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const top = (spaceHeight - height) * .5;
                 const left = (spaceWidth - width) * .5;
                 const opacity = this.state.surfaces[idx].opacity.current;
-                const visibility = opacity ? 'visible' : 'hidden';
+                const front = surface.props.front;
+                const size = surface.props.size;
+                const visibility = opacity && front && size ? 'visible' : 'hidden';
                 return (
                     <span style={{ opacity, visibility, position, top, left, clipPath, WebkitClipPath: clipPath }}>
                         <Surface
@@ -117,8 +126,14 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 );
             });
 
+          const canRound = spaceWidth > spaceHeight ? spaceHeight / spaceWidth : spaceWidth / spaceHeight;
+
         return (
-            <Material className={mdc(colors.bg.green.n500)} style={{ width: spaceWidth, height: spaceHeight }}>
+            <Material
+                className={mdc(colors.bg.grey.n50, colors.text.black.darker)}
+                rippleClassName={mdc(colors.bg.grey.n100)}
+                floating
+                style={{ width: spaceWidth, height: spaceHeight, borderRadius: ((Math.max(spaceWidth, spaceHeight) * canRound * totalCircle / maxShape)) }}>
                 {positioned}
             </Material>
         );

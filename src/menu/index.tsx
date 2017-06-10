@@ -92,7 +92,8 @@ class Menu extends React.Component<IMenuProps, IMenuState> {
         const width = this.state.currentw.current + this.state.paddingw;
         const height = this.state.currenth.current + this.state.paddingh;
         const opacity = Math.min(Math.max(this.state.currentw.current, this.state.currenth.current), 10) / 10;
-        const style = { width, height, opacity };
+        const style = { };
+        // const style = { width, height, opacity };
         const accented = accent;
         return (
             <Material className={cx(css, mdc(colors.bg.grey.n50, colors.text.black.dark))} onClick={onClick} menu slim style={style} divRef={this._setDiv}>

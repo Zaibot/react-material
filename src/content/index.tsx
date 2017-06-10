@@ -83,7 +83,6 @@ class Content extends React.Component<IContentProps, IContentState> {
 
     private onSize(x: number, y: number) {
         if (this.props.onSize) {
-          console.log(x, y);
             this.props.onSize({ x, y });
         }
     }

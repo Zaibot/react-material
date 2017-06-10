@@ -25,32 +25,27 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                 <Surface
                     focus={{ x: 0, y: 0 }}
                     center={primary ? 1 : 0}
-                    size={0}
+                    size={primary ? 1 : 0}
                     front={primary ? 1 : 0}
                     opacity={primary ? 1 : 0}
                     shape={primary ? 1 : 0}
-                    type={'rectangle'} >
-                    <Button
-                        className={mdc(colors.bg.green.n500, colors.text.white.darker)}
-                        rippleClassName={mdc(colors.bg.green.n50)}
-                        onClick={this.onToggle}>
-                        Test 1
-                    </Button>
+                    type={'circle'} >
+                    <Button round onClick={this.onToggle}>...</Button>
                 </Surface>
                 <Surface
                     focus={{ x: 0, y: 0 }}
                     center={primary ? 0 : 1}
-                    size={1}
+                    size={primary ? 0 : 1}
                     front={primary ? 0 : 1}
                     opacity={primary ? 0 : 1}
                     shape={primary ? 0 : 1}
                     type={'rectangle'} >
-                    <Button
-                        className={mdc(colors.bg.green.n500, colors.text.white.darker)}
-                        rippleClassName={mdc(colors.bg.green.n50)}
-                        onClick={this.onToggle}>
-                        Test<br/>234567890
-                    </Button>
+                    <Menu open>
+                        <NavButton onClick={this.onToggle}>Option 1</NavButton>
+                        <NavButton onClick={this.onToggle}>Option 2</NavButton>
+                        <NavButton onClick={this.onToggle}>Option 3</NavButton>
+                        <NavButton onClick={this.onToggle}>Option 4</NavButton>
+                    </Menu>
                 </Surface>
             </Space>
         );
