@@ -25,7 +25,7 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                 <Surface
                     focus={{ x: 0, y: 0 }}
                     center={primary ? 1 : 0}
-                    size={primary ? 1 : 0}
+                    size={0}
                     front={primary ? 1 : 0}
                     opacity={primary ? 1 : 0}
                     shape={primary ? 1 : 0}
@@ -40,7 +40,7 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                 <Surface
                     focus={{ x: 0, y: 0 }}
                     center={primary ? 0 : 1}
-                    size={primary ? 0 : 1}
+                    size={1}
                     front={primary ? 0 : 1}
                     opacity={primary ? 0 : 1}
                     shape={primary ? 0 : 1}

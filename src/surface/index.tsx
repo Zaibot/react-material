@@ -17,21 +17,18 @@ export interface ISurfaceProps {
     type: Shape;
     onSize?: SurfaceSizeCallback;
 }
-export interface ISurfaceState {
-}
-class Surface extends React.Component<ISurfaceProps, ISurfaceState> {
-    public state = {};
+class Surface extends React.Component<ISurfaceProps, {}> {
     public render() {
+        return (<Content onSize={this.onSize}>{this.props.children}</Content>);
+    }
+
+    public shouldComponentUpdate() {
+      return false;
+    }
+
+    private onSize = ({ x, y }: { x: number, y: number }) => {
         const { onSize, surfaceKey } = this.props as any;
-        // const child = React.cloneElement(this.props.children as any, {
-        //     ...(this.props.children as any).props,
-        //     onSize: ({ x, y }: { x: number, y: number }) => {
-        //       onSize({ surfaceKey, x, y });
-        //     }
-        // });
-        return (
-          <Content onSize={({ x, y }: { x: number, y: number }) =>  onSize({ surfaceKey, x, y })}>{this.props.children}</Content>
-        );
+        onSize({ surfaceKey, x, y });
     }
 }
 export default Surface;
