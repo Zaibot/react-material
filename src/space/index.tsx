@@ -1,5 +1,6 @@
 import React from 'react';
 import Animated from '../animated';
+import { GetAnimationRoot } from '../animationroot';
 import { Spring } from '../animation';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
@@ -13,14 +14,18 @@ export interface ISpaceState {
     sizeHeight: Spring;
     sizeWidth: Spring;
     surfaces: SurfaceAnimation[];
-    sizes: SurfaceAnimation[];
+    sizes: SurfaceMeasure[];
 }
 
 export class SurfaceAnimation {
     public constructor(
+        public readonly opacity: Spring,
+    ) { }
+}
+export class SurfaceMeasure {
+    public constructor(
         public readonly width: number,
         public readonly height: number,
-        public readonly opacity: Spring,
     ) { }
 }
 export interface IInputAnimation {
@@ -35,7 +40,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
         sizeHeight: Spring.generic(0, 0, 0, 150),
         sizeWidth: Spring.generic(0, 0, 0, 150),
-        sizes: [] as SurfaceAnimation[],
+        sizes: [] as SurfaceMeasure[],
         surfaces: [] as SurfaceAnimation[],
     };
 
@@ -54,19 +59,19 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const width = children.reduce((s, surface, idx) => s + d(sizes[idx].width / surface.props.size), 0);
 
         if (sizeHeight.target === 0 && sizeHeight.current === 0) {
+            // console.log(`target&current === 0 height`, height, children.map(x=> x.props.size), this.state.sizes.map(x => x.height));
             sizeHeight = sizeHeight.jump(height);
         } else {
             sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
         }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) {
+            // console.log(`target&current === 0 width`, width, children.map(x=> x.props.size), this.state.sizes.map(x => x.width));
             sizeWidth = sizeWidth.jump(width);
         } else {
             sizeWidth = sizeWidth.change(width).iterate(advance * 0.001);
         }
         const surfaces = this.state.surfaces.map((x) => {
             return new SurfaceAnimation(
-                x.width,
-                x.height,
                 x.opacity.iterate(advance * 0.001),
             );
         });
@@ -89,7 +94,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const height = this.state.sizeHeight.current;
         const clipPath = `polygon(${0}px ${0}px, ${width}px 0, ${width}px ${height}px, 0px ${height}px, 0px 0px)`;
 
-        const s =
+        const positioned =
             children.map(({ surface, idx }) => {
                 const st = this.state.sizes[idx];
                 const position = 'absolute';
@@ -118,7 +123,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
         return (
             <Material style={{ width, height }}>
-                {s}
+                {positioned}
             </Material>
         );
     }
@@ -133,39 +138,23 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
     protected onPropsChanging({ children }: { children: Surface[] }) {
         let surfaces = this.state.surfaces;
-        while (children.length > surfaces.length) {
-            surfaces = surfaces.concat([new SurfaceAnimation(0, 0, Spring.generic(0, 0, 0, 100))]);
-        }
-        surfaces = surfaces.map((surface, idx) => {
-            return new SurfaceAnimation(
-                surface.width,
-                surface.height,
-                surface.opacity.change(children[idx].props.opacity)
-            );
-        });
+        while (children.length > surfaces.length) { surfaces = [...surfaces, new SurfaceAnimation(Spring.generic(0, 0, 0, 100))]; }
+        surfaces = surfaces.map((surface, idx) => new SurfaceAnimation(surface.opacity.change(children[idx].props.opacity)));
         let sizes = this.state.sizes;
-        while (children.length > sizes.length) {
-            sizes = sizes.concat([new SurfaceAnimation(0, 0, Spring.generic(0, 0, 0, 100))]);
-        }
-        sizes = sizes.map((surface, idx) => {
-            return new SurfaceAnimation(
-                surface.width,
-                surface.height,
-                surface.opacity.change(children[idx].props.opacity)
-            );
-        });
+        while (children.length > sizes.length) { sizes = [...sizes, new SurfaceMeasure(0, 0)]; }
+        sizes = sizes.map((surface, idx) => new SurfaceMeasure(surface.width, surface.height));
         if (surfaces !== this.state.surfaces || sizes !== this.state.sizes) {
             this.setState({ sizes, surfaces });
         }
     }
 
     private onSize = (size: ISurfaceSize) => {
-        const sizes = this.state.sizes.map((surface, idx) => {
-            if (`${idx}` !== size.surfaceKey) { return surface; }
-            const r = new SurfaceAnimation(size.x, size.y, Spring.generic(0, 0, 0, 100));
-            return r;
-        });
-        this.setState({ sizes });
+        const sizes = this.state.sizes.map(
+            (surface, idx) => `${idx}` !== size.surfaceKey
+                ? surface
+                : new SurfaceMeasure(size.x, size.y),
+        );
+        this.setState({ sizes }, () => GetAnimationRoot(this).iterate());
     }
 }
 export default Space;

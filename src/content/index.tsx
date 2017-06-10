@@ -71,7 +71,6 @@ class Content extends React.Component<IContentProps, IContentState> {
     public componentDidMount() {
         const { width, height } = this.measure();
         this.onSize(width, height);
-        console.log(width, height);
     }
     public shouldComponentUpdate(nextProps: IContentProps) {
         return this.props.opacity !== nextProps.opacity
@@ -86,14 +85,11 @@ class Content extends React.Component<IContentProps, IContentState> {
         if (this.props.onSize) {
             const x = width;
             const y = height;
-            // console.log(this._div, x, y);
-            // console.log(this._div, width, height);
             this.props.onSize({ x, y });
         }
     }
 
     private measure() {
-
         const storeWidth = this._div.style.width;
         const storeHeight = this._div.style.height;
         // Prep
