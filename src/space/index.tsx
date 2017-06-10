@@ -33,14 +33,21 @@ export class SurfaceAnimation {
     ) { }
 
     public iterate(advance: number) {
-        return new SurfaceAnimation(
-            this.center.iterate(advance),
-            this.size.iterate(advance),
-            this.reserve.iterate(advance),
-            this.front.iterate(advance),
-            this.opacity.iterate(advance),
-            this.shape.iterate(advance),
-        );
+        const center = this.center.iterate(advance);
+        const size = this.size.iterate(advance);
+        const reserve = this.reserve.iterate(advance);
+        const front = this.front.iterate(advance);
+        const opacity = this.opacity.iterate(advance);
+        const shape = this.shape.iterate(advance);
+        if (center !== this.center
+            || size !== this.size
+            || reserve !== this.reserve
+            || front !== this.front
+            || opacity !== this.opacity
+            || shape !== this.shape) {
+            return new SurfaceAnimation(center, size, reserve, front, opacity, shape);
+        }
+        return this;
     }
 }
 export class SurfaceMeasure {
