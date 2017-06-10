@@ -8,7 +8,7 @@ export interface IHeaderProps {
 }
 export interface IHeaderState {
 }
-export default class Header extends React.Component<IHeaderProps, IHeaderState> {
+class Header extends React.Component<IHeaderProps, IHeaderState> {
     public state = {
     };
 
@@ -21,3 +21,4 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
         );
     }
 }
+export default Header;

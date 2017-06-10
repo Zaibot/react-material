@@ -20,7 +20,7 @@ export interface IButtonState {
     pressed: boolean;
 }
 
-export default class Button extends React.Component<IButtonProps, IButtonState> {
+class Button extends React.Component<IButtonProps, IButtonState> {
     public state = {
         hover: false,
         pressed: false,
@@ -59,3 +59,4 @@ export default class Button extends React.Component<IButtonProps, IButtonState> 
         this.setState({ pressed: false });
     }
 }
+export default Button;

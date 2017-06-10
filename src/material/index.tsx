@@ -107,8 +107,8 @@ const emptyAnimation: IMaterialAnimation = {
     measured: 0,
 };
 
-@Animated
-export default class Material extends React.Component<IMaterialProps, IMaterialState> {
+@Animated()
+class Material extends React.Component<IMaterialProps, IMaterialState> {
     public state: IMaterialState = {
         width: 0,
         height: 0,
@@ -183,7 +183,7 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         }, [children, ...ripples]);
     }
 
-    protected componentWillUnmount() {
+    public componentWillUnmount() {
         unregisterRipple(this);
     }
 
@@ -240,3 +240,4 @@ export default class Material extends React.Component<IMaterialProps, IMaterialS
         if (onMouseUp) { onMouseUp(e); }
     }
 }
+export default Material;

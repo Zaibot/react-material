@@ -8,7 +8,7 @@ export interface ISubheaderProps {
 }
 export interface ISubheaderState {
 }
-export default class Subheader extends React.Component<ISubheaderProps, ISubheaderState> {
+class Subheader extends React.Component<ISubheaderProps, ISubheaderState> {
     public state = {
     };
 
@@ -21,3 +21,4 @@ export default class Subheader extends React.Component<ISubheaderProps, ISubhead
         );
     }
 }
+export default Subheader;

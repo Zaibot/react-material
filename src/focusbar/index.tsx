@@ -34,8 +34,8 @@ const emptyAnimation: IFocusBarAnimation = {
     focusw: Spring.generic(0, 0, 0, 200),
 };
 
-@Animated
-export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarState> {
+@Animated()
+class FocusBar extends React.Component<IFocusBarProps, IFocusBarState> {
     public state = {
         erroro: 0,
         errorw: 0,
@@ -88,3 +88,4 @@ export default class FocusBar extends React.Component<IFocusBarProps, IFocusBarS
         );
     }
 }
+export default FocusBar;

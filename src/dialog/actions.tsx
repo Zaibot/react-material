@@ -8,7 +8,7 @@ export interface IActionsProps {
 }
 export interface IActionsState {
 }
-export default class Actions extends React.Component<IActionsProps, IActionsState> {
+class Actions extends React.Component<IActionsProps, IActionsState> {
     public state = {
     };
 
@@ -21,3 +21,4 @@ export default class Actions extends React.Component<IActionsProps, IActionsStat
         );
     }
 }
+export default Actions;

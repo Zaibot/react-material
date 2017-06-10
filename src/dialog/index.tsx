@@ -13,7 +13,7 @@ export interface IDialogProps {
 }
 export interface IDialogState {
 }
-export default class Dialog extends React.Component<IDialogProps, IDialogState> {
+class Dialog extends React.Component<IDialogProps, IDialogState> {
     public state = {
         x: 0,
         y: 0,
@@ -33,3 +33,4 @@ export default class Dialog extends React.Component<IDialogProps, IDialogState> 
         );
     }
 }
+export default Dialog;

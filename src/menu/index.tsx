@@ -39,8 +39,8 @@ const parsePixels = (text: string) => {
   return n;
 };
 
-@Animated
-export default class Menu extends React.Component<IMenuProps, IMenuState> {
+@Animated()
+class Menu extends React.Component<IMenuProps, IMenuState> {
     public state = {
         currenth: Spring.flex(0, 0, 0, 400, 1.0),
         currentw: Spring.flex(0, 0, 0, 800, 1.0),
@@ -67,8 +67,8 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
 
         const { opening, toggle, width, height } = this.state;
 
-        const currentw = this.state.currentw.change(open || this.state.progress.current > 0.2 ? this.state.width : 0).iterate(advance * 0.001).constrain(0, width);
-        const currenth = this.state.currenth.change(open || this.state.progress.current > 0.2 ? this.state.height : 0).iterate(advance * 0.001).constrain(0, height);
+        const currentw = this.state.currentw.change(open || this.state.progress.current > 0.2 ? this.state.width : 0).iterate(advance * 0.001);
+        const currenth = this.state.currenth.change(open || this.state.progress.current > 0.2 ? this.state.height : 0).iterate(advance * 0.001);
         const progress = this.state.progress.change(open && (currentw.current / width) > 0.8 ? 1 : 0).iterate(advance * 0.001);
 
         const c = window.getComputedStyle(this._div);
@@ -103,7 +103,7 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         );
     }
 
-    protected componentWillReceiveProps(nextProps: IMenuProps) {
+    public componentWillReceiveProps(nextProps: IMenuProps) {
         if (nextProps.open !== this.props.open) {
             const opening = nextProps.open;
             const toggle = Date.now();
@@ -121,3 +121,4 @@ export default class Menu extends React.Component<IMenuProps, IMenuState> {
         this.setState({ width, height });
     }
 }
+export default Menu;

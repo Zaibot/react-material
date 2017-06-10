@@ -8,7 +8,7 @@ export interface IContentsProps {
 }
 export interface IContentsState {
 }
-export default class Contents extends React.Component<IContentsProps, IContentsState> {
+class Contents extends React.Component<IContentsProps, IContentsState> {
     public state = {
     };
 
@@ -21,3 +21,4 @@ export default class Contents extends React.Component<IContentsProps, IContentsS
         );
     }
 }
+export default Contents;

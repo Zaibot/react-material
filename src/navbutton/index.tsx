@@ -16,7 +16,7 @@ export interface ButtonState {
     pressed: boolean;
 }
 
-export default class NavButton extends React.Component<ButtonProps, ButtonState> {
+class NavButton extends React.Component<ButtonProps, ButtonState> {
     public state = {
         hover: false,
         pressed: false,
@@ -54,3 +54,4 @@ export default class NavButton extends React.Component<ButtonProps, ButtonState>
         this.setState({ pressed: false });
     }
 }
+export default NavButton;

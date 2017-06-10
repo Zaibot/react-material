@@ -19,7 +19,7 @@ export interface ISurfaceProps {
 }
 export interface ISurfaceState {
 }
-export default class Surface extends React.Component<ISurfaceProps, ISurfaceState> {
+class Surface extends React.Component<ISurfaceProps, ISurfaceState> {
     public state = {};
     public render() {
         const { onSize, surfaceKey } = this.props as any;
@@ -34,3 +34,4 @@ export default class Surface extends React.Component<ISurfaceProps, ISurfaceStat
         );
     }
 }
+export default Surface;

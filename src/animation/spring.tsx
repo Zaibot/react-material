@@ -1,5 +1,5 @@
 // tslint:disable no-magic-numbers
-export default class Spring {
+class Spring {
     public static generic(
         current: number,
         target: number,
@@ -98,3 +98,4 @@ export default class Spring {
     }
 
 }
+export default Spring;

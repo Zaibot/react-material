@@ -35,8 +35,8 @@ const emptyAnimation: IInputAnimation = {
     label: Spring.generic(0, 0, 0, 500),
 };
 
-@Animated
-export default class Input extends React.Component<IInputProps, IInputState> {
+@Animated()
+class Input extends React.Component<IInputProps, IInputState> {
     public state: IInputState = {
         focused: false,
         helper: 0,
@@ -117,3 +117,4 @@ export default class Input extends React.Component<IInputProps, IInputState> {
         this.setState({ focused });
     }
 }
+export default Input;

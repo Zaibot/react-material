@@ -18,7 +18,7 @@ export interface IAnimatable<T> {
     onAnimate(time: number, advance: number, state: T): T;
 }
 
-export default class AnimationRoot extends React.Component<{}, {}> {
+export class AnimationRoot extends React.Component<{}, {}> {
     public static childContextTypes = {
         [RootSymbol]: PropTypes.any,
     };
@@ -107,3 +107,4 @@ export default class AnimationRoot extends React.Component<{}, {}> {
         if (!this._timer) { this._timer = window.requestAnimationFrame(this.trigger); }
     }
 }
+export default AnimationRoot;

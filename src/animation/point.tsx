@@ -1,4 +1,4 @@
-export default class Point {
+class Point {
     public constructor(
         public readonly x: number,
         public readonly y: number,
@@ -60,3 +60,4 @@ export default class Point {
         );
     }
 }
+export default Point;

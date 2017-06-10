@@ -11,7 +11,7 @@ export interface IRippleProps {
     color: string;
 }
 
-export default class Ripple extends React.Component<IRippleProps, any> {
+class Ripple extends React.Component<IRippleProps, any> {
     public render() {
         const { x, y, z, color, opacity, className } = this.props;
         const clipPath = `ellipse(${z.toFixed(1)}px ${z.toFixed(1)}px at ${x.toFixed(1)}px ${y.toFixed(1)}px)`;
@@ -31,3 +31,4 @@ export default class Ripple extends React.Component<IRippleProps, any> {
             || this.props.color !== nextProps.color;
     }
 }
+export default Ripple;

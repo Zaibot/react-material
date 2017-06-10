@@ -14,7 +14,7 @@ export interface MenuState {
     open: boolean;
 }
 
-export default class ToggleMenu extends React.Component<MenuProps, MenuState> {
+class ToggleMenu extends React.Component<MenuProps, MenuState> {
     public state = {
         open: false,
     };
@@ -32,3 +32,4 @@ export default class ToggleMenu extends React.Component<MenuProps, MenuState> {
         );
     }
 }
+export default ToggleMenu;

@@ -30,8 +30,8 @@ const emptyAnimation: IInputAnimation = {
     surfaces: [],
 };
 
-@Animated
-export default class Space extends React.Component<ISpaceProps, ISpaceState> {
+@Animated()
+class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
         sizeHeight: Spring.generic(0, 0, 0, 150),
         sizeWidth: Spring.generic(0, 0, 0, 150),
@@ -123,11 +123,11 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
         );
     }
 
-    protected componentWillMount() {
+    public componentWillMount() {
         this.onPropsChanging(this.props as any);
     }
 
-    protected componentWillReceiveProps(nextProps: { children: React.ReactNode } & ISpaceProps) {
+    public componentWillReceiveProps(nextProps: { children: React.ReactNode } & ISpaceProps) {
         this.onPropsChanging(nextProps as any);
     }
 
@@ -168,3 +168,4 @@ export default class Space extends React.Component<ISpaceProps, ISpaceState> {
         this.setState({ sizes });
     }
 }
+export default Space;
