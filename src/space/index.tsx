@@ -50,12 +50,46 @@ export class SurfaceAnimation {
         }
         return this;
     }
+
+    public change(
+        center: number,
+        size: number,
+        reserve: number,
+        front: number,
+        opacity: number,
+        shape: number,
+    ) {
+        if (center !== this.center.target
+            || size !== this.size.target
+            || reserve !== this.reserve.target
+            || front !== this.front.target
+            || opacity !== this.opacity.target
+            || shape !== this.shape.target) {
+            return new SurfaceAnimation(
+                this.center.change(center),
+                this.size.change(size),
+                this.reserve.change(reserve),
+                this.front.change(front),
+                this.opacity.change(opacity),
+                this.shape.change(shape),
+            );
+
+        }
+        return this;
+    }
 }
 export class SurfaceMeasure {
     public constructor(
         public readonly width: number,
         public readonly height: number,
     ) { }
+
+    public change(width: number, height: number) {
+        if (width !== this.width || height !== this.height) {
+            return new SurfaceMeasure(width, height);
+        }
+        return this;
+    }
 }
 export interface IInputAnimation {
     surfaces: SurfaceAnimation[];
@@ -70,12 +104,12 @@ function getMaterialStyle(width: number, height: number, offsetX: number, offset
     return { width, height, borderRadius, overflow, transform } as React.CSSProperties;
 }
 
-function smartUpdate<T>(array: T[], map: (item: T) => T) {
+function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
     let res: T[] = null;
     let i = 0;
     const ii = array.length;
     for (; i < ii; i++) {
-        const n = map(array[i]);
+        const n = map(array[i], i);
         if (n !== array[i]) {
             res = array.slice(0);
             res[i] = n;
@@ -84,7 +118,7 @@ function smartUpdate<T>(array: T[], map: (item: T) => T) {
     }
     if (!res) { return array; }
     for (; i < ii; i++) {
-        res[i] = map(array[i]);
+        res[i] = map(array[i], i);
     }
     return res;
 }
@@ -130,6 +164,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         if (this.state.sizeHeight !== sizeHeight
             || this.state.sizeWidth !== sizeWidth
             || this.state.surfaces !== surfaces) {
+            // Update state
             this.setState({ sizeHeight, sizeWidth, surfaces });
         }
         return state;
@@ -234,28 +269,25 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 Spring.generic(shape, shape, 0, 100)
             )];
         }
-        surfaces = surfaces.map((surface, idx) => {
+        surfaces = smartUpdate(surfaces, (surface, idx) => {
             const { center, size, reserve, front, opacity, shape } = children[idx].props;
-            return new SurfaceAnimation(
-                surface.center.change(center),
-                surface.size.change(size),
-                surface.reserve.change(reserve),
-                surface.front.change(front),
-                surface.opacity.change(opacity),
-                surface.shape.change(shape),
-            );
+            return surface.change(center, size, reserve, front, opacity, shape);
         });
         // Allocate Sizes
         let sizes = this.state.sizes;
         while (children.length > sizes.length) { sizes = [...sizes, new SurfaceMeasure(0, 0)]; }
         if (surfaces !== this.state.surfaces || sizes !== this.state.sizes) {
+            // Update state
             this.setState({ sizes, surfaces });
         }
     }
 
     private onSize = (size: ISurfaceSize) => {
-        const sizes = this.state.sizes.map((surface, idx) => `${idx}` !== size.surfaceKey ? surface : new SurfaceMeasure(size.x, size.y));
-        this.setState({ sizes }, () => GetAnimationRoot(this).iterate());
+        const sizes = smartUpdate(this.state.sizes, (surface, idx) => `${idx}` !== size.surfaceKey ? surface : surface.change(size.x, size.y));
+        if (sizes !== this.state.sizes) {
+            // Update state
+            this.setState({ sizes }, () => GetAnimationRoot(this).iterate());
+        }
     }
 }
 export default Space;
