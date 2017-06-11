@@ -104,14 +104,14 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
         const children = (this.props.children as Surface[])
-            .map((surface, idx) => ({ surface, idx, animation: this.getSurface(idx), size: this.state.sizes[idx] }))
-            .sort((a, b) => a.animation.front - b.animation.front);
+            .map((surface, idx) => ({ surface, idx, animation: this.state.surfaces[idx], size: this.state.sizes[idx] }))
+            .sort((a, b) => a.animation.front.current - b.animation.front.current);
 
-        const maxShape = children.reduce((state, { surface, animation }) => state + animation.shape, 0);
-        const totalCircle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'circle' ? animation.shape : 0), 0);
-        const totalRectangle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'rectangle' ? animation.shape : 0), 0);
-        const maxSize = children.reduce((state, { surface, animation }) => state + animation.size, 0);
-        const maxReserve = children.reduce((state, { surface, animation }) => state + animation.reserve, 0);
+        const maxShape = children.reduce((state, { surface, animation }) => state + animation.shape.current, 0);
+        const totalCircle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
+        const totalRectangle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
+        const maxSize = children.reduce((state, { surface, animation }) => state + animation.size.current, 0);
+        const maxReserve = children.reduce((state, { surface, animation }) => state + animation.reserve.current, 0);
 
         let height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
         let width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
@@ -138,22 +138,22 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
     public render() {
         const surfaces = this.state.surfaces;
         const children = (this.props.children as Surface[])
-            .map((surface, idx) => ({ surface, idx, animation: this.getSurface(idx), size: this.state.sizes[idx] }))
-            .sort((a, b) => a.animation.front - b.animation.front);
+            .map((surface, idx) => ({ surface, idx, animation: this.state.surfaces[idx], size: this.state.sizes[idx] }))
+            .sort((a, b) => a.animation.front.current - b.animation.front.current);
 
-        const maxCenter = children.reduce((state, { animation }) => state + animation.center, 0);
-        const maxSize = children.reduce((state, { animation }) => state + animation.size, 0);
-        const maxReserve = children.reduce((state, { animation }) => state + animation.reserve, 0);
-        const maxFront = children.reduce((state, { animation }) => state + animation.front, 0);
-        const maxOpacity = children.reduce((state, { animation }) => state + animation.opacity, 0);
-        const maxShape = children.reduce((state, { animation }) => state + animation.shape, 0);
-        const totalCircle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'circle' ? animation.shape : 0), 0);
-        const totalRectangle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'rectangle' ? animation.shape : 0), 0);
-        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.x * animation.center, 0);
-        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.y * animation.center, 0);
+        const maxCenter = children.reduce((state, { animation }) => state + animation.center.current, 0);
+        const maxSize = children.reduce((state, { animation }) => state + animation.size.current, 0);
+        const maxReserve = children.reduce((state, { animation }) => state + animation.reserve.current, 0);
+        const maxFront = children.reduce((state, { animation }) => state + animation.front.current, 0);
+        const maxOpacity = children.reduce((state, { animation }) => state + animation.opacity.current, 0);
+        const maxShape = children.reduce((state, { animation }) => state + animation.shape.current, 0);
+        const totalCircle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
+        const totalRectangle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
+        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.x * animation.center.current, 0);
+        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.y * animation.center.current, 0);
 
-        const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve / maxReserve), 0);
-        const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve / maxReserve), 0);
+        const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve.current / maxReserve), 0);
+        const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve.current / maxReserve), 0);
         const spaceWidth = this.state.sizeWidth.current;
         const spaceHeight = this.state.sizeHeight.current;
 
@@ -168,15 +168,15 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const position = 'absolute';
                 const top = 0;
                 const left = 0;
-                const { center, size, reserve, front, opacity, shape } = this.getSurface(idx);
+                const { center, size, reserve, front, opacity, shape } = this.state.surfaces[idx];
                 if (!opacity) { return null; }
-                const visibility = opacity && front && size ? 'visible' : 'hidden';
+                const visibility = opacity.current && front.current && size.current ? 'visible' : 'hidden';
                 const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.focus.x - offsetX);
                 const offsetTop = (reserveHeight - spaceHeight) * (surface.props.focus.y - offsetY);
                 const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
                 const clipPath = ``;//spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
                 return (
-                    <span style={{ opacity, visibility, position, top, left, clipPath, transform, WebkitClipPath: clipPath }}>
+                    <span style={{ opacity: opacity.current, visibility, position, top, left, clipPath, transform, WebkitClipPath: clipPath }}>
                         <Surface
                             key={`${idx}`}
                             surfaceKey={`${idx}`}
@@ -224,48 +224,33 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         // Allocate Surfaces
         let surfaces = this.state.surfaces;
         while (children.length > surfaces.length) {
+            const { center, size, reserve, front, opacity, shape } = children[surfaces.length].props;
             surfaces = [...surfaces, new SurfaceAnimation(
-                Spring.generic(0, 0, 0, 100),
-                Spring.generic(0, 0, 0, 500),
-                Spring.generic(0, 0, 0, 400),
-                Spring.generic(0, 0, 0, 100),
-                Spring.generic(0, 0, 0, 100),
-                Spring.generic(0, 0, 0, 100)
+                Spring.generic(center, center, 0, 500),
+                Spring.generic(size, size, 0, 500),
+                Spring.generic(reserve, reserve, 0, 500),
+                Spring.generic(front, front, 0, 100),
+                Spring.generic(opacity, opacity, 0, 100),
+                Spring.generic(shape, shape, 0, 100)
             )];
         }
-        surfaces = surfaces.map((surface, idx) => new SurfaceAnimation(
-            surface.center.change(children[idx].props.center),
-            surface.size.change(children[idx].props.size),
-            surface.reserve.change(children[idx].props.reserve),
-            surface.front.change(children[idx].props.front),
-            surface.opacity.change(children[idx].props.opacity),
-            surface.shape.change(children[idx].props.shape),
-        ));
+        surfaces = surfaces.map((surface, idx) => {
+            const { center, size, reserve, front, opacity, shape } = children[idx].props;
+            return new SurfaceAnimation(
+                surface.center.change(center),
+                surface.size.change(size),
+                surface.reserve.change(reserve),
+                surface.front.change(front),
+                surface.opacity.change(opacity),
+                surface.shape.change(shape),
+            );
+        });
         // Allocate Sizes
         let sizes = this.state.sizes;
         while (children.length > sizes.length) { sizes = [...sizes, new SurfaceMeasure(0, 0)]; }
-        sizes = sizes.map((surface, idx) => new SurfaceMeasure(surface.width, surface.height));
         if (surfaces !== this.state.surfaces || sizes !== this.state.sizes) {
             this.setState({ sizes, surfaces });
         }
-    }
-
-    private getSurface(idx: number) {
-        const surface = this.state.surfaces[idx];
-        const center = surface.center.current;
-        const size = surface.size.current;
-        const reserve = surface.reserve.current;
-        const front = surface.front.current;
-        const opacity = surface.opacity.current;
-        const shape = surface.shape.current;
-        return {
-            center,
-            size,
-            reserve,
-            front,
-            opacity,
-            shape,
-        };
     }
 
     private onSize = (size: ISurfaceSize) => {
