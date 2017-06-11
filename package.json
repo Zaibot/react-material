@@ -7,9 +7,10 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production npm run compile",
     "dev": "webpack-dev-server --config webpack.demo.js",
-    "server": "cross-env NODE_ENV=production webpack-dev-server --config webpack.demo.js",
+    "build": "cross-env NODE_ENV=production npm run compile",
+    "demo": "cross-env NODE_ENV=production webpack-dev-server --config webpack.demo.js",
+    "stat": "cross-env NODE_ENV=production webpack --json --config webpack.config.js",
     "compile": "webpack",
     "tslint": "tslint --config tslint.json --project src/tsconfig.json --type-check",
     "tslint:fix": "tslint --config tslint.json --project src/tsconfig.json --type-check --fix",
@@ -61,8 +62,7 @@
   },
   "dependencies": {
     "@zaibot/css-reset": "^1.0.6",
-    "classnames": "^2.2.5",
-    "react-redux-pure": "^0.1.7"
+    "classnames": "^2.2.5"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
