@@ -3,11 +3,15 @@ import React from 'react';
 import Animated from '../animated';
 import Button from '../button';
 import colors from '../colors';
+import Surface from '../surface';
+import Space from '../space';
 import Material from '../material';
 import Menu from '../menu';
+import Focus from '../surface/focus';
 import cx from './style.less';
 
 export interface MenuProps {
+    focus: Focus;
     menu: (onClick: () => void) => React.ReactElement<any>;
 }
 export interface MenuState {
@@ -20,16 +24,39 @@ class ToggleMenu extends React.Component<MenuProps, MenuState> {
     };
 
     public render() {
+        const { children, focus } = this.props;
+        const { open } = this.state;
         return (
-            <span>
-                <Button
-                    className={mdc(colors.bg.indigo.n500, colors.text.white.dark)}
-                    rippleClassName={mdc(colors.bg.indigo.n50)}
-                     onClick={() => this.setState({ open: !this.state.open })}
-                     round>{this.props.children}</Button>
-                {React.cloneElement(this.props.menu(() => this.setState({ open: false })), { open: this.state.open })}
-            </span>
+            <Space>
+                <Surface
+                    focus={focus || { x: .5, y: .5 }}
+                    center={open ? 0 : 1}
+                    size={open ? 0 : 1}
+                    reserve={1}
+                    front={open ? 0 : 1}
+                    opacity={open ? 0 : 1}
+                    shape={open ? 0 : 1}
+                    type={'circle'} >
+                    <Button round rippleClassName={mdc(colors.bg.grey.n500)} onClick={this.onToggle}>{children}</Button>
+                </Surface>
+                <Surface
+                    focus={focus || { x: .5, y: .5 }}
+                    center={open ? 1 : 0}
+                    size={open ? 1 : 0}
+                    reserve={0}
+                    front={open ? 1 : 0}
+                    opacity={open ? 1 : 0}
+                    shape={open ? 1 : 0}
+                    type={'rectangle'} >
+                    {this.props.menu(this.onToggle)}
+                </Surface>
+            </Space>
         );
+    }
+
+    private onToggle = () => {
+        const open = !this.state.open;
+        this.setState({ open });
     }
 }
 export default ToggleMenu;

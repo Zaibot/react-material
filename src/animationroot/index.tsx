@@ -18,7 +18,10 @@ export interface IAnimatable<T> {
     onAnimate(time: number, advance: number, state: T): T;
 }
 
-export class AnimationRoot extends React.Component<{}, {}> {
+export interface IAnimationRootProps {
+  rate?: number;
+};
+export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     public static childContextTypes = {
         [RootSymbol]: PropTypes.any,
     };
@@ -73,7 +76,7 @@ export class AnimationRoot extends React.Component<{}, {}> {
 
     private iterateCore() {
         const time = Date.now();
-        const advance = time - this._last;
+        const advance = (this.props.rate) || (time - this._last);
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
         this._last = time;
     }

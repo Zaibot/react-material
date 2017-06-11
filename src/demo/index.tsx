@@ -11,6 +11,7 @@ import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } 
 import Input from '../input';
 import Space from '../space';
 import Surface from '../surface';
+import { FocusTopRight, FocusTopLeft, FocusCenterLeft } from '../surface/focus';
 import cx from './style.less';
 
 class MaterialSurfaceTest extends React.Component<any, any> {
@@ -23,7 +24,7 @@ class MaterialSurfaceTest extends React.Component<any, any> {
         return (
             <Space>
                 <Surface
-                    focus={{ x: 1, y: 1 }}
+                    focus={FocusCenterLeft}
                     center={primary ? 1 : 0}
                     size={primary ? 1 : 0}
                     reserve={1}
@@ -34,7 +35,7 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                     <Button round rippleClassName={mdc(colors.bg.grey.n300)} onClick={this.onToggle}>...</Button>
                 </Surface>
                 <Surface
-                    focus={{ x: 1, y: 1 }}
+                    focus={FocusCenterLeft}
                     center={primary ? 0 : 1}
                     size={primary ? 0 : 1}
                     reserve={0}
@@ -74,14 +75,16 @@ class Form extends React.Component<any, any> {
             <div className={cx(`form`)}>
                 <Dialog>
                     <span style={{ position: 'absolute', right: 0, zIndex: 2 }}>
-                        <ToggleMenu menu={(e) => (
+                        <ToggleMenu focus={FocusTopRight} menu={(e) => (
                             <Menu open>
                                 <NavButton onClick={e}>Option 1</NavButton>
                                 <NavButton onClick={e}>Option 2</NavButton>
                                 <NavButton onClick={e}>Option 3</NavButton>
                                 <NavButton onClick={e}>Option 4</NavButton>
                             </Menu>
-                        )}>Test</ToggleMenu>
+                        )}>
+                            ...
+                          </ToggleMenu>
                     </span>
                     <DialogHeader>
                         Add new contact
@@ -225,14 +228,10 @@ class Login2 extends React.Component<any, any> {
 
 const Demo = () => (
     <AnimationRoot>
-        <div style={{margin: '10rem'}}>
+        <div style={{ margin: '10rem' }}>
             <h2>MaterialSurfaceTest</h2>
             <MaterialSurfaceTest />
-            </div>
-            </AnimationRoot>
-          );
-/*
-<MaterialSurfaceTest />
+
             <h2>Rounded Card</h2>
             <Material
                 className={mdc(colors.bg.grey.n50, colors.text.black.dark)}
@@ -317,7 +316,7 @@ const Demo = () => (
 
             <h2>Toggle Menu</h2>
             <div style={{ height: 300 }}>
-                <ToggleMenu menu={(e) => (
+                <ToggleMenu focus={FocusTopLeft} menu={(e) => (
                     <Menu open>
                         <NavButton onClick={e}>Option 1</NavButton>
                         <NavButton onClick={e}>Option 2</NavButton>
@@ -325,7 +324,7 @@ const Demo = () => (
                         <NavButton onClick={e}>Option 4</NavButton>
                     </Menu>
                 )}>
-                    Test
+                    ...
                 </ToggleMenu>
             </div>
 

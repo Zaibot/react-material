@@ -7,6 +7,7 @@ import { GetAnimationRoot } from '../animationroot';
 import { Spring } from '../animation';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
+import Focus from '../surface/focus';
 
 // tslint:disable max-classes-per-file
 
@@ -63,14 +64,10 @@ const emptyAnimation: IInputAnimation = {
     surfaces: [],
 };
 
-function getStyle(width1: number, height1: number, width2: number, height2: number, roundableRatio: number, totalCircle: number, maxShape: number) {
-    const borderRadius = ((Math.max(width2, height2) * Math.pow(roundableRatio, 6) * totalCircle / maxShape));
+function getMaterialStyle(width: number, height: number, offsetX: number, offsetY: number, borderRadius: number) {
     const overflow = 'hidden';
-    const transform = `translate(${width1 * .5 - width2 * .5}px, ${height1 * .5 - height2 * .5}px)`;
-    const width = width2;
-    const height = height2;
-    const r = { width, height, transform, borderRadius, overflow } as React.CSSProperties;
-    return r;
+    const transform = `translate(${offsetX}px, ${offsetY}px)`;
+    return { width, height, borderRadius, overflow, transform } as React.CSSProperties;
 }
 
 function smartUpdate<T>(array: T[], map: (item: T) => T) {
@@ -152,25 +149,34 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const maxShape = children.reduce((state, { animation }) => state + animation.shape, 0);
         const totalCircle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'circle' ? animation.shape : 0), 0);
         const totalRectangle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'rectangle' ? animation.shape : 0), 0);
+        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.x * animation.center, 0);
+        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.y * animation.center, 0);
 
         const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve / maxReserve), 0);
         const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve / maxReserve), 0);
         const spaceWidth = this.state.sizeWidth.current;
         const spaceHeight = this.state.sizeHeight.current;
-        const clipPath = ``;//spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
 
-        // console.log(this.state.sizes.map((x) => `${x.width.toFixed(0)}x${x.height.toFixed(0)}`));
-        // console.log(children.map((x) => x.size.width));
+        const roundableRatio = (spaceWidth > spaceHeight) ? (spaceHeight / spaceWidth) : (spaceWidth / spaceHeight);
+        const borderRadius = Math.max(spaceWidth, spaceHeight) * Math.pow(roundableRatio, 6) * totalCircle / maxShape;
+
+        const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
+        const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
 
         const positioned =
-            children.map(({ surface, idx, size: { width, height } }) => {
+            children.map(({ surface, idx, size: { width, height }, animation }) => {
                 const position = 'absolute';
-                const top = (spaceHeight - height) * .5;
-                const left = (spaceWidth - width) * .5;
+                const top = 0;
+                const left = 0;
                 const { center, size, reserve, front, opacity, shape } = this.getSurface(idx);
-                const visibility = opacity || front || size || reserve ? 'visible' : 'hidden';
+                if (!opacity) { return null; }
+                const visibility = opacity && front && size ? 'visible' : 'hidden';
+                const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.focus.x - offsetX);
+                const offsetTop = (reserveHeight - spaceHeight) * (surface.props.focus.y - offsetY);
+                const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
+                const clipPath = ``;//spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
                 return (
-                    <span style={{ opacity, visibility, position, top, left, clipPath, WebkitClipPath: clipPath }}>
+                    <span style={{ opacity, visibility, position, top, left, clipPath, transform, WebkitClipPath: clipPath }}>
                         <Surface
                             key={`${idx}`}
                             surfaceKey={`${idx}`}
@@ -189,7 +195,6 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 );
             });
 
-        const roundableRatio = (spaceWidth > spaceHeight) ? (spaceHeight / spaceWidth) : (spaceWidth / spaceHeight);
 
         const style = {
             width: reserveWidth,
@@ -199,9 +204,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             <div className={cx(`component`)} style={style}>
                 <Material
                     className={mdc(colors.bg.grey.n50, colors.text.black.darker)}
-                    rippleClassName={mdc(colors.bg.grey.n100)}
-                    floating
-                    style={getStyle(reserveWidth, reserveHeight, spaceWidth, spaceHeight, roundableRatio, totalCircle, maxShape)}>
+                    style={getMaterialStyle(spaceWidth, spaceHeight, spaceOffsetX, spaceOffsetY, borderRadius)}
+                    floating>
                     {positioned}
                 </Material>
             </div>

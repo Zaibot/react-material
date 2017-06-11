@@ -55,6 +55,7 @@
     "./menu/index.tsx",
     "./navbutton/index.tsx",
     "./space/index.tsx",
+    "./surface/focus.tsx",
     "./surface/index.tsx",
     "./theme/index.tsx",
     "./togglemenu/index.tsx"
