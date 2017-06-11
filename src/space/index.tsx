@@ -226,8 +226,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         while (children.length > surfaces.length) {
             surfaces = [...surfaces, new SurfaceAnimation(
                 Spring.generic(0, 0, 0, 100),
-                Spring.generic(0, 0, 0, 100),
-                Spring.generic(0, 0, 0, 100),
+                Spring.generic(0, 0, 0, 500),
+                Spring.generic(0, 0, 0, 400),
                 Spring.generic(0, 0, 0, 100),
                 Spring.generic(0, 0, 0, 100),
                 Spring.generic(0, 0, 0, 100)
