@@ -204,7 +204,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const top = 0;
                 const left = 0;
                 const { center, size, reserve, front, opacity, shape } = this.state.surfaces[idx];
-                if (!opacity) { return null; }
+                if (!opacity.current) { return null; }
                 const visibility = opacity.current && front.current && size.current ? 'visible' : 'hidden';
                 const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.focus.x - offsetX);
                 const offsetTop = (reserveHeight - spaceHeight) * (surface.props.focus.y - offsetY);
