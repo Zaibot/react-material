@@ -2,6 +2,7 @@ import mdc from 'material-design-color-palette/css/material-design-color-palette
 import React from 'react';
 import Animated from '../animated';
 import { Advance, Spring } from '../animation';
+import Presets from '../animation/presets';
 import colors from '../colors';
 import Material from '../material';
 import cx from './style.less';
@@ -28,10 +29,10 @@ export interface IFocusBarAnimation {
     focusw: Spring;
 }
 const emptyAnimation: IFocusBarAnimation = {
-    erroro: Spring.generic(0, 0, 0, 150),
-    errorw: Spring.generic(0, 0, 0, 200),
-    focuso: Spring.generic(0, 0, 0, 150),
-    focusw: Spring.generic(0, 0, 0, 200),
+    erroro: Presets.Spring150,
+    errorw: Presets.Spring200,
+    focuso: Presets.Spring150,
+    focusw: Presets.Spring200,
 };
 
 @Animated()

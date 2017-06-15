@@ -5,6 +5,7 @@ import cx from './style.less';
 import Animated from '../animated';
 import { GetAnimationRoot } from '../animationroot';
 import { Spring } from '../animation';
+import Presets from '../animation/presets';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
@@ -19,6 +20,7 @@ export interface ISpaceProps {
 export interface ISpaceState {
     sizeHeight: Spring;
     sizeWidth: Spring;
+    rounding: Spring;
     surfaces: SurfaceAnimation[];
     sizes: SurfaceMeasure[];
 }
@@ -98,12 +100,6 @@ const emptyAnimation: IInputAnimation = {
     surfaces: [],
 };
 
-function getMaterialStyle(width: number, height: number, offsetX: number, offsetY: number, borderRadius: number) {
-    const overflow = 'hidden';
-    const transform = `translate(${offsetX}px, ${offsetY}px)`;
-    return { width, height, borderRadius, overflow, transform } as React.CSSProperties;
-}
-
 function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
     let res: T[] = null;
     let i = 0;
@@ -126,8 +122,9 @@ function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
 @Animated()
 class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
-        sizeHeight: Spring.generic(0, 0, 0, 150),
-        sizeWidth: Spring.generic(0, 0, 0, 150),
+        rounding: Presets.Spring300,
+        sizeHeight: Presets.Spring100,
+        sizeWidth: Presets.Spring100,
         sizes: [] as SurfaceMeasure[],
         surfaces: [] as SurfaceAnimation[],
     };
@@ -141,31 +138,32 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             .map((surface, idx) => ({ surface, idx, animation: this.state.surfaces[idx], size: this.state.sizes[idx] }))
             .sort((a, b) => a.animation.front.current - b.animation.front.current);
 
-        const maxShape = children.reduce((state, { surface, animation }) => state + animation.shape.current, 0);
-        const totalCircle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
-        const totalRectangle = children.reduce((state, { surface, animation }) => state + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
-        const maxSize = children.reduce((state, { surface, animation }) => state + animation.size.current, 0);
-        const maxReserve = children.reduce((state, { surface, animation }) => state + animation.reserve.current, 0);
+        const maxShape = children.reduce((s, { surface, animation }) => s + animation.shape.current, 0);
+        const totalCircle = children.reduce((s, { surface, animation }) => s + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
+        const totalRectangle = children.reduce((s, { surface, animation }) => s + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
+        const maxSize = children.reduce((s, { surface, animation }) => s + animation.size.current, 0);
+        const maxReserve = children.reduce((s, { surface, animation }) => s + animation.reserve.current, 0);
 
         let height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
         let width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
-        if (totalCircle / maxShape > 0.5) {
+        let { rounding, sizeHeight, sizeWidth } = this.state;
+        if (rounding.current > 0.1) {
             if (height >= width) { height = width; }
             if (height < width) { width = height; }
         }
-
-        let { sizeHeight, sizeWidth } = this.state;
         if (sizeHeight.target === 0 && sizeHeight.current === 0) { sizeHeight = sizeHeight.jump(height); }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
         sizeWidth = sizeWidth.change(width).iterate(advance * 0.001);
+        rounding = rounding.change(totalCircle / maxShape > 0.2 ? 1 : 0).iterate(advance * 0.001);
 
         const surfaces = smartUpdate(this.state.surfaces, (x) => x.iterate(advance * 0.001));
-        if (this.state.sizeHeight !== sizeHeight
+        if (this.state.rounding !== rounding
+            || this.state.sizeHeight !== sizeHeight
             || this.state.sizeWidth !== sizeWidth
             || this.state.surfaces !== surfaces) {
             // Update state
-            this.setState({ sizeHeight, sizeWidth, surfaces });
+            this.setState({ rounding, sizeHeight, sizeWidth, surfaces });
         }
         return state;
     }
@@ -191,12 +189,20 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve.current / maxReserve), 0);
         const spaceWidth = this.state.sizeWidth.current;
         const spaceHeight = this.state.sizeHeight.current;
+        const rounding = this.state.rounding.current;
 
-        const roundableRatio = (spaceWidth > spaceHeight) ? (spaceHeight / spaceWidth) : (spaceWidth / spaceHeight);
-        const borderRadius = Math.max(spaceWidth, spaceHeight) * Math.pow(roundableRatio, 6) * totalCircle / maxShape;
+        // const roundableRatio = (spaceWidth > spaceHeight) ? (spaceHeight / spaceWidth) : (spaceWidth / spaceHeight);
+        // const roundableRatioA = roundableRatio * (totalCircle / maxShape);
+        // const roundableRatioB = 1 - roundableRatioA;
 
         const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
         const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
+
+        // tslint:disable no-magic-numbers
+
+        const circle = Math.sqrt(spaceWidth * spaceWidth + spaceWidth * spaceWidth);
+        const borderRadius = spaceWidth * .5 * rounding;
+        const circleSize = spaceWidth * rounding + circle * (1 - rounding);
 
         const positioned =
             children.map(({ surface, idx, size: { width, height }, animation }) => {
@@ -209,10 +215,11 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.center.x - offsetX);
                 const offsetTop = (reserveHeight - spaceHeight) * (surface.props.center.y - offsetY);
                 const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
-                const clipPath = ``;
+                const clipPath = `ellipse(${circleSize}px ${circleSize}px at ${spaceWidth * .5 + offsetLeft}px ${spaceHeight * .5 + offsetTop}px)`;
+                // const clipPath = `ellipse(${circle * size.current}px ${circle * size.current}px at ${width * .5}px ${height * .5}px)`;
                 // spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
                 return (
-                    <span style={{ opacity: opacity.current, visibility, position, top, left, clipPath, transform, WebkitClipPath: clipPath }}>
+                    <span style={{ opacity: opacity.current, visibility, position, top, left, transform, clipPath, WebkitClipPath: clipPath }}>
                         <Surface
                             key={`${idx}`}
                             surfaceKey={`${idx}`}
@@ -227,22 +234,35 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                             onSize={this.onSize}>
                             {surface.props.children}
                         </Surface>
-                    </span>
+                    </span >
                 );
             });
-
-
-        const style = {
+        const containerStyle = {
             height: reserveHeight,
             width: reserveWidth,
         };
+        const innerStyle = {
+            borderRadius,
+            height: spaceHeight,
+            transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
+            width: spaceWidth,
+        };
         return (
-            <div className={cx(`component`)} style={style}>
-                <Material
-                    className={mdc(colors.bg.grey.n50, colors.text.black.darker)}
-                    style={getMaterialStyle(spaceWidth, spaceHeight, spaceOffsetX, spaceOffsetY, borderRadius)}
-                    floating>
+            <div className={cx(`component`)} style={containerStyle}>
+                <Material className={mdc(colors.bg.grey.n50, colors.text.black.darker)} style={innerStyle} floating>
                     {positioned}
+                    <span style={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        width: circleSize,
+                        height: circleSize,
+                        background: `rgba(0,0,0,0.1)`,
+                        borderRadius: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        border: `1px solid rgba(0,0,0,0.3)`,
+                        pointerEvents: `none`
+                    }} />
                 </Material>
             </div>
         );
@@ -262,12 +282,12 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         while (children.length > surfaces.length) {
             const { focus, size, reserve, front, opacity, shape } = children[surfaces.length].props;
             surfaces = [...surfaces, new SurfaceAnimation(
-                Spring.generic(focus, focus, 0, 1000),
-                Spring.generic(size, size, 0, 1000),
-                Spring.generic(reserve, reserve, 0, 500),
-                Spring.generic(front, front, 0, 100),
-                Spring.generic(opacity, opacity, 0, 100),
-                Spring.generic(shape, shape, 0, 100)
+                Presets.Spring100.jump(focus),
+                Presets.Spring100.jump(size),
+                Presets.Spring100.jump(reserve),
+                Presets.Spring100.jump(front),
+                Presets.Spring100.jump(opacity),
+                Presets.Spring100.jump(shape),
             )];
         }
         surfaces = smartUpdate(surfaces, (surface, idx) => {

@@ -11,7 +11,8 @@ import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } 
 import Input from '../input';
 import Space from '../space';
 import Surface from '../surface';
-import { FocusCenterLeft, FocusTopLeft, FocusTopRight } from '../surface/focus';
+import Slider from '../slider';
+import { FocusCenterLeft, FocusTopLeft, FocusTopRight, FocusCenterRight } from '../surface/focus';
 import cx from './style.less';
 
 class MaterialSurfaceTest extends React.Component<any, any> {
@@ -62,6 +63,66 @@ class MaterialSurfaceTest extends React.Component<any, any> {
     }
 }
 
+// tslint:disable max-classes-per-file
+
+class SurfaceControls extends React.Component<any, any> {
+    public state = {
+        centerX: 20,
+        centerY: 20,
+        focus: 20,
+        size: 20,
+        reserve: 20,
+        front: 20,
+        opacity: 20,
+        shape: 20,
+    };
+    public render() {
+        return (
+            <div className={cx(`form`)}>
+                <Dialog>
+                    <DialogHeader>
+                        Surface
+                    </DialogHeader>
+                    <DialogSubheader>
+                        Play with surface inputs
+                </DialogSubheader>
+                    <DialogContents>
+                        <div>
+                            <label>Center</label>
+                            <Slider value={this.state.centerX} min={0} max={100} onChange={(p) => this.setState({ centerX: p })} />
+                            <Slider value={this.state.centerY} min={0} max={100} onChange={(p) => this.setState({ centerY: p })} />
+                        </div>
+                        <div>
+                            <label>Focus</label>
+                            <Slider value={this.state.focus} min={0} max={100} onChange={(p) => this.setState({ focus: p })} />
+                        </div>
+                        <div>
+                            <label>Size</label>
+                            <Slider value={this.state.size} min={0} max={100} onChange={(p) => this.setState({ size: p })} />
+                        </div>
+                        <div>
+                            <label>Reserve</label>
+                            <Slider value={this.state.reserve} min={0} max={100} onChange={(p) => this.setState({ reserve: p })} />
+                        </div>
+                        <div>
+                            <label>Front</label>
+                            <Slider value={this.state.front} min={0} max={100} onChange={(p) => this.setState({ front: p })} />
+                        </div>
+                        <div>
+                            <label>Opacity</label>
+                            <Slider value={this.state.opacity} min={0} max={100} onChange={(p) => this.setState({ opacity: p })} />
+                        </div>
+                        <div>
+                            <label>Shape</label>
+                            <Slider value={this.state.shape} min={0} max={100} onChange={(p) => this.setState({ shape: p })} />
+                        </div>
+                    </DialogContents>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
 class Form extends React.Component<any, any> {
     public state = {
         firstName: 'Tobias',
@@ -75,7 +136,7 @@ class Form extends React.Component<any, any> {
             <div className={cx(`form`)}>
                 <Dialog>
                     <span style={{ position: 'absolute', right: 0, zIndex: 2 }}>
-                        <ToggleMenu focus={FocusTopRight} menu={(e) => (
+                        <ToggleMenu focus={FocusTopRight} focusMenu={FocusTopRight} menu={(e) => (
                             <Menu open>
                                 <NavButton onClick={e}>Option 1</NavButton>
                                 <NavButton onClick={e}>Option 2</NavButton>
@@ -229,6 +290,8 @@ class Login2 extends React.Component<any, any> {
 const Demo = () => (
     <AnimationRoot>
         <div style={{ margin: '10rem' }}>
+            <SurfaceControls />
+
             <h2>MaterialSurfaceTest</h2>
             <MaterialSurfaceTest />
 

@@ -12,6 +12,7 @@ import cx from './style.less';
 
 export interface MenuProps {
     focus: Focus;
+    focusMenu?: Focus;
     menu: (onClick: () => void) => React.ReactElement<any>;
 }
 export interface MenuState {
@@ -24,13 +25,13 @@ class ToggleMenu extends React.Component<MenuProps, MenuState> {
     };
 
     public render() {
-        const { children, focus } = this.props;
+        const { children, focus, focusMenu } = this.props;
         const { open } = this.state;
         return (
             <Space>
                 <Surface
                     center={focus || { x: .5, y: .5 }}
-                    focus={open ? 0 : 1}
+                    focus={1}
                     size={open ? 0 : 1}
                     reserve={1}
                     front={open ? 0 : 1}
@@ -40,8 +41,8 @@ class ToggleMenu extends React.Component<MenuProps, MenuState> {
                     <Button round rippleClassName={mdc(colors.bg.grey.n500)} onClick={this.onToggle}>{children}</Button>
                 </Surface>
                 <Surface
-                    center={focus || { x: .5, y: .5 }}
-                    focus={open ? 1 : 0}
+                    center={focusMenu || focus || { x: .5, y: .5 }}
+                    focus={0}
                     size={open ? 1 : 0}
                     reserve={0}
                     front={open ? 1 : 0}

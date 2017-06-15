@@ -2,6 +2,7 @@ import mdc from 'material-design-color-palette/css/material-design-color-palette
 import React from 'react';
 import Animated from '../animated';
 import { Advance, Spring } from '../animation';
+import Presets from '../animation/presets';
 import colors from '../colors';
 import FocusBar from '../focusbar';
 import Material from '../material';
@@ -30,9 +31,9 @@ export interface IInputAnimation {
     label: Spring;
 }
 const emptyAnimation: IInputAnimation = {
-    helper: Spring.generic(0, 0, 0, 300),
-    input: Spring.generic(0, 0, 0, 300),
-    label: Spring.generic(0, 0, 0, 500),
+    helper: Presets.Spring300,
+    input: Presets.Spring300,
+    label: Presets.Spring500,
 };
 
 @Animated()
