@@ -184,8 +184,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const maxShape = children.reduce((state, { animation }) => state + animation.shape.current, 0);
         const totalCircle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
         const totalRectangle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
-        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.x * animation.center.current, 0);
-        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.focus.y * animation.center.current, 0);
+        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.x * animation.center.current, 0);
+        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.y * animation.center.current, 0);
 
         const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve.current / maxReserve), 0);
         const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve.current / maxReserve), 0);
@@ -206,17 +206,18 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const { center, size, reserve, front, opacity, shape } = this.state.surfaces[idx];
                 if (!opacity.current) { return null; }
                 const visibility = opacity.current && front.current && size.current ? 'visible' : 'hidden';
-                const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.focus.x - offsetX);
-                const offsetTop = (reserveHeight - spaceHeight) * (surface.props.focus.y - offsetY);
+                const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.center.x - offsetX);
+                const offsetTop = (reserveHeight - spaceHeight) * (surface.props.center.y - offsetY);
                 const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
-                const clipPath = ``;//spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
+                const clipPath = ``;
+                // spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
                 return (
                     <span style={{ opacity: opacity.current, visibility, position, top, left, clipPath, transform, WebkitClipPath: clipPath }}>
                         <Surface
                             key={`${idx}`}
                             surfaceKey={`${idx}`}
-                            focus={surface.props.focus}
                             center={surface.props.center}
+                            focus={surface.props.focus}
                             size={surface.props.size}
                             reserve={surface.props.reserve}
                             front={surface.props.front}
@@ -232,8 +233,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
 
         const style = {
-            width: reserveWidth,
             height: reserveHeight,
+            width: reserveWidth,
         };
         return (
             <div className={cx(`component`)} style={style}>
@@ -259,10 +260,10 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         // Allocate Surfaces
         let surfaces = this.state.surfaces;
         while (children.length > surfaces.length) {
-            const { center, size, reserve, front, opacity, shape } = children[surfaces.length].props;
+            const { focus, size, reserve, front, opacity, shape } = children[surfaces.length].props;
             surfaces = [...surfaces, new SurfaceAnimation(
-                Spring.generic(center, center, 0, 500),
-                Spring.generic(size, size, 0, 500),
+                Spring.generic(focus, focus, 0, 1000),
+                Spring.generic(size, size, 0, 1000),
                 Spring.generic(reserve, reserve, 0, 500),
                 Spring.generic(front, front, 0, 100),
                 Spring.generic(opacity, opacity, 0, 100),
@@ -270,8 +271,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             )];
         }
         surfaces = smartUpdate(surfaces, (surface, idx) => {
-            const { center, size, reserve, front, opacity, shape } = children[idx].props;
-            return surface.change(center, size, reserve, front, opacity, shape);
+            const { focus, size, reserve, front, opacity, shape } = children[idx].props;
+            return surface.change(focus, size, reserve, front, opacity, shape);
         });
         // Allocate Sizes
         let sizes = this.state.sizes;

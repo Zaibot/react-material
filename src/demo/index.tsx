@@ -11,7 +11,7 @@ import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } 
 import Input from '../input';
 import Space from '../space';
 import Surface from '../surface';
-import { FocusTopRight, FocusTopLeft, FocusCenterLeft } from '../surface/focus';
+import { FocusCenterLeft, FocusTopLeft, FocusTopRight } from '../surface/focus';
 import cx from './style.less';
 
 class MaterialSurfaceTest extends React.Component<any, any> {
@@ -24,8 +24,8 @@ class MaterialSurfaceTest extends React.Component<any, any> {
         return (
             <Space>
                 <Surface
-                    focus={FocusCenterLeft}
-                    center={primary ? 1 : 0}
+                    center={FocusCenterLeft}
+                    focus={1}
                     size={primary ? 1 : 0}
                     reserve={1}
                     front={primary ? 1 : 0}
@@ -35,8 +35,8 @@ class MaterialSurfaceTest extends React.Component<any, any> {
                     <Button round rippleClassName={mdc(colors.bg.grey.n300)} onClick={this.onToggle}>...</Button>
                 </Surface>
                 <Surface
-                    focus={FocusCenterLeft}
-                    center={primary ? 0 : 1}
+                    center={FocusCenterLeft}
+                    focus={0}
                     size={primary ? 0 : 1}
                     reserve={0}
                     front={primary ? 0 : 1}

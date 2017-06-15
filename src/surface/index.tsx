@@ -7,9 +7,9 @@ export type SurfaceSizeCallback = (dimensions: ISurfaceSize) => void;
 
 export type Shape = 'circle' | 'rectangle';
 export interface ISurfaceProps {
-    focus: { x: number; y: number; };
+    center: { x: number; y: number; };
     surfaceKey?: string;
-    center: number;
+    focus: number;
     size: number;
     reserve: number;
     front: number;

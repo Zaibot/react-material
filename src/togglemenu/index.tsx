@@ -29,8 +29,8 @@ class ToggleMenu extends React.Component<MenuProps, MenuState> {
         return (
             <Space>
                 <Surface
-                    focus={focus || { x: .5, y: .5 }}
-                    center={open ? 0 : 1}
+                    center={focus || { x: .5, y: .5 }}
+                    focus={open ? 0 : 1}
                     size={open ? 0 : 1}
                     reserve={1}
                     front={open ? 0 : 1}
@@ -40,8 +40,8 @@ class ToggleMenu extends React.Component<MenuProps, MenuState> {
                     <Button round rippleClassName={mdc(colors.bg.grey.n500)} onClick={this.onToggle}>{children}</Button>
                 </Surface>
                 <Surface
-                    focus={focus || { x: .5, y: .5 }}
-                    center={open ? 1 : 0}
+                    center={focus || { x: .5, y: .5 }}
+                    focus={open ? 1 : 0}
                     size={open ? 1 : 0}
                     reserve={0}
                     front={open ? 1 : 0}
