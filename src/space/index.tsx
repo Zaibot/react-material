@@ -9,6 +9,7 @@ import Presets from '../animation/presets';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
+import SpaceCore from './space';
 
 // tslint:disable max-classes-per-file
 
@@ -200,11 +201,10 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const circleSize = borderRadius + circle * (1 - rounding);
 
         const positioned =
-            children.map(({ surface, idx, size: { width, height }, animation }) => {
+            children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => {
                 const position = 'absolute';
                 const top = 0;
                 const left = 0;
-                const { center, size, reserve, front, opacity, shape } = this.state.surfaces[idx];
                 if (!opacity.current) { return null; }
                 const visibility = opacity.current && front.current && size.current ? 'visible' : 'hidden';
                 const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.center.x - offsetX);
@@ -230,35 +230,22 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                     </span >
                 );
             });
-        const containerStyle = {
-            height: reserveHeight,
-            width: reserveWidth,
-        };
-        const innerStyle = {
-            borderRadius,
-            height: spaceHeight,
-            transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
-            width: spaceWidth,
-        };
         return (
-            <div className={cx(`component`)} style={containerStyle}>
-                <Material className={mdc(colors.bg.grey.n50, colors.text.black.darker)} style={innerStyle} floating>
-                    {positioned}
-                </Material>
-            </div>
+            <SpaceCore
+                reserveWidth={reserveWidth}
+                reserveHeight={reserveHeight}
+                spaceWidth={spaceWidth}
+                spaceHeight={spaceHeight}
+                borderRadius={borderRadius}
+                rounding={circleSize}
+                offsetX={offsetX}
+                offsetY={offsetY}
+                surfaces={
+                    children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => ({
+                        surface, key: `${idx}`, width, height, center: center.current, size: size.current, reserve: reserve.current, front: front.current, opacity: opacity.current, shape: shape.current, circleSize, onSize: this.onSize
+                    }))
+                } />
         );
-        // <span style={{
-        //     position: 'absolute',
-        //     left: '50%',
-        //     top: '50%',
-        //     width: circleSize * 2,
-        //     height: circleSize * 2,
-        //     background: `rgba(0,0,0,0.1)`,
-        //     borderRadius: '50%',
-        //     transform: 'translate(-50%, -50%)',
-        //     border: `1px solid rgba(0,0,0,0.3)`,
-        //     pointerEvents: `none`
-        // }} />
     }
 
     public componentWillMount() {
