@@ -191,18 +191,13 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const spaceHeight = this.state.sizeHeight.current;
         const rounding = this.state.rounding.current;
 
-        // const roundableRatio = (spaceWidth > spaceHeight) ? (spaceHeight / spaceWidth) : (spaceWidth / spaceHeight);
-        // const roundableRatioA = roundableRatio * (totalCircle / maxShape);
-        // const roundableRatioB = 1 - roundableRatioA;
-
         const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
         const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
 
         // tslint:disable no-magic-numbers
-
         const circle = Math.sqrt(spaceWidth * spaceWidth + spaceWidth * spaceWidth);
         const borderRadius = spaceWidth * .5 * rounding;
-        const circleSize = spaceWidth * rounding + circle * (1 - rounding);
+        const circleSize = borderRadius + circle * (1 - rounding);
 
         const positioned =
             children.map(({ surface, idx, size: { width, height }, animation }) => {
@@ -216,8 +211,6 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 const offsetTop = (reserveHeight - spaceHeight) * (surface.props.center.y - offsetY);
                 const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
                 const clipPath = `ellipse(${circleSize}px ${circleSize}px at ${spaceWidth * .5 + offsetLeft}px ${spaceHeight * .5 + offsetTop}px)`;
-                // const clipPath = `ellipse(${circle * size.current}px ${circle * size.current}px at ${width * .5}px ${height * .5}px)`;
-                // spaceWidth && spaceHeight ? `polygon(${0}px ${0}px, ${spaceWidth}px 0, ${spaceWidth}px ${spaceHeight}px, 0px ${spaceHeight}px, 0px 0px)` : ``;
                 return (
                     <span style={{ opacity: opacity.current, visibility, position, top, left, transform, clipPath, WebkitClipPath: clipPath }}>
                         <Surface
@@ -251,21 +244,21 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             <div className={cx(`component`)} style={containerStyle}>
                 <Material className={mdc(colors.bg.grey.n50, colors.text.black.darker)} style={innerStyle} floating>
                     {positioned}
-                    <span style={{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        width: circleSize,
-                        height: circleSize,
-                        background: `rgba(0,0,0,0.1)`,
-                        borderRadius: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        border: `1px solid rgba(0,0,0,0.3)`,
-                        pointerEvents: `none`
-                    }} />
                 </Material>
             </div>
         );
+        // <span style={{
+        //     position: 'absolute',
+        //     left: '50%',
+        //     top: '50%',
+        //     width: circleSize * 2,
+        //     height: circleSize * 2,
+        //     background: `rgba(0,0,0,0.1)`,
+        //     borderRadius: '50%',
+        //     transform: 'translate(-50%, -50%)',
+        //     border: `1px solid rgba(0,0,0,0.3)`,
+        //     pointerEvents: `none`
+        // }} />
     }
 
     public componentWillMount() {

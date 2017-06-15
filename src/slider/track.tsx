@@ -9,9 +9,15 @@ export interface ITrackProps {
 }
 
 export default ({ children, position }: ITrackProps & { children?: React.ReactNode }) => (
-  <Material className={cx(`track`, mdc(colors.bg.indigo.n500))} rippleClassName={mdc(colors.bg.indigo.n50)} ripple slim style={{ left: `${(position * 100).toFixed(2)}%` }} elevation={2}>
-    {children}
-  </Material>
+    <Material
+        className={cx(`track`, mdc(colors.bg.indigo.n500))}
+        rippleClassName={mdc(colors.bg.indigo.n50)}
+        ripple
+        slim
+        style={{ left: `${(position * 100).toFixed(2)}%` }}
+        elevation={2}>
+        {children}
+    </Material>
 );
 // export default ({ children, position }: ITrackProps & { children?: React.ReactNode }) => (
 //     <div className={cx(`track`)} style={{ left: `${(position * 100).toFixed(2)}%` }}>

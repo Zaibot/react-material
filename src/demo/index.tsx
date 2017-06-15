@@ -67,54 +67,129 @@ class MaterialSurfaceTest extends React.Component<any, any> {
 
 class SurfaceControls extends React.Component<any, any> {
     public state = {
-        centerX: 20,
-        centerY: 20,
-        focus: 20,
-        size: 20,
-        reserve: 20,
-        front: 20,
-        opacity: 20,
-        shape: 20,
+        centerX: 0,
+        centerY: 0,
+        focus: 0,
+        size: 0,
+        reserve: 0,
+        front: 0,
+        opacity: 0,
+        shape: 0,
     };
+
     public render() {
         return (
-            <div className={cx(`form`)}>
+            <div>
+                <div>
+                    <label>Preset</label>
+                    <br/>
+                    <Button slim className={mdc(colors.bg.red.n500, colors.text.white.dark)} onClick={this.onPreset1}>1</Button>&nbsp;
+                    <Button slim className={mdc(colors.bg.red.n500, colors.text.white.dark)} onClick={this.onPreset2}>2</Button>&nbsp;
+                    <Button slim className={mdc(colors.bg.red.n500, colors.text.white.dark)} onClick={this.onPreset3}>3</Button>&nbsp;
+                    <Button slim className={mdc(colors.bg.red.n500, colors.text.white.dark)} onClick={this.onPreset4}>4</Button>&nbsp;
+                </div>
+                <div>
+                    <label>Center</label>
+                    <Slider value={this.state.centerX} min={-1} max={1} onChange={(p) => this.setState({ centerX: p }, () => this.props.onChange(this.state))} />
+                    <Slider value={this.state.centerY} min={-1} max={1} onChange={(p) => this.setState({ centerY: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Focus</label>
+                    <Slider value={this.state.focus} min={0} max={1} onChange={(p) => this.setState({ focus: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Size</label>
+                    <Slider value={this.state.size} min={0} max={1} onChange={(p) => this.setState({ size: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Reserve</label>
+                    <Slider value={this.state.reserve} min={0} max={1} onChange={(p) => this.setState({ reserve: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Front</label>
+                    <Slider value={this.state.front} min={0} max={1} onChange={(p) => this.setState({ front: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Opacity</label>
+                    <Slider value={this.state.opacity} min={0} max={1} onChange={(p) => this.setState({ opacity: p }, () => this.props.onChange(this.state))} />
+                </div>
+                <div>
+                    <label>Shape</label>
+                    <Slider value={this.state.shape} min={0} max={1} onChange={(p) => this.setState({ shape: p }, () => this.props.onChange(this.state))} />
+                </div>
+            </div>
+        );
+    }
+    private onPreset1 = () => {
+      this.setState({ centerX: 0, centerY: 0, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 }, () => this.props.onChange(this.state));
+    }
+    private onPreset2 = () => {
+      this.setState({ centerX: 0, centerY: 0, focus: 1, size: 1, reserve: 1, front: 1, opacity: 1, shape: 1 }, () => this.props.onChange(this.state));
+    }
+    private onPreset3 = () => {
+      this.setState({ centerX: 0, centerY: 0, focus: 1, size: 0, reserve: 0, front: 1, opacity: 1, shape: 1 }, () => this.props.onChange(this.state));
+    }
+    private onPreset4 = () => {
+      this.setState({ centerX: 0, centerY: 0, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 }, () => this.props.onChange(this.state));
+    }
+}
+class SurfacePlayground extends React.Component<any, any> {
+    public state = {
+        left: { centerX: 0, centerY: 0, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 },
+        right: { centerX: 0, centerY: 0, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 },
+    };
+    public render() {
+        const { left, right } = this.state;
+        return (
+            <div className={cx(`form`)} style={{ width: `50%` }}>
                 <Dialog>
                     <DialogHeader>
                         Surface
                     </DialogHeader>
                     <DialogSubheader>
                         Play with surface inputs
-                </DialogSubheader>
+                    </DialogSubheader>
                     <DialogContents>
-                        <div>
-                            <label>Center</label>
-                            <Slider value={this.state.centerX} min={0} max={100} onChange={(p) => this.setState({ centerX: p })} />
-                            <Slider value={this.state.centerY} min={0} max={100} onChange={(p) => this.setState({ centerY: p })} />
-                        </div>
-                        <div>
-                            <label>Focus</label>
-                            <Slider value={this.state.focus} min={0} max={100} onChange={(p) => this.setState({ focus: p })} />
-                        </div>
-                        <div>
-                            <label>Size</label>
-                            <Slider value={this.state.size} min={0} max={100} onChange={(p) => this.setState({ size: p })} />
-                        </div>
-                        <div>
-                            <label>Reserve</label>
-                            <Slider value={this.state.reserve} min={0} max={100} onChange={(p) => this.setState({ reserve: p })} />
-                        </div>
-                        <div>
-                            <label>Front</label>
-                            <Slider value={this.state.front} min={0} max={100} onChange={(p) => this.setState({ front: p })} />
-                        </div>
-                        <div>
-                            <label>Opacity</label>
-                            <Slider value={this.state.opacity} min={0} max={100} onChange={(p) => this.setState({ opacity: p })} />
-                        </div>
-                        <div>
-                            <label>Shape</label>
-                            <Slider value={this.state.shape} min={0} max={100} onChange={(p) => this.setState({ shape: p })} />
+                        <div style={{ display: 'flex' }}>
+                            <div style={{ flex: '0 0 25%' }}>
+                                <SurfaceControls onChange={(s: any) => this.setState({ left: s })} />
+                            </div>
+                            <div style={{ flex: '0 0 25%' }}>
+                                <SurfaceControls onChange={(s: any) => this.setState({ right: s })} />
+                            </div>
+                            <div style={{ flex: '0 0 50%' }}>
+                                <Space>
+                                    <Surface
+                                        center={{ x: left.centerX, y: left.centerY }}
+                                        focus={left.focus}
+                                        size={left.size}
+                                        reserve={left.reserve}
+                                        front={left.front}
+                                        opacity={left.opacity}
+                                        shape={left.shape}
+                                        type={'circle'} >
+                                        <Button round rippleClassName={mdc(colors.bg.grey.n300)}>...</Button>
+                                    </Surface>
+                                    <Surface
+                                        center={{ x: right.centerX, y: right.centerY }}
+                                        focus={right.focus}
+                                        size={right.size}
+                                        reserve={right.reserve}
+                                        front={right.front}
+                                        opacity={right.opacity}
+                                        shape={right.shape}
+                                        type={'rectangle'} >
+                                        <Menu open>
+                                            <NavButton>Option 1</NavButton>
+                                            <NavButton>Option 2</NavButton>
+                                            <NavButton>Option 3</NavButton>
+                                            <NavButton>Option 4</NavButton>
+                                            <NavButton>Option 5</NavButton>
+                                            <NavButton>Option 6</NavButton>
+                                        </Menu>
+                                    </Surface>
+                                </Space>
+                            </div>
                         </div>
                     </DialogContents>
                 </Dialog>
@@ -290,7 +365,7 @@ class Login2 extends React.Component<any, any> {
 const Demo = () => (
     <AnimationRoot>
         <div style={{ margin: '10rem' }}>
-            <SurfaceControls />
+            <SurfacePlayground />
 
             <h2>MaterialSurfaceTest</h2>
             <MaterialSurfaceTest />

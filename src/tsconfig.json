@@ -56,7 +56,7 @@
     "./menu/index.tsx",
     "./navbutton/index.tsx",
     "./slider/bar.tsx",
-    "./slider/index.tsx",
+    "./slider/slider.tsx",
     "./slider/track.tsx",
     "./slider/trackbar.tsx",
     "./space/index.tsx",
