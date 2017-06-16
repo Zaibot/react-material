@@ -3,10 +3,10 @@ import React from 'react';
 import Animated from '../animated';
 import Button from '../button';
 import colors from '../colors';
-import Surface from '../surface';
-import Space from '../space';
 import Material from '../material';
 import Menu from '../menu';
+import Space from '../space';
+import Surface from '../surface';
 import Focus from '../surface/focus';
 import cx from './style.less';
 

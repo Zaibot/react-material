@@ -17,26 +17,20 @@ export interface IMenuProps {
     onClick?: any;
     open: boolean;
 }
-export interface IMenuAnimation {
-    width: number;
-    height: number;
-}
-
-const parsePixels = (text: string) => {
-    const n = Number(text.substring(0, text.length - 2));
-    if (isNaN(n)) { return 0; }
-    return n;
-};
 
 class Menu extends React.Component<IMenuProps, {}> {
     public render() {
         const { onClick, disabled, children } = this.props;
-        const css = cx('component', { open }/*, mdc(colors.bg.blue.n300)*/);
+        const css = cx('component', { open }, mdc(colors.bg.blue.n300));
         return (
             <div className={css} onClick={onClick}>
                 {children}
             </div>
         );
+    }
+
+    public shouldComponentUpdate() {
+      return false;
     }
 }
 export default Menu;

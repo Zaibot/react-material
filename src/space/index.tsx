@@ -1,15 +1,15 @@
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
-import colors from '../colors';
-import cx from './style.less';
 import Animated from '../animated';
-import { GetAnimationRoot } from '../animationroot';
 import { Spring } from '../animation';
 import Presets from '../animation/presets';
+import { GetAnimationRoot } from '../animationroot';
+import colors from '../colors';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
 import SpaceCore from './space';
+import cx from './style.less';
 
 // tslint:disable max-classes-per-file
 

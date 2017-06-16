@@ -1,4 +1,4 @@
-export type Focus = { x: number; y: number; };
+export interface Focus { x: number; y: number; }
 
 export const FocusTopLeft: Focus = { x: 0, y: 0 };
 export const FocusTopCenter: Focus = { x: .5, y: 0 };

@@ -26,7 +26,7 @@ class NavButton extends React.Component<ButtonProps, ButtonState> {
         const { onClick, disabled, children } = this.props;
         const { round, raised, accent } = this.props;
         const { hover, pressed } = this.state;
-        const css = cx('component', mdc(colors.bg.grey.n50), mdc(colors.text.black.darker), { round, hover, pressed });
+        const css = cx('component', /*mdc(colors.bg.grey.n50),*/ mdc(colors.text.black.darker), { round, hover, pressed });
         const cssRipple = mdc(colors.bg.grey.n800);
         // const colorAccent = '#222';
         // const colorText = '#fff';
