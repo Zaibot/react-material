@@ -28,7 +28,7 @@ export interface ISpaceState {
 
 export class SurfaceAnimation {
     public constructor(
-        public readonly center: Spring,
+        public readonly focus: Spring,
         public readonly size: Spring,
         public readonly reserve: Spring,
         public readonly front: Spring,
@@ -37,39 +37,39 @@ export class SurfaceAnimation {
     ) { }
 
     public iterate(advance: number) {
-        const center = this.center.iterate(advance);
+        const focus = this.focus.iterate(advance);
         const size = this.size.iterate(advance);
         const reserve = this.reserve.iterate(advance);
         const front = this.front.iterate(advance);
         const opacity = this.opacity.iterate(advance);
         const shape = this.shape.iterate(advance);
-        if (center !== this.center
+        if (focus !== this.focus
             || size !== this.size
             || reserve !== this.reserve
             || front !== this.front
             || opacity !== this.opacity
             || shape !== this.shape) {
-            return new SurfaceAnimation(center, size, reserve, front, opacity, shape);
+            return new SurfaceAnimation(focus, size, reserve, front, opacity, shape);
         }
         return this;
     }
 
     public change(
-        center: number,
+        focus: number,
         size: number,
         reserve: number,
         front: number,
         opacity: number,
         shape: number,
     ) {
-        if (center !== this.center.target
+        if (focus !== this.focus.target
             || size !== this.size.target
             || reserve !== this.reserve.target
             || front !== this.front.target
             || opacity !== this.opacity.target
             || shape !== this.shape.target) {
             return new SurfaceAnimation(
-                this.center.change(center),
+                this.focus.change(focus),
                 this.size.change(size),
                 this.reserve.change(reserve),
                 this.front.change(front),
@@ -174,7 +174,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             .map((surface, idx) => ({ surface, idx, animation: this.state.surfaces[idx], size: this.state.sizes[idx] }))
             .sort((a, b) => a.animation.front.current - b.animation.front.current);
 
-        const maxCenter = children.reduce((state, { animation }) => state + animation.center.current, 0);
+        const maxFocus = children.reduce((state, { animation }) => state + animation.focus.current, 0);
         const maxSize = children.reduce((state, { animation }) => state + animation.size.current, 0);
         const maxReserve = children.reduce((state, { animation }) => state + animation.reserve.current, 0);
         const maxFront = children.reduce((state, { animation }) => state + animation.front.current, 0);
@@ -182,8 +182,8 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const maxShape = children.reduce((state, { animation }) => state + animation.shape.current, 0);
         const totalCircle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'circle' ? animation.shape.current : 0), 0);
         const totalRectangle = children.reduce((state, { surface, animation }, idx) => state + (surface.props.type === 'rectangle' ? animation.shape.current : 0), 0);
-        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.x * animation.center.current, 0);
-        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.y * animation.center.current, 0);
+        const offsetX = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.x * animation.focus.current, 0);
+        const offsetY = children.reduce((state, { surface, animation }, idx) => state + surface.props.center.y * animation.focus.current, 0);
 
         const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve.current / maxReserve), 0);
         const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve.current / maxReserve), 0);
@@ -199,17 +199,18 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const borderRadius = spaceWidth * .5 * rounding;
         const circleSize = borderRadius + circle * (1 - rounding);
 
-        const surfaces = children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => ({
-            center: center.current,
+        const surfaces = children.map(({ surface, idx, size: { width, height }, animation: { focus, size, reserve, front, opacity, shape } }) => ({
+            center: surface.props.center,
             circleSize,
+            focus: focus.current,
             front: front.current,
             height,
-            key: `${idx}`,
-            opacity: opacity.current,
+            opacity: opacity.current * .5,
             reserve: reserve.current,
             shape: shape.current,
             size: size.current,
             surface,
+            surfaceKey: `${idx}`,
             width,
         }));
 
@@ -265,6 +266,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
     private onSize = (size: ISurfaceSize) => {
         const sizes = smartUpdate(this.state.sizes, (surface, idx) => `${idx}` !== size.surfaceKey ? surface : surface.change(size.x, size.y));
+        console.log(sizes.map((x) => `${x.width}x${x.height}`))
         if (sizes !== this.state.sizes) {
             // Update state
             this.setState({ sizes }, () => GetAnimationRoot(this).iterate());

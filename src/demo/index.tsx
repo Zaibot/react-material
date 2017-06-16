@@ -159,13 +159,13 @@ class SurfacePlayground extends React.Component<any, any> {
                         </div>
                         <div style={{ display: 'flex' }}>
                             <div style={{ flex: '0 0 25%' }}>
-                                <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetLeft1}>1</Button>&nbsp;
-                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetLeft2}>2</Button>&nbsp;
+                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetLeft2}>A</Button>&nbsp;
+                            <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetRight2}>A</Button>&nbsp;
                                 <SurfaceControls values={left} onChange={(s: any) => this.setState({ left: s })} />
                             </div>
                             <div style={{ flex: '0 0 25%' }}>
-                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetRight1}>1</Button>&nbsp;
-                                <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetRight2}>2</Button>&nbsp;
+                                <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetLeft1}>B</Button>&nbsp;
+                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetRight1}>B</Button>&nbsp;
                                 <SurfaceControls values={right} onChange={(s: any) => this.setState({ right: s })} />
                             </div>
                             <div style={{ flex: '0 0 50%' }}>
