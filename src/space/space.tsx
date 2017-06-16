@@ -20,6 +20,7 @@ export interface ISpaceProps {
     borderRadius: number;
     rounding: number;
     surfaces: IChild[];
+    onSize: (size: ISurfaceSize) => void;
 }
 
 export interface IChild {
@@ -34,14 +35,13 @@ export interface IChild {
     opacity: number;
     circleSize: number;
     shape: number;
-    onSize: (size: ISurfaceSize) => void;
 }
 
-export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, borderRadius, rounding, offsetX, offsetY, surfaces }: ISpaceProps) => {
+export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, borderRadius, rounding, offsetX, offsetY, surfaces, onSize }: ISpaceProps) => {
     const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
     const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
     const positioned =
-        surfaces.map(({ surface, key, width, height, center, size, reserve, front, opacity, shape, circleSize, onSize }) => {
+        surfaces.map(({ surface, key, width, height, center, size, reserve, front, opacity, shape, circleSize }) => {
             const position = 'absolute';
             const top = 0;
             const left = 0;

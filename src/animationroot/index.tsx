@@ -20,18 +20,22 @@ export interface IAnimatable<T> {
 
 export interface IAnimationRootProps {
   rate?: number;
-};
+}
 export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     public static childContextTypes = {
         [RootSymbol]: PropTypes.any,
     };
     private static _warned = false;
+    // private static xx = 0;
     private _registrations: Array<{ component: IAnimatable<any>; state: any; always: boolean; last: number; }> = [];
     private _timer: any = null;
     private _last: number = Date.now();
+    // private x = 0;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+        // this.x = ++AnimationRoot.xx;
+        // console.log(`[@zaibot/react-material] animation root ${this.x}`);
     }
 
     public add(component: IAnimatable<any>, always: boolean) {
@@ -39,10 +43,12 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const state: any = undefined;
         this._registrations = [...this._registrations, { component, state, always, last: 0 }];
         this.runSingle(component, this.getAnimationTime(), 0);
+        // console.log(`[@zaibot/react-material] animation root, adding ${this.x}`);
     }
 
     public remove(component: IAnimatable<any>) {
         this._registrations = this._registrations.filter((x) => x.component !== component);
+        // console.log(`[@zaibot/react-material] animation root, removing ${this.x}`);
     }
 
     public render() {
@@ -70,13 +76,13 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         this.cancelTrigger();
     }
 
-    protected shouldComponentUpdate() {
-        return false;
-    }
+    // protected shouldComponentUpdate() {
+    //     return false;
+    // }
 
     private iterateCore() {
         const time = Date.now();
-        const advance = (this.props.rate) || (time - this._last);
+        const advance = this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last);
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
         this._last = time;
     }

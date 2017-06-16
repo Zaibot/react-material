@@ -31,7 +31,7 @@ const parsePixels = (text: string) => {
 class Menu extends React.Component<IMenuProps, {}> {
     public render() {
         const { onClick, disabled, children } = this.props;
-        const css = cx('component', { open });
+        const css = cx('component', { open }/*, mdc(colors.bg.blue.n300)*/);
         return (
             <div className={css} onClick={onClick}>
                 {children}

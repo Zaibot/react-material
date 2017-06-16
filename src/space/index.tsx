@@ -170,7 +170,6 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
     }
 
     public render() {
-        const surfaces = this.state.surfaces;
         const children = (this.props.children as Surface[])
             .map((surface, idx) => ({ surface, idx, animation: this.state.surfaces[idx], size: this.state.sizes[idx] }))
             .sort((a, b) => a.animation.front.current - b.animation.front.current);
@@ -200,36 +199,20 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const borderRadius = spaceWidth * .5 * rounding;
         const circleSize = borderRadius + circle * (1 - rounding);
 
-        const positioned =
-            children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => {
-                const position = 'absolute';
-                const top = 0;
-                const left = 0;
-                if (!opacity.current) { return null; }
-                const visibility = opacity.current && front.current && size.current ? 'visible' : 'hidden';
-                const offsetLeft = (reserveWidth - spaceWidth) * (surface.props.center.x - offsetX);
-                const offsetTop = (reserveHeight - spaceHeight) * (surface.props.center.y - offsetY);
-                const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
-                const clipPath = `ellipse(${circleSize}px ${circleSize}px at ${spaceWidth * .5 + offsetLeft}px ${spaceHeight * .5 + offsetTop}px)`;
-                return (
-                    <span style={{ opacity: opacity.current, visibility, position, top, left, transform, clipPath, WebkitClipPath: clipPath }}>
-                        <Surface
-                            key={`${idx}`}
-                            surfaceKey={`${idx}`}
-                            center={surface.props.center}
-                            focus={surface.props.focus}
-                            size={surface.props.size}
-                            reserve={surface.props.reserve}
-                            front={surface.props.front}
-                            opacity={surface.props.opacity}
-                            shape={surface.props.shape}
-                            type={surface.props.type}
-                            onSize={this.onSize}>
-                            {surface.props.children}
-                        </Surface>
-                    </span >
-                );
-            });
+        const surfaces = children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => ({
+            center: center.current,
+            circleSize,
+            front: front.current,
+            height,
+            key: `${idx}`,
+            opacity: opacity.current,
+            reserve: reserve.current,
+            shape: shape.current,
+            size: size.current,
+            surface,
+            width,
+        }));
+
         return (
             <SpaceCore
                 reserveWidth={reserveWidth}
@@ -237,14 +220,11 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 spaceWidth={spaceWidth}
                 spaceHeight={spaceHeight}
                 borderRadius={borderRadius}
+                onSize={this.onSize}
                 rounding={circleSize}
                 offsetX={offsetX}
                 offsetY={offsetY}
-                surfaces={
-                    children.map(({ surface, idx, size: { width, height }, animation: { center, size, reserve, front, opacity, shape } }) => ({
-                        surface, key: `${idx}`, width, height, center: center.current, size: size.current, reserve: reserve.current, front: front.current, opacity: opacity.current, shape: shape.current, circleSize, onSize: this.onSize
-                    }))
-                } />
+                surfaces={surfaces} />
         );
     }
 
