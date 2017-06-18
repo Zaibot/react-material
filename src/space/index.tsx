@@ -222,7 +222,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 spaceHeight={spaceHeight}
                 size={rounding}
                 onSize={this.onSize}
-                rounding={circleSize}
+                rounding={rounding}
                 offsetX={offsetX}
                 offsetY={offsetY}
                 surfaces={surfaces} />
