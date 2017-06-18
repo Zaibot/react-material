@@ -225,7 +225,7 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
         const { offsetX, offsetY } = e.nativeEvent as { offsetX: number, offsetY: number };
         let { ripples } = this.state;
         const max = this.calcRippleMax(offsetX, offsetY);
-        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max * 0.1, max, 0, 150));
+        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max * 0.05, max, 0, 150));
         ripples = [...ripples, ripple];
         if (ripples.length === 1) { registerRipple(this); }
         const pressed = true;

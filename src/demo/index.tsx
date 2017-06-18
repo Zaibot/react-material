@@ -144,7 +144,7 @@ class SurfacePlayground extends React.Component<any, any> {
     public render() {
         const { speed, left, right } = this.state;
         return (
-            <div className={cx(`form`)} style={{ width: `50%` }}>
+            <div className={cx(`form`)} style={{ width: `80%` }}>
                 <Dialog>
                     <DialogHeader>
                         Surface
@@ -159,13 +159,37 @@ class SurfacePlayground extends React.Component<any, any> {
                         </div>
                         <div style={{ display: 'flex' }}>
                             <div style={{ flex: '0 0 25%' }}>
-                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetLeft2}>A</Button>&nbsp;
-                            <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetRight2}>A</Button>&nbsp;
+                                <Button
+                                    slim
+                                    className={mdc(colors.bg.green.n800, colors.text.white.darker)}
+                                    rippleClassName={mdc(colors.bg.green.n50)}
+                                    onClick={this.onPreset1A}>
+                                    A
+                                  </Button>&nbsp;
+                                <Button
+                                    slim
+                                    className={mdc(colors.bg.green.n800, colors.text.white.darker)}
+                                    rippleClassName={mdc(colors.bg.green.n50)}
+                                    onClick={this.onPreset1B}>
+                                    B
+                                  </Button>&nbsp;
                                 <SurfaceControls values={left} onChange={(s: any) => this.setState({ left: s })} />
                             </div>
                             <div style={{ flex: '0 0 25%' }}>
-                                <Button slim className={mdc(colors.bg.red.n800, colors.text.white.darker)} onClick={this.onPresetLeft1}>B</Button>&nbsp;
-                                <Button slim className={mdc(colors.bg.green.n800, colors.text.white.darker)} onClick={this.onPresetRight1}>B</Button>&nbsp;
+                                <Button
+                                    slim
+                                    className={mdc(colors.bg.red.n800, colors.text.white.darker)}
+                                    rippleClassName={mdc(colors.bg.red.n50)}
+                                    onClick={this.onPreset2A}>
+                                    A
+                                  </Button>&nbsp;
+                            <Button
+                                    slim
+                                    className={mdc(colors.bg.red.n800, colors.text.white.darker)}
+                                    rippleClassName={mdc(colors.bg.red.n50)}
+                                    onClick={this.onPreset2B}>
+                                    B
+                                  </Button>&nbsp;
                                 <SurfaceControls values={right} onChange={(s: any) => this.setState({ right: s })} />
                             </div>
                             <div style={{ flex: '0 0 50%' }}>
@@ -210,28 +234,28 @@ class SurfacePlayground extends React.Component<any, any> {
         );
     }
 
-    private onPresetLeft1 = () => {
+    private onPreset1A = () => {
         this.setState({
             left: { ...this.state.left, focus: 1, size: 1, reserve: 1, front: 1, opacity: 1, shape: 1 },
             right: { ...this.state.right, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 },
         });
     }
 
-    private onPresetLeft2 = () => {
+    private onPreset2A = () => {
         this.setState({
             left: { ...this.state.left, focus: 1, size: 1, reserve: 0, front: 1, opacity: 1, shape: 1 },
             right: { ...this.state.right, focus: 0, size: 0, reserve: 1, front: 0, opacity: 0, shape: 0 },
         });
     }
 
-    private onPresetRight1 = () => {
+    private onPreset2B = () => {
         this.setState({
             left: { ...this.state.left, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 },
             right: { ...this.state.right, focus: 1, size: 1, reserve: 1, front: 1, opacity: 1, shape: 1 },
         });
     }
 
-    private onPresetRight2 = () => {
+    private onPreset1B = () => {
         this.setState({
             left: { ...this.state.left, focus: 0, size: 0, reserve: 1, front: 0, opacity: 0, shape: 0 },
             right: { ...this.state.right, focus: 1, size: 1, reserve: 0, front: 1, opacity: 1, shape: 1 },
@@ -405,7 +429,7 @@ class Login2 extends React.Component<any, any> {
 
 const Demo = () => (
     <AnimationRoot>
-        <div style={{ margin: '10rem' }}>
+        <div style={{ margin: '5rem' }}>
             <SurfacePlayground />
         </div>
     </AnimationRoot>

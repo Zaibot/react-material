@@ -11,6 +11,7 @@ export type SizeCallback = (dimensions: ISize) => void;
 export type ContentHint = 'static' | 'dynamic';
 export interface IContentProps {
     // children?: React.ReactChild;
+    size?: ISize;
     opacity?: number;
     hint?: ContentHint;
     onSize?: SizeCallback;
@@ -60,9 +61,12 @@ class Content extends React.Component<IContentProps, IContentState> {
     }
 
     public render() {
-        const { children, opacity } = this.props;
+        const { children, opacity, size } = this.props;
+        const onDivRef = size ? null : this.onDivRef;
+        const width = size ? size.x : null;
+        const height = size ? size.y : null;
         return (
-            <div className={cx(`component`)} style={{ opacity }} ref={this.onDivRef}>
+            <div className={cx(`component`)} style={{ opacity, width, height }} ref={onDivRef}>
                 {children}
             </div>
         );
@@ -88,6 +92,7 @@ class Content extends React.Component<IContentProps, IContentState> {
     }
 
     private measure() {
+        if (this.props.size) { return { width: this.props.size.x, height: this.props.size.y }; }
         const storeWidth = this._div.style.width;
         const storeHeight = this._div.style.height;
         // Prep

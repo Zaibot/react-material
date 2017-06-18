@@ -9,6 +9,7 @@ import Focus from '../surface/focus';
 import { SurfaceAnimation, SurfaceMeasure } from './';
 import SpaceCore from './space';
 import cx from './style.less';
+import { calcBorderRadius, calcClipPath } from './mask';
 
 export interface ISpaceProps {
     reserveWidth: number;
@@ -17,7 +18,7 @@ export interface ISpaceProps {
     spaceHeight: number;
     offsetX: number;
     offsetY: number;
-    borderRadius: number;
+    size: number;
     rounding: number;
     surfaces: IChild[];
     onSize: (size: ISurfaceSize) => void;
@@ -78,7 +79,7 @@ const SurfacePrep = ({
     const offsetLeft = (reserveWidth - spaceWidth) * (center.x - offsetX);
     const offsetTop = (reserveHeight - spaceHeight) * (center.y - offsetY);
     const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
-    const clipPath = `ellipse(${rounding}px ${rounding}px at ${spaceWidth * .5 - offsetLeft}px ${spaceHeight * .5 - offsetTop}px)`;
+    const clipPath = calcClipPath(spaceWidth, spaceHeight, size, spaceWidth * .5 - offsetLeft, spaceHeight * .5 - offsetTop);
     return (
         <span style={{ opacity, visibility, position, top, left, transform, clipPath, WebkitClipPath: clipPath }}>
             <Surface
@@ -98,7 +99,7 @@ const SurfacePrep = ({
         </span>
     );
 };
-export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, borderRadius, rounding, offsetX, offsetY, surfaces, onSize }: ISpaceProps) => {
+export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, size, rounding, offsetX, offsetY, surfaces, onSize }: ISpaceProps) => {
     const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
     const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
     const positioned = surfaces.map((x) => (
@@ -130,10 +131,11 @@ export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, borderRa
         width: reserveWidth,
     };
     const innerStyle = {
-        borderRadius,
+        ...calcBorderRadius(spaceWidth, spaceHeight, size, offsetX, offsetY, rounding),
         height: spaceHeight,
         transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
         width: spaceWidth,
+        // overflow: 'hidden' as any,
     };
     return (
         <div className={cx(`component`)} style={containerStyle}>

@@ -148,10 +148,10 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         let height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
         let width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
         let { rounding, sizeHeight, sizeWidth } = this.state;
-        if (rounding.current > 0.1) {
-            if (height >= width) { height = width; }
-            if (height < width) { width = height; }
-        }
+        // if (rounding.current > 0.1) {
+        //     if (height >= width) { height = width; }
+        //     if (height < width) { width = height; }
+        // }
         if (sizeHeight.target === 0 && sizeHeight.current === 0) { sizeHeight = sizeHeight.jump(height); }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
@@ -220,7 +220,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 reserveHeight={reserveHeight}
                 spaceWidth={spaceWidth}
                 spaceHeight={spaceHeight}
-                borderRadius={borderRadius}
+                size={rounding}
                 onSize={this.onSize}
                 rounding={circleSize}
                 offsetX={offsetX}

@@ -25,7 +25,7 @@ const resolvePosition = (x: React.MouseEvent<HTMLDivElement>) => {
     return Math.min(1, Math.max(0, rel / size));
 };
 
-export default ({ children, onHover, onBegin, onChange, onEnd }: IBarProps & { children: React.ReactNode }) => (
+export default ({ children, onHover, onBegin, onChange, onEnd }: IBarProps & { children?: React.ReactNode }) => (
     <div
         className={cx(`bar`)}
         onMouseDown={(x) => onBegin(resolvePosition(x))}

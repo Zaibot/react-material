@@ -27,7 +27,7 @@ export interface IInputAnimation {
     value: Spring;
 }
 const emptyAnimation: IInputAnimation = {
-    value: new Spring(0, 0, 0, 200, 2),
+    value: new Spring(0, 0, 0, 200, 0.1),
 };
 
 @Animated()
@@ -42,7 +42,7 @@ class Input extends React.Component<IInputProps, IInputState> {
     }
 
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
-        const value = state.value.change(this.props.value).speed(this.state.changing ? 1000 : 50).iterate(advance * 0.001);
+        const value = state.value.change(this.props.value).speed(this.state.changing ? 1000 : 100).iterate(advance * 0.001);
 
         if (this.state.value !== value.current) {
             this.setState({
