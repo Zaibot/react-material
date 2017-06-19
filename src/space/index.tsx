@@ -156,7 +156,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
         sizeWidth = sizeWidth.change(width).iterate(advance * 0.001);
-        rounding = rounding.change(totalCircle / maxShape > 0.2 ? 1 : 0).iterate(advance * 0.001);
+        rounding = rounding.change(totalCircle / maxShape).iterate(advance * 0.001);
 
         const surfaces = smartUpdate(this.state.surfaces, (x) => x.iterate(advance * 0.001));
         if (this.state.rounding !== rounding

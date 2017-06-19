@@ -9,7 +9,7 @@ import Focus from '../surface/focus';
 import { SurfaceAnimation, SurfaceMeasure } from './';
 import SpaceCore from './space';
 import cx from './style.less';
-import { calcBorderRadius, calcClipPath } from './mask';
+import { calcSize, calcBorderRadius, calcClipPath } from './mask';
 
 export interface ISpaceProps {
     reserveWidth: number;
@@ -132,10 +132,9 @@ export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, size, ro
     };
     const innerStyle = {
         ...calcBorderRadius(spaceWidth, spaceHeight, size, offsetX, offsetY, rounding),
-        height: spaceHeight,
+        ...calcSize(spaceWidth, spaceHeight, size, offsetX, offsetY, rounding),
         transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
-        width: spaceWidth,
-        // overflow: 'hidden' as any,
+        overflow: 'hidden' as any,
     };
     return (
         <div className={cx(`component`)} style={containerStyle}>

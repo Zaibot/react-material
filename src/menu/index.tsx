@@ -21,7 +21,8 @@ export interface IMenuProps {
 class Menu extends React.Component<IMenuProps, {}> {
     public render() {
         const { onClick, disabled, children } = this.props;
-        const css = cx('component', { open }, mdc(colors.bg.blue.n300));
+        // const css = cx('component', { open }, mdc(colors.bg.grey.n50));
+        const css = cx('component', { open }, mdc(colors.bg.blue.n500));
         return (
             <div className={css} onClick={onClick}>
                 {children}
