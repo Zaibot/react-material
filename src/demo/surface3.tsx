@@ -29,13 +29,21 @@ const Small = ({ onClick }: { onClick: () => void }) => (
 );
 const Large = ({ onClick }: { onClick: () => void }) => (
     <div className={cx(`profile-large`)} onClick={onClick}>
-        <div className={cx(`profile-large__image`)}>
-            <ProfileImage />
+        <div className={cx(`profile-large__banner`)}>
+            <div className={cx(`profile-large__image`)}>
+                <ProfileImage />
+            </div>
+            <div className={cx(`profile-large__description`)}>
+                <dl>
+                    <dt>Tobias de Groen</dt>
+                    <dd>tdgroen@zaibot.net</dd>
+                </dl>
+            </div>
         </div>
-        <div className={cx(`profile-large__description`)}>
+        <div className={cx(`profile-large__content`)}>
             <dl>
-                <dt>Tobias de Groen</dt>
-                <dd>tdgroen@zaibot.net</dd>
+                <dd>+31 6 33883156</dd>
+                <dd>Arnhem</dd>
             </dl>
         </div>
     </div>
@@ -75,7 +83,7 @@ export class SurfacePlayground3 extends React.Component<any, any> {
                             <label>Speed x{speed.toFixed(2)}</label>
                             <Slider value={speed} min={0} max={10} onChange={(p) => this.setState({ speed: p })} />
                         </div>
-                        <div style={{ display: 'flex' }}>
+                        <div style={{ display: 'flex', padding: '5rem' }}>
                             <div style={{ flex: '0 0 50%' }}>
                                 <AnimationRoot rate={speed}>
                                     <Space>
