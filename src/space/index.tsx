@@ -266,7 +266,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
     private onSize = (size: ISurfaceSize) => {
         const sizes = smartUpdate(this.state.sizes, (surface, idx) => `${idx}` !== size.surfaceKey ? surface : surface.change(size.x, size.y));
-        console.log(sizes.map((x) => `${x.width}x${x.height}`))
+        // console.log(sizes.map((x) => `${x.width}x${x.height}`))
         if (sizes !== this.state.sizes) {
             // Update state
             this.setState({ sizes }, () => GetAnimationRoot(this).iterate());
