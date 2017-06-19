@@ -87,7 +87,7 @@ export class SurfaceMeasure {
         public readonly height: number,
     ) { }
 
-    public change(width: number, height: number) {
+    public update(width: number, height: number) {
         if (width !== this.width || height !== this.height) {
             return new SurfaceMeasure(width, height);
         }
@@ -261,7 +261,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
     }
 
     private onSize = (size: ISurfaceSize) => {
-        const sizes = smartUpdate(this.state.sizes, (surface, idx) => `${idx}` !== size.surfaceKey ? surface : surface.change(size.x, size.y));
+        const sizes = smartUpdate(this.state.sizes, (surface, idx) => `${idx}` !== size.surfaceKey ? surface : surface.update(size.x, size.y));
         // console.log(sizes.map((x) => `${x.width}x${x.height}`))
         if (sizes !== this.state.sizes) {
             // Update state
