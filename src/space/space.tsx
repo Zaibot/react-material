@@ -7,9 +7,10 @@ import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
 import { SurfaceAnimation, SurfaceMeasure } from './';
+import { calcBorderRadius, calcClipPath, calcSize } from './mask';
 import SpaceCore from './space';
 import cx from './style.less';
-import { calcSize, calcBorderRadius, calcClipPath } from './mask';
+import SurfaceWrapper from './surfaceWrapper';
 
 export interface ISpaceProps {
     reserveWidth: number;
@@ -38,72 +39,12 @@ export interface IChild {
     circleSize: number;
     shape: number;
 }
-export interface IChild2 {
-    reserveWidth: number;
-    spaceWidth: number;
-    reserveHeight: number;
-    spaceHeight: number;
-    offsetX: number;
-    offsetY: number;
-    rounding: number;
-    onSize: (size: ISurfaceSize) => void;
 
-    surfaceKey: any;
-    surface: Surface;
-    width: number;
-    height: number;
-    center: { x: number; y: number };
-    focus: number;
-    size: number;
-    reserve: number;
-    front: number;
-    opacity: number;
-    circleSize: number;
-    shape: number;
-}
-const SurfacePrep = ({
-    reserveWidth,
-    spaceWidth,
-    reserveHeight,
-    spaceHeight,
-    offsetX,
-    offsetY,
-    rounding,
-    onSize,
-    surface, surfaceKey, width, height, center, focus, size, reserve, front, opacity, shape, circleSize }: IChild2) => {
-    if (!opacity) { return null; }
-    const position = 'absolute';
-    const top = 0;
-    const left = 0;
-    const visibility = opacity && front && size ? 'visible' : 'hidden';
-    const offsetLeft = (reserveWidth - spaceWidth) * (center.x - offsetX);
-    const offsetTop = (reserveHeight - spaceHeight) * (center.y - offsetY);
-    const transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
-    const clipPath = calcClipPath(spaceWidth, spaceHeight, size, spaceWidth * .5 - offsetLeft, spaceHeight * .5 - offsetTop);
-    return (
-        <span style={{ opacity, visibility, position, top, left, transform, clipPath, WebkitClipPath: clipPath }}>
-            <Surface
-                key={`${surfaceKey}`}
-                surfaceKey={`${surfaceKey}`}
-                center={center}
-                focus={focus}
-                size={size}
-                reserve={reserve}
-                front={front}
-                opacity={opacity}
-                shape={shape}
-                type={surface.props.type}
-                onSize={onSize}>
-                {surface.props.children}
-            </Surface>
-        </span>
-    );
-};
 export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, size, rounding, offsetX, offsetY, surfaces, onSize }: ISpaceProps) => {
     const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
     const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
     const positioned = surfaces.map((x) => (
-        <SurfacePrep
+        <SurfaceWrapper
             reserveWidth={reserveWidth}
             spaceWidth={spaceWidth}
             reserveHeight={reserveHeight}
@@ -133,8 +74,8 @@ export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, size, ro
     const innerStyle = {
         ...calcBorderRadius(spaceWidth, spaceHeight, size, offsetX, offsetY, rounding),
         ...calcSize(spaceWidth, spaceHeight, size, offsetX, offsetY, rounding),
-        transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
         overflow: 'hidden' as any,
+        transform: `translate(${spaceOffsetX}px, ${spaceOffsetY}px)`,
     };
     return (
         <div className={cx(`component`)} style={containerStyle}>

@@ -69,6 +69,7 @@
     "./space/index.tsx",
     "./space/mask.tsx",
     "./space/space.tsx",
+    "./space/surfaceWrapper.tsx",
     "./surface/focus.tsx",
     "./surface/index.tsx",
     "./theme/index.tsx",

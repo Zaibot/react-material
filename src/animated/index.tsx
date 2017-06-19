@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { GetAnimationRoot, IAnimatable, RootSymbol } from '../animationroot';
 
-export interface Constructor<T> { new (...args: any[]): T }
+export interface Constructor<T> { new (...args: any[]): T; }
 export default (always = false) => {
     // tslint:disable-next-line only-arrow-functions
     return function <T extends Constructor<IAnimatable<any> & React.Component<any, any> & React.ComponentLifecycle<any, any>>>(constructor: T) {
