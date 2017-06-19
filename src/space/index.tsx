@@ -124,7 +124,7 @@ function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
 class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
         rounding: Presets.Spring300,
-        sizeHeight: Presets.Spring100.changeGravity(1.5),
+        sizeHeight: Presets.Spring100.changeGravity(1.06),
         sizeWidth: Presets.Spring100,
         sizes: [] as SurfaceMeasure[],
         surfaces: [] as SurfaceAnimation[],
