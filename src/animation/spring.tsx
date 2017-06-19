@@ -4,24 +4,27 @@ class Spring {
         current: number,
         target: number,
         velocity: number,
+        gravity: number,
         springConstant: number,
     ) {
-        return new Spring(current, target, velocity, springConstant, Math.sqrt(springConstant) * 2);
+        return new Spring(current, target, velocity, gravity, springConstant, Math.sqrt(springConstant) * 2);
     }
     public static flex(
         current: number,
         target: number,
         velocity: number,
+        gravity: number,
         springConstant: number,
         dampingMultiplier: number,
     ) {
-        return new Spring(current, target, velocity, springConstant, Math.sqrt(springConstant) * 2 * dampingMultiplier);
+        return new Spring(current, target, velocity, gravity, springConstant, Math.sqrt(springConstant) * 2 * dampingMultiplier);
     }
 
     public constructor(
         public readonly current: number,
         public readonly target: number,
         public readonly velocity: number,
+        public readonly gravity: number,
         public readonly springConstant: number,
         public readonly dampingConstant: number,
     ) { }
@@ -32,7 +35,7 @@ class Spring {
         if (this.target === target) {
             return this;
         }
-        return new Spring(this.current, target, this.velocity, this.springConstant, this.dampingConstant);
+        return new Spring(this.current, target, this.velocity, this.gravity, this.springConstant, this.dampingConstant);
     }
 
     public jump(
@@ -41,7 +44,7 @@ class Spring {
         if (this.current === target && this.target === target && this.velocity === 0) {
             return this;
         }
-        return new Spring(target, target, 0, this.springConstant, this.dampingConstant);
+        return new Spring(target, target, 0, this.gravity, this.springConstant, this.dampingConstant);
     }
 
     public speed(
@@ -49,17 +52,22 @@ class Spring {
         dampingConstant: number | false = false,
     ) {
         if (dampingConstant === false) {
-            return this.altered(this.current, this.target, this.velocity, springConstant, Math.sqrt(springConstant) * 2);
+            return this.altered(this.current, this.target, this.velocity, this.gravity, springConstant, Math.sqrt(springConstant) * 2);
         }
-        return this.altered(this.current, this.target, this.velocity, springConstant, dampingConstant);
+        return this.altered(this.current, this.target, this.velocity, this.gravity, springConstant, dampingConstant);
+    }
+    public changeGravity(
+        gravity: number,
+    ) {
+        return this.altered(this.current, this.target, this.velocity, gravity, this.springConstant, this.dampingConstant);
     }
 
     public constrain(
         min: number,
         max: number,
     ) {
-        if (this.current < min) { return new Spring(min, this.target, this.velocity, this.springConstant, this.dampingConstant); }
-        if (this.current > max) { return new Spring(max, this.target, this.velocity, this.springConstant, this.dampingConstant); }
+        if (this.current < min) { return new Spring(min, this.target, this.velocity, this.gravity, this.springConstant, this.dampingConstant); }
+        if (this.current > max) { return new Spring(max, this.target, this.velocity, this.gravity, this.springConstant, this.dampingConstant); }
         return this;
     }
 
@@ -70,33 +78,34 @@ class Spring {
             return this;
         }
         const currentToTarget = this.target - this.current;
-        const springForce = currentToTarget * this.springConstant;
+        const springForce = currentToTarget * this.springConstant * (currentToTarget > 0 ? this.gravity : 2 - this.gravity);
         const dampingForce = this.velocity * this.dampingConstant;
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
         if (currentToTarget > -0.01 && currentToTarget < 0.01) {
             // snap
-            return this.altered(this.target, this.target, 0, this.springConstant, this.dampingConstant);
+            return this.altered(this.target, this.target, 0, this.gravity, this.springConstant, this.dampingConstant);
         }
-        return this.altered(this.current + velocity * advance, this.target, velocity, this.springConstant, this.dampingConstant);
+        return this.altered(this.current + velocity * advance, this.target, velocity, this.gravity, this.springConstant, this.dampingConstant);
     }
 
     private altered(
         current: number,
         target: number,
         velocity: number,
+        gravity: number,
         springConstant: number,
         dampingConstant: number,
     ) {
         if (this.current !== current
             || this.target !== target
             || this.velocity !== velocity
+            || this.gravity !== gravity
             || this.springConstant !== springConstant
             || this.dampingConstant !== dampingConstant) {
-            return new Spring(current, target, velocity, springConstant, dampingConstant);
+            return new Spring(current, target, velocity, gravity, springConstant, dampingConstant);
         }
         return this;
     }
-
 }
 export default Spring;

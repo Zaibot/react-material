@@ -17,12 +17,12 @@ import Surface from '../surface';
 import { FocusCenterLeft, FocusCenterRight, FocusTopLeft, FocusTopRight } from '../surface/focus';
 import cx from './style.less';
 
+import { CardSurface } from './cardSurface';
 import { Form } from './form';
 import { Login } from './login';
 import { Login2 } from './login2';
 import { SurfacePlayground } from './surface';
 import { MaterialSurfaceTest } from './surface2';
-import { SurfacePlayground3 } from './surface3';
 
 const Demo = () => (
     <AnimationRoot>
@@ -31,7 +31,7 @@ const Demo = () => (
                 <SurfacePlayground />
             </div>
             <div style={{ margin: '5rem' }}>
-                <SurfacePlayground3 />
+                <CardSurface />
             </div>
         </div>
     </AnimationRoot>

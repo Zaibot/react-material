@@ -124,7 +124,7 @@ function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
 class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
         rounding: Presets.Spring300,
-        sizeHeight: Presets.Spring100,
+        sizeHeight: Presets.Spring100.changeGravity(1.5),
         sizeWidth: Presets.Spring100,
         sizes: [] as SurfaceMeasure[],
         surfaces: [] as SurfaceAnimation[],
@@ -145,13 +145,9 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const maxSize = children.reduce((s, { surface, animation }) => s + animation.size.current, 0);
         const maxReserve = children.reduce((s, { surface, animation }) => s + animation.reserve.current, 0);
 
-        let height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
-        let width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
+        const height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
+        const width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
         let { rounding, sizeHeight, sizeWidth } = this.state;
-        // if (rounding.current > 0.1) {
-        //     if (height >= width) { height = width; }
-        //     if (height < width) { width = height; }
-        // }
         if (sizeHeight.target === 0 && sizeHeight.current === 0) { sizeHeight = sizeHeight.jump(height); }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);

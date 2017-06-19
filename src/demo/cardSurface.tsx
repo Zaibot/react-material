@@ -49,14 +49,53 @@ const Large = ({ onClick }: { onClick: () => void }) => (
     </div>
 );
 
-export class SurfacePlayground3 extends React.Component<any, any> {
+class CardDemo extends React.Component<any, any> {
     public state = {
-        speed: 1 as number,
         which: false,
     };
 
     public render() {
-        const { speed, which } = this.state;
+        const { which } = this.state;
+        return (
+            <Space>
+                <Surface
+                    center={{ x: 0, y: 0 }}
+                    focus={!which ? 1 : 0}
+                    size={!which ? 1 : 0}
+                    reserve={1}
+                    front={!which ? 1 : 0}
+                    opacity={!which ? 1 : 0}
+                    shape={!which ? 1 : 0}
+                    type={'rectangle'}>
+                    <Small onClick={this.onToggle} />
+                </Surface>
+                <Surface
+                    center={{ x: 0, y: 0 }}
+                    focus={which ? 1 : 0}
+                    size={which ? 1 : 0}
+                    reserve={0}
+                    front={which ? 1 : 0}
+                    opacity={which ? 1 : 0}
+                    shape={which ? 1 : 0}
+                    type={'rectangle'}>
+                    <Large onClick={this.onToggle} />
+                </Surface>
+            </Space>
+        );
+    }
+
+    private onToggle = () => {
+        this.setState({ which: !this.state.which });
+    }
+}
+
+export class CardSurface extends React.Component<any, any> {
+    public state = {
+        speed: 1 as number,
+    };
+
+    public render() {
+        const { speed } = this.state;
         return (
             <div className={cx(`form`)} style={{ width: `80%` }}>
                 <Dialog>
@@ -73,7 +112,7 @@ export class SurfacePlayground3 extends React.Component<any, any> {
                                 ...
                               </ToggleMenu>
                         </span>
-                        Surface
+                        Cards
                     </DialogHeader>
                     <DialogSubheader>
                         Card transition
@@ -84,42 +123,18 @@ export class SurfacePlayground3 extends React.Component<any, any> {
                             <Slider value={speed} min={0} max={10} onChange={(p) => this.setState({ speed: p })} />
                         </div>
                         <div style={{ display: 'flex', padding: '5rem' }}>
-                            <div style={{ flex: '0 0 50%' }}>
-                                <AnimationRoot rate={speed}>
-                                    <Space>
-                                        <Surface
-                                            center={{ x: 0, y: 0 }}
-                                            focus={!which ? 1 : 0}
-                                            size={!which ? 1 : 0}
-                                            reserve={1}
-                                            front={!which ? 1 : 0}
-                                            opacity={!which ? 1 : 0}
-                                            shape={!which ? 1 : 0}
-                                            type={'rectangle'}>
-                                            <Small onClick={this.onToggle} />
-                                        </Surface>
-                                        <Surface
-                                            center={{ x: 0, y: 0 }}
-                                            focus={which ? 1 : 0}
-                                            size={which ? 1 : 0}
-                                            reserve={0}
-                                            front={which ? 1 : 0}
-                                            opacity={which ? 1 : 0}
-                                            shape={which ? 1 : 0}
-                                            type={'rectangle'}>
-                                            <Large onClick={this.onToggle} />
-                                        </Surface>
-                                    </Space>
-                                </AnimationRoot>
-                            </div>
+                            <AnimationRoot rate={speed}>
+                                <div style={{ flex: '0 0 50%' }}>
+                                    <CardDemo />
+                                    <CardDemo />
+                                    <CardDemo />
+                                    <CardDemo />
+                                </div>
+                            </AnimationRoot>
                         </div>
                     </DialogContents>
                 </Dialog>
             </div>
         );
-    }
-
-    private onToggle = () => {
-        this.setState({ which: !this.state.which });
     }
 }

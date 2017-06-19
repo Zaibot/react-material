@@ -27,7 +27,7 @@ export interface IInputAnimation {
     value: Spring;
 }
 const emptyAnimation: IInputAnimation = {
-    value: new Spring(0, 0, 0, 200, 0.1),
+    value: Presets.Spring200,
 };
 
 @Animated()
