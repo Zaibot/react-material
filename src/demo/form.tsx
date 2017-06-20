@@ -1,8 +1,6 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
 
-// tslint:disable max-classes-per-file
-
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
@@ -12,13 +10,12 @@ import colors from '../colors';
 import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
 import Input from '../input';
 
-
-
 import { FocusTopRight } from '../surface/focus';
 import cx from './style.less';
 
-
-
+// tslint:disable max-classes-per-file
+// tslint:disable no-unsafe-any
+// tslint:disable no-magic-numbers
 
 export class Form extends React.Component<any, any> {
     public state = {

@@ -1,8 +1,6 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
 
-// tslint:disable max-classes-per-file
-
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
@@ -18,6 +16,10 @@ import { FocusCenterLeft, FocusCenterRight, FocusTopLeft, FocusTopRight } from '
 import cx from './style.less';
 
 import { SurfacePlayground } from './surface';
+
+// tslint:disable max-classes-per-file
+// tslint:disable no-unsafe-any
+// tslint:disable no-magic-numbers
 
 export class MaterialSurfaceTest extends React.Component<any, any> {
     public state = {

@@ -4,7 +4,6 @@ import Animated from '../animated';
 import { Spring } from '../animation';
 import Presets from '../animation/presets';
 
-
 import cx from './style.less';
 
 // tslint:disable no-magic-numbers

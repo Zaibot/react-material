@@ -1,28 +1,19 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
 
-// tslint:disable max-classes-per-file
-
 import '@zaibot/css-reset';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AnimationRoot } from '..';
 
-
-
-
-
-
-
-
-
 import { CardSurface } from './cardSurface';
-
-
 
 import { SurfacePlayground } from './surface';
 
+// tslint:disable max-classes-per-file
+// tslint:disable no-unsafe-any
+// tslint:disable no-magic-numbers
 
 const Demo = () => (
     <AnimationRoot>

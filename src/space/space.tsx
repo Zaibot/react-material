@@ -1,14 +1,11 @@
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 
-
 import colors from '../colors';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 
-
 import { calcBorderRadius, calcSize } from './mask';
-
 
 import cx from './style.less';
 import SurfaceWrapper from './surfaceWrapper';

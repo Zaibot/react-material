@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
-
 const maximumDelay = 500;
 const timeout = 500;
 

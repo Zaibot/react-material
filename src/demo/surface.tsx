@@ -1,5 +1,3 @@
-// tslint:disable max-classes-per-file
-
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -12,6 +10,10 @@ import Space from '../space';
 import Surface from '../surface';
 import { FocusCenterLeft, FocusCenterRight, FocusTopLeft, FocusTopRight } from '../surface/focus';
 import cx from './style.less';
+
+// tslint:disable max-classes-per-file
+// tslint:disable no-unsafe-any
+// tslint:disable no-magic-numbers
 
 interface ISurfaceValues {
     centerX: number;
