@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated from '../animated';
 import Turn, { EngineContext, Spring } from '../animation';
+import { GetAnimationRoot } from '../animationroot';
 import Ripple from './ripple';
 import cx from './style.less';
 
@@ -26,6 +27,13 @@ const elevationToCss = (el: Elevation) => {
 
 export class RippleItem {
     public constructor(public x: number, public y: number, public z: Spring) {
+    }
+
+    public iterate(advance: number) {
+        const { x, y } = this;
+        const z = this.z.iterate(advance);
+        if (z === this.z) { return this; }
+        return new RippleItem(x, y, z);
     }
 }
 
@@ -80,7 +88,7 @@ const releaseMaterials = () => {
     const pressed = false;
     for (const material of materials) {
         if (material.state.pressed !== pressed) {
-            material.setState({ pressed });
+            GetAnimationRoot(material).update(material, (state) => ({ ...state, pressed }));
         }
     }
 };
@@ -99,12 +107,16 @@ export interface IMaterialAnimation {
     height: number;
     last: number;
     measured: number;
+    pressed: boolean;
+    ripples: RippleItem[];
 }
 const emptyAnimation: IMaterialAnimation = {
     width: 0,
     height: 0,
     last: 0,
     measured: 0,
+    pressed: false,
+    ripples: [] as RippleItem[],
 };
 
 @Animated()
@@ -121,27 +133,32 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
         if (!this._panel) { return state; }
         if (time < state.measured + 100) { return state; }
         const { width, height } = this._panel.getBoundingClientRect();
-        const { last } = state;
         const measured = time;
-        return { width, height, last, measured };
+        return { ...state, width, height, measured };
     }
 
     public onAnimate(time: number, advance: number, state: IMaterialAnimation): IMaterialAnimation {
-        const { width, height, measured } = state;
-        const { pressed } = this.state;
-        let ripples = this.state.ripples;
+        const { pressed } = state;
+        let { ripples } = state;
         if (!ripples.length) {
             // short circuit
-            if (width !== this.state.width || height !== this.state.height) {
-                this.setState({ width, height });
-            }
-            return state;
+            return { ...state, last: time };
         }
-        ripples = ripples.map((x) => new RippleItem(x.x, x.y, x.z.iterate(advance * 0.001)));
+        ripples = ripples.map((x) => x.iterate(advance * 0.001));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         if (ripples.length === 0) { unregisterRipple(this); }
-        this.setState({ width, height, ripples });
-        return { width, height, last: time, measured };
+        const last = time;
+        return { ...state, last, ripples };
+    }
+
+    public applyAnimation(state: IMaterialAnimation) {
+        const { width, height, ripples, pressed } = state;
+        if (this.state.width !== width
+            || this.state.height !== height
+            || this.state.pressed !== pressed
+            || this.state.ripples !== ripples) {
+            this.setState({ width, height, pressed, ripples });
+        }
     }
 
     public render() {
@@ -192,17 +209,19 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
         if (this.props.divRef) { this.props.divRef(e); }
     }
     private centerRipple() {
-        if (this.state.pressed) { return; }
-        const { rippleClassName } = this.props;
-        const { width, height } = this.state;
-        const offsetX = width * .5;
-        const offsetY = height * .5;
-        const max = this.calcRippleMax(offsetX, offsetY);
-        let { ripples } = this.state;
-        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 1, 100));
-        ripples = [...ripples, ripple];
-        if (ripples.length === 1) { registerRipple(this); }
-        this.setState({ ripples });
+        GetAnimationRoot(this).update(this, (state) => {
+            const { pressed, width, height } = state;
+            if (pressed) { return; }
+            const { rippleClassName } = this.props;
+            const offsetX = width * .5;
+            const offsetY = height * .5;
+            const max = this.calcRippleMax(offsetX, offsetY);
+            let { ripples } = state;
+            const ripple = new RippleItem(offsetX, offsetY, Spring.generic(0, max, 0, 1, 100));
+            ripples = [...ripples, ripple];
+            if (ripples.length === 1) { registerRipple(this); }
+            return { ...state, ripples };
+        });
     }
     private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
         // this.centerRipple();
@@ -221,21 +240,25 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
         return diagonal;
     }
     private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        const { rippleClassName } = this.props;
-        const { offsetX, offsetY } = e.nativeEvent as { offsetX: number, offsetY: number };
-        let { ripples } = this.state;
-        const max = this.calcRippleMax(offsetX, offsetY);
-        const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max * 0.05, max, 0, 1,  150));
-        ripples = [...ripples, ripple];
-        if (ripples.length === 1) { registerRipple(this); }
-        const pressed = true;
-        this.setState({ pressed, ripples });
+        GetAnimationRoot(this).update(this, (state) => {
+            const { rippleClassName } = this.props;
+            const { offsetX, offsetY } = e.nativeEvent as { offsetX: number, offsetY: number };
+            let { ripples } = state;
+            const max = this.calcRippleMax(offsetX, offsetY);
+            const ripple = new RippleItem(offsetX, offsetY, Spring.generic(max * 0.05, max, 0, 1, 150));
+            ripples = [...ripples, ripple];
+            if (ripples.length === 1) { registerRipple(this); }
+            const pressed = true;
+            return { ...state, pressed, ripples };
+        });
         const { onMouseDown } = this.props;
         if (onMouseDown) { onMouseDown(e); }
     }
     private onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-        const pressed = false;
-        this.setState({ pressed });
+        GetAnimationRoot(this).update(this, (state) => {
+            const pressed = false;
+            return { ...state, pressed };
+        });
         const { onMouseUp } = this.props;
         if (onMouseUp) { onMouseUp(e); }
     }

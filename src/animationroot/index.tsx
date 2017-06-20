@@ -57,6 +57,16 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         // console.log(`[@zaibot/react-material] animation root, removing ${this.x}`);
     }
 
+    public update<T>(component: IAnimatable<T>, callback: (state: T) => T) {
+        const regs = this._registrations;
+        const ii = regs.length;
+        for (let i = 0; i < ii; i++) {
+            const reg = regs[i];
+            if (reg.component !== component) { continue; }
+            reg.state = callback(reg.state);
+        }
+    }
+
     public render() {
         return this.props.children as JSX.Element;
     }
