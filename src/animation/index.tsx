@@ -22,3 +22,22 @@ export default (engine: EngineContext): EngineContext => {
 export { default as Advance } from './point';
 export { default as Point } from './point';
 export { default as Spring } from './spring';
+
+// export type Current<T> = {
+//     readonly [P in keyof T]: number;
+// };
+// export const IsSpring = (a: any): a is Spring => a && a.target !== undefined && a.current !== undefined;
+// export const Compute = <T extends {}>(a: T): Current<T> => {
+//   const r = {};
+//   for (const k of Object.keys(a)) {
+//     if (a.hasOwnProperty(k)) {
+//       const val = a[k];
+//       if (IsSpring(val)) {
+//         r[k] = val.current;
+//       }
+//     } else {
+//       r[k] = undefined;
+//     }
+//   }
+//   return r as any;
+// };

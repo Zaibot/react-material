@@ -8,7 +8,8 @@ import colors from '../colors';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
-import SpaceCore from './space';
+import SurfaceAnimation from './animation';
+import SpaceCore, { Child } from './space';
 import cx from './style.less';
 
 // tslint:disable max-classes-per-file
@@ -19,68 +20,13 @@ export interface ISpaceProps {
 
 }
 export interface ISpaceState {
-    sizeHeight: Spring;
-    sizeWidth: Spring;
-    rounding: Spring;
+    sizeHeight: number;
+    sizeWidth: number;
+    rounding: number;
     surfaces: SurfaceAnimation[];
     sizes: SurfaceMeasure[];
 }
 
-export class SurfaceAnimation {
-    public constructor(
-        public readonly focus: Spring,
-        public readonly size: Spring,
-        public readonly reserve: Spring,
-        public readonly front: Spring,
-        public readonly opacity: Spring,
-        public readonly shape: Spring,
-    ) { }
-
-    public iterate(advance: number) {
-        const focus = this.focus.iterate(advance);
-        const size = this.size.iterate(advance);
-        const reserve = this.reserve.iterate(advance);
-        const front = this.front.iterate(advance);
-        const opacity = this.opacity.iterate(advance);
-        const shape = this.shape.iterate(advance);
-        if (focus !== this.focus
-            || size !== this.size
-            || reserve !== this.reserve
-            || front !== this.front
-            || opacity !== this.opacity
-            || shape !== this.shape) {
-            return new SurfaceAnimation(focus, size, reserve, front, opacity, shape);
-        }
-        return this;
-    }
-
-    public change(
-        focus: number,
-        size: number,
-        reserve: number,
-        front: number,
-        opacity: number,
-        shape: number,
-    ) {
-        if (focus !== this.focus.target
-            || size !== this.size.target
-            || reserve !== this.reserve.target
-            || front !== this.front.target
-            || opacity !== this.opacity.target
-            || shape !== this.shape.target) {
-            return new SurfaceAnimation(
-                this.focus.change(focus),
-                this.size.change(size),
-                this.reserve.change(reserve),
-                this.front.change(front),
-                this.opacity.change(opacity),
-                this.shape.change(shape),
-            );
-
-        }
-        return this;
-    }
-}
 export class SurfaceMeasure {
     public constructor(
         public readonly width: number,
@@ -95,10 +41,14 @@ export class SurfaceMeasure {
     }
 }
 export interface IInputAnimation {
-    surfaces: SurfaceAnimation[];
+    sizeHeight: Spring;
+    sizeWidth: Spring;
+    rounding: Spring;
 }
 const emptyAnimation: IInputAnimation = {
-    surfaces: [],
+    rounding: Presets.Spring300,
+    sizeHeight: Presets.Spring100.changeGravity(1.06),
+    sizeWidth: Presets.Spring100,
 };
 
 function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
@@ -123,9 +73,9 @@ function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
 @Animated()
 class Space extends React.Component<ISpaceProps, ISpaceState> {
     public state = {
-        rounding: Presets.Spring300,
-        sizeHeight: Presets.Spring100.changeGravity(1.06),
-        sizeWidth: Presets.Spring100,
+        rounding: 0,
+        sizeHeight: 0,
+        sizeWidth: 0,
         sizes: [] as SurfaceMeasure[],
         surfaces: [] as SurfaceAnimation[],
     };
@@ -147,7 +97,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
         const height = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.height * (surface.props.size / maxSize)), 0);
         const width = children.reduce((s, { surface, animation, size }) => s + ensureFinite(size.width * (surface.props.size / maxSize)), 0);
-        let { rounding, sizeHeight, sizeWidth } = this.state;
+        let { rounding, sizeHeight, sizeWidth } = state;
         if (sizeHeight.target === 0 && sizeHeight.current === 0) { sizeHeight = sizeHeight.jump(height); }
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance * 0.001);
@@ -155,14 +105,14 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         rounding = rounding.change(totalCircle / maxShape).iterate(advance * 0.001);
 
         const surfaces = smartUpdate(this.state.surfaces, (x) => x.iterate(advance * 0.001));
-        if (this.state.rounding !== rounding
-            || this.state.sizeHeight !== sizeHeight
-            || this.state.sizeWidth !== sizeWidth
+        if (this.state.rounding !== rounding.current
+            || this.state.sizeHeight !== sizeHeight.current
+            || this.state.sizeWidth !== sizeWidth.current
             || this.state.surfaces !== surfaces) {
             // Update state
-            this.setState({ rounding, sizeHeight, sizeWidth, surfaces });
+            this.setState({ rounding: rounding.current, sizeHeight: sizeHeight.current, sizeWidth: sizeWidth.current, surfaces });
         }
-        return state;
+        return { rounding, sizeHeight, sizeWidth };
     }
 
     public render() {
@@ -183,9 +133,9 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
         const reserveWidth = children.reduce((state, { animation, size }) => state + size.width * (animation.reserve.current / maxReserve), 0);
         const reserveHeight = children.reduce((state, { animation, size }) => state + size.height * (animation.reserve.current / maxReserve), 0);
-        const spaceWidth = this.state.sizeWidth.current;
-        const spaceHeight = this.state.sizeHeight.current;
-        const rounding = this.state.rounding.current;
+        const spaceWidth = this.state.sizeWidth;
+        const spaceHeight = this.state.sizeHeight;
+        const rounding = this.state.rounding;
 
         const spaceOffsetX = (reserveWidth - spaceWidth) * offsetX;
         const spaceOffsetY = (reserveHeight - spaceHeight) * offsetY;
@@ -195,20 +145,21 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         const borderRadius = spaceWidth * .5 * rounding;
         const circleSize = borderRadius + circle * (1 - rounding);
 
-        const surfaces = children.map(({ surface, idx, size: { width, height }, animation: { focus, size, reserve, front, opacity, shape } }) => ({
-            center: surface.props.center,
-            circleSize,
-            focus: focus.current,
-            front: front.current,
-            height,
-            opacity: opacity.current * .5,
-            reserve: reserve.current,
-            shape: shape.current,
-            size: size.current,
-            surface,
-            surfaceKey: `${idx}`,
-            width,
-        }));
+        const surfaces = children.map(({ surface, idx, size: { width, height }, animation: { focus, size, reserve, front, opacity, shape } }) => {
+            return new Child(`${idx}`,
+                surface,
+                width,
+                height,
+                surface.props.center,
+                focus.current,
+                size.current,
+                reserve.current,
+                front.current,
+                opacity.current * .5,
+                shape.current,
+                circleSize,
+            );
+        });
 
         return (
             <SpaceCore

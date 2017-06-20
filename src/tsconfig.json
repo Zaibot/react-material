@@ -66,6 +66,7 @@
     "./slider/slider.tsx",
     "./slider/track.tsx",
     "./slider/trackbar.tsx",
+    "./space/animation.tsx",
     "./space/index.tsx",
     "./space/mask.tsx",
     "./space/space.tsx",

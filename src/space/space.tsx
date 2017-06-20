@@ -6,11 +6,29 @@ import colors from '../colors';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
-import { SurfaceAnimation, SurfaceMeasure } from './';
+import { SurfaceMeasure } from './';
+import SurfaceAnimation from './animation';
 import { calcBorderRadius, calcClipPath, calcSize } from './mask';
 import SpaceCore from './space';
 import cx from './style.less';
 import SurfaceWrapper from './surfaceWrapper';
+
+export class Child {
+  public constructor(
+    public readonly surfaceKey: any,
+    public readonly surface: Surface,
+    public readonly width: number,
+    public readonly height: number,
+    public readonly center: { x: number; y: number },
+    public readonly focus: number,
+    public readonly size: number,
+    public readonly reserve: number,
+    public readonly front: number,
+    public readonly opacity: number,
+    public readonly circleSize: number,
+    public readonly shape: number,
+  ) { }
+}
 
 export interface ISpaceProps {
     reserveWidth: number;
@@ -21,23 +39,8 @@ export interface ISpaceProps {
     offsetY: number;
     size: number;
     rounding: number;
-    surfaces: IChild[];
+    surfaces: Child[];
     onSize: (size: ISurfaceSize) => void;
-}
-
-export interface IChild {
-    surfaceKey: any;
-    surface: Surface;
-    width: number;
-    height: number;
-    center: { x: number; y: number };
-    focus: number;
-    size: number;
-    reserve: number;
-    front: number;
-    opacity: number;
-    circleSize: number;
-    shape: number;
 }
 
 export default ({ reserveWidth, reserveHeight, spaceWidth, spaceHeight, size, rounding, offsetX, offsetY, surfaces, onSize }: ISpaceProps) => {
