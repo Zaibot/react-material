@@ -1,5 +1,5 @@
 import React from 'react';
-import Theme from '../theme';
+
 import cx from './style.less';
 
 export interface IRippleProps {

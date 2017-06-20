@@ -1,10 +1,10 @@
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
+
 import React from 'react';
 import Animated from '../animated';
-import { Advance, Spring } from '../animation';
+import { Spring } from '../animation';
 import Presets from '../animation/presets';
-import colors from '../colors';
-import Material from '../material';
+
+
 import cx from './style.less';
 
 // tslint:disable no-magic-numbers

@@ -4,25 +4,25 @@
 // tslint:disable max-classes-per-file
 
 import '@zaibot/css-reset';
-import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AnimationRoot, Button, Material, Menu, NavButton, ToggleMenu } from '..';
-import colors from '../colors';
-import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
-import Input from '../input';
-import Slider from '../slider';
-import Space from '../space';
-import Surface from '../surface';
-import { FocusCenterLeft, FocusCenterRight, FocusTopLeft, FocusTopRight } from '../surface/focus';
-import cx from './style.less';
+import { AnimationRoot } from '..';
+
+
+
+
+
+
+
+
 
 import { CardSurface } from './cardSurface';
-import { Form } from './form';
-import { Login } from './login';
-import { Login2 } from './login2';
+
+
+
 import { SurfacePlayground } from './surface';
-import { MaterialSurfaceTest } from './surface2';
+
 
 const Demo = () => (
     <AnimationRoot>

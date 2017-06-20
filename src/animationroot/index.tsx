@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Material from '../material';
-import cx from './style.less';
+
+
 
 const maximumDelay = 500;
 const timeout = 500;
