@@ -76,10 +76,10 @@ class Content extends React.Component<IContentProps, IContentState> {
         const { width, height } = this.measure();
         this.onSize(width, height);
     }
-    public shouldComponentUpdate(nextProps: IContentProps) {
-        return this.props.opacity !== nextProps.opacity
-            || this.props.hint !== nextProps.hint;
-    }
+    // public shouldComponentUpdate(nextProps: IContentProps) {
+    //     return this.props.opacity !== nextProps.opacity
+    //         || this.props.hint !== nextProps.hint;
+    // }
 
     private onDivRef = (div: HTMLDivElement) => {
         this._div = div;

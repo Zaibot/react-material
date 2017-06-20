@@ -88,19 +88,20 @@ class SurfaceControls extends React.Component<{ values: ISurfaceValues; onChange
 export class SurfacePlayground extends React.Component<any, any> {
     public state = {
         speed: 1 as number,
+        debug: false,
         left: { centerX: 0, centerY: 0, focus: 1, size: 1, reserve: 1, front: 1, opacity: 1, shape: 1 },
         right: { centerX: 0, centerY: 0, focus: 0, size: 0, reserve: 0, front: 0, opacity: 0, shape: 0 },
     };
 
     public render() {
-        const { speed, left, right } = this.state;
+        const { speed, left, right, debug } = this.state;
         return (
             <div className={cx(`form`)} style={{ width: `80%` }}>
                 <Dialog>
                     <DialogHeader>
                         <span style={{ position: 'absolute', right: `1rem`, top: `1rem`, zIndex: 2 }}>
                             <ToggleMenu focus={FocusTopRight} focusMenu={FocusTopRight} menu={(e) => (
-                                <Menu open>
+                                <Menu className={mdc(colors.bg.grey.n50)} open>
                                     <NavButton onClick={e}>Option 1</NavButton>
                                     <NavButton onClick={e}>Option 2</NavButton>
                                     <NavButton onClick={e}>Option 3</NavButton>
@@ -119,6 +120,18 @@ export class SurfacePlayground extends React.Component<any, any> {
                         <div>
                             <label>Speed x{speed.toFixed(2)}</label>
                             <Slider value={speed} min={0} max={10} onChange={(p) => this.setState({ speed: p })} />
+                        </div>
+                        <div>
+                            <Button
+                                raised
+                                className={cx(
+                                    debug ? mdc(colors.bg.red.n800) : mdc(colors.bg.grey.n100),
+                                    debug ? mdc(colors.text.white.darker) : mdc(colors.text.black.darker),
+                                )}
+                                rippleClassName={debug ? mdc(colors.bg.red.n300) : mdc(colors.bg.grey.n300)}
+                                onClick={this.onToggleDebug}>
+                                {debug ? 'Debug' : 'Normal'}
+                            </Button>
                         </div>
                         <div style={{ display: 'flex' }}>
                             <div style={{ flex: '0 0 25%' }}>
@@ -167,7 +180,12 @@ export class SurfacePlayground extends React.Component<any, any> {
                                             opacity={left.opacity}
                                             shape={left.shape}
                                             type={'circle'}>
-                                            <Button round className={mdc(colors.bg.red.n500)} rippleClassName={mdc(colors.bg.red.n300)}>...</Button>
+                                            <Button
+                                                round
+                                                className={debug ? mdc(colors.bg.red.n500) : mdc(colors.bg.grey.n50)}
+                                                rippleClassName={debug ? mdc(colors.bg.red.n300) : mdc(colors.bg.grey.n300)}>
+                                                ...
+                                            </Button>
                                         </Surface>
                                         <Surface
                                             center={{ x: right.centerX, y: right.centerY }}
@@ -178,7 +196,7 @@ export class SurfacePlayground extends React.Component<any, any> {
                                             opacity={right.opacity}
                                             shape={right.shape}
                                             type={'rectangle'}>
-                                            <Menu open>
+                                            <Menu className={debug ? mdc(colors.bg.blue.n500) : mdc(colors.bg.grey.n50)} open>
                                                 <NavButton>Option 1</NavButton>
                                                 <NavButton>Option 2</NavButton>
                                                 <NavButton>Option 3</NavButton>
@@ -195,6 +213,12 @@ export class SurfacePlayground extends React.Component<any, any> {
                 </Dialog>
             </div>
         );
+    }
+
+    private onToggleDebug = () => {
+        this.setState({
+            debug: !this.state.debug,
+        });
     }
 
     private onPreset1A = () => {

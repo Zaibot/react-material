@@ -11,23 +11,36 @@ export const calcRadius2 = (width: number, height: number, size: number) => {
     return max * size * .5;
 };
 
+const circleY = (width: number, height: number, rounding: number) => {
+  const r = width * rounding * .5; // calcRadius(width, height, rounding);
+  const y = width * .5;
+  const x = Math.sqrt(Math.max(0, r * r - y * y));
+  const z = r - x;
+  return z;
+};
+const circleX = (width: number, height: number, rounding: number) => {
+  const r = height * rounding * .5; // calcRadius2(width, height, rounding);
+  const y = height * .5;
+  const x = Math.sqrt(Math.max(0, r * r - y * y));
+  const z = r - x;
+  return z;
+};
+
 export const calcBorderRadius = (width: number, height: number, size: number, centerX: number, centerY: number, rounding: number) => {
     const snap = width > height ? height : width;
-    const r = calcRadius(width, height, rounding);
-    const y = (width) * .5;
-    const x = Math.sqrt(Math.max(0, r * r - y * y));
-    const z = r - x;
+    const x = circleX(width, height, rounding);
+    const y = circleY(width, height, rounding);
 
     // console.log(`${width} ${Math.max(0, r * r - y * y)} ${r} ${y} ${x} ${z}`)
 
-    const topLeftX = snap * .5;
-    const topLeftY = z;
-    const topRightX = snap * .5;
-    const topRightY = z;
-    const bottomRightX = snap * .5;
-    const bottomRightY = z;
-    const bottomLeftX = snap * .5;
-    const bottomLeftY = z;
+    const topLeftX = x;
+    const topLeftY = y;
+    const topRightX = x;
+    const topRightY = y;
+    const bottomRightX = x;
+    const bottomRightY = y;
+    const bottomLeftX = x;
+    const bottomLeftY = y;
     return {
         borderBottomLeftRadius: `${bottomLeftX}px ${bottomLeftY}px`,
         borderBottomRightRadius: `${bottomRightX}px ${bottomRightY}px`,

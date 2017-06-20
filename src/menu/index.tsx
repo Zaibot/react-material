@@ -12,6 +12,7 @@ import cx from './style.less';
 const constrain = (val: number, min: number, max: number) => val < min ? min : val > max ? max : val;
 
 export interface IMenuProps {
+    className?: string;
     disabled?: boolean;
     accent?: boolean;
     onClick?: any;
@@ -21,17 +22,13 @@ export interface IMenuProps {
 class Menu extends React.Component<IMenuProps, {}> {
     public render() {
         const { onClick, disabled, children } = this.props;
-        // const css = cx('component', { open }, mdc(colors.bg.grey.n50));
-        const css = cx('component', { open }, mdc(colors.bg.blue.n500));
+        const css = cx('component', { open }, this.props.className);
+        // const css = cx('component', { open }, mdc(colors.bg.blue.n500));
         return (
             <div className={css} onClick={onClick}>
                 {children}
             </div>
         );
-    }
-
-    public shouldComponentUpdate() {
-      return false;
     }
 }
 export default Menu;

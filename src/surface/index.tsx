@@ -23,10 +23,6 @@ class Surface extends React.Component<ISurfaceProps, {}> {
         return (<Content onSize={this.onSize}>{this.props.children}</Content>);
     }
 
-    public shouldComponentUpdate() {
-      return false;
-    }
-
     private onSize = ({ x, y }: { x: number, y: number }) => {
         const { onSize, surfaceKey } = this.props;
         // console.log(`${surfaceKey} ${x}x${y}`)

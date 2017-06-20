@@ -32,11 +32,13 @@ export interface IInputAnimation {
     sizeHeight: Spring;
     sizeWidth: Spring;
     rounding: Spring;
+    surfaces: SurfaceAnimation[];
 }
 const emptyAnimation: IInputAnimation = {
     rounding: Presets.Spring300,
     sizeHeight: Presets.Spring100.changeGravity(1.06),
     sizeWidth: Presets.Spring100,
+    surfaces: [] as SurfaceAnimation[],
 };
 
 function smartUpdate<T>(array: T[], map: (item: T, idx?: number) => T) {
@@ -93,6 +95,14 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         rounding = rounding.change(totalCircle / maxShape).iterate(advance * 0.001);
 
         const surfaces = smartUpdate(this.state.surfaces, (x) => x.iterate(advance * 0.001));
+        if (this.state.surfaces !== surfaces) {
+            this.setState({ surfaces });
+        }
+        return { rounding, sizeHeight, sizeWidth, surfaces };
+    }
+
+    public applyAnimation(state: IInputAnimation) {
+        const { rounding, sizeHeight, sizeWidth, surfaces } = state;
         if (this.state.rounding !== rounding.current
             || this.state.sizeHeight !== sizeHeight.current
             || this.state.sizeWidth !== sizeWidth.current
@@ -100,7 +110,6 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
             // Update state
             this.setState({ rounding: rounding.current, sizeHeight: sizeHeight.current, sizeWidth: sizeWidth.current, surfaces });
         }
-        return { rounding, sizeHeight, sizeWidth };
     }
 
     public render() {
