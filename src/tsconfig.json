@@ -38,6 +38,8 @@
     "./animation/point.tsx",
     "./animation/presets.tsx",
     "./animation/spring.tsx",
+    "./animationroot/animatable.tsx",
+    "./animationroot/entry.tsx",
     "./animationroot/index.tsx",
     "./button/index.tsx",
     "./colors/index.tsx",

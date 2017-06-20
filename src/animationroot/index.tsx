@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import IAnimatable from '../animationroot/animatable';
 
+// tslint:disable no-magic-numbers
 const maximumDelay = 500;
-const maximumCycleTime = 5;
+const maximumCycleTime = 1000 / 60; /* 60fps */
 const timeout = 500;
+// tslint:enable no-magic-numbers
 
 // tslint:disable no-console
 
@@ -17,11 +20,7 @@ const isWithinTimeNow = (last: number, t: number) => Date.now() - last - t <= 0;
 const isTimedOut = (time: number, last: number, t: number) => time - last - t > 0;
 const isTimedOutNow = (last: number, t: number) => Date.now() - last - t > 0;
 
-export interface IAnimatable<T> {
-    onPreAnimate(time: number, advance: number, state: T): T;
-    onAnimate(time: number, advance: number, state: T): T;
-    applyAnimation?(state: T): void;
-}
+import Registration from './entry';
 
 export interface IAnimationRootProps {
     rate?: number;
@@ -32,7 +31,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     };
     private static _warned = false;
     // private static xx = 0;
-    private _registrations: Array<{ component: IAnimatable<any>; state: any; always: boolean; last: number; changed: boolean; }> = [];
+    private _registrations: Registration[] = [];
     private _timer: any = null;
     private _last: number = Date.now();
     // private x = 0;
@@ -45,9 +44,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
 
     public add(component: IAnimatable<any>, always: boolean) {
         if (this._registrations.some((x) => x.component === component)) { return; }
-        const state: any = undefined;
-        const changed = false;
-        this._registrations = [...this._registrations, { component, state, always, last: 0, changed }];
+        this._registrations = [...this._registrations, Registration.create(component, always)];
         this.runSingle(component, this.getAnimationTime(), 0);
         // console.log(`[@zaibot/react-material] animation root, adding ${this.x}`);
     }
@@ -111,9 +108,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
             if (reg.component !== component) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    const nextState = reg.component.onPreAnimate(time, advance, reg.state);
-                    reg.changed = reg.changed || reg.state !== nextState;
-                    reg.state = nextState;
+                    reg.changeState(reg.component.onPreAnimate(time, advance, reg.state));
                 } else {
                     if (!AnimationRoot._warned) {
                         AnimationRoot._warned = true;
@@ -129,9 +124,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
             if (reg.component !== component) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    const nextState = reg.component.onAnimate(time, advance, reg.state);
-                    reg.changed = reg.changed || reg.state !== nextState;
-                    reg.state = nextState;
+                    reg.changeState(reg.component.onAnimate(time, advance, reg.state));
                     if (reg.changed && reg.component.applyAnimation) {
                         reg.component.applyAnimation(reg.state);
                         reg.changed = false;

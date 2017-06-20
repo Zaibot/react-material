@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { GetAnimationRoot, IAnimatable, RootSymbol } from '../animationroot';
+import { GetAnimationRoot, RootSymbol } from '../animationroot';
+import IAnimatable from '../animationroot/animatable';
 
 export interface Constructor<T> { new (...args: any[]): T; }
 export default (always = false) => {
