@@ -9,6 +9,7 @@ import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
 import SurfaceAnimation from './animation';
+import SurfaceMeasure from './measure';
 import SpaceCore, { Child } from './space';
 import cx from './style.less';
 
@@ -27,19 +28,6 @@ export interface ISpaceState {
     sizes: SurfaceMeasure[];
 }
 
-export class SurfaceMeasure {
-    public constructor(
-        public readonly width: number,
-        public readonly height: number,
-    ) { }
-
-    public update(width: number, height: number) {
-        if (width !== this.width || height !== this.height) {
-            return new SurfaceMeasure(width, height);
-        }
-        return this;
-    }
-}
 export interface IInputAnimation {
     sizeHeight: Spring;
     sizeWidth: Spring;

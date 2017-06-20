@@ -6,8 +6,8 @@ import colors from '../colors';
 import Material from '../material';
 import Surface, { ISurfaceSize } from '../surface';
 import Focus from '../surface/focus';
-import { SurfaceMeasure } from './';
 import { calcBorderRadius, calcClipPath, calcSize } from './mask';
+import SurfaceMeasure from './measure';
 import SpaceCore from './space';
 import cx from './style.less';
 
