@@ -22,6 +22,8 @@ const isTimedOutNow = (last: number, t: number) => Date.now() - last - t > 0;
 
 import Registration from './entry';
 
+let profileTimer = 0;
+
 export interface IAnimationRootProps {
     rate?: number;
 }
