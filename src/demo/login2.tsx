@@ -1,15 +1,12 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
-
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
-
 import { Button } from '..';
 import colors from '../colors';
 import Dialog, { DialogActions, DialogContents } from '../dialog';
 import Input from '../input';
-
 import cx from './style.less';
 
 // tslint:disable max-classes-per-file

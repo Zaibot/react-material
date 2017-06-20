@@ -1,8 +1,5 @@
-
 import React from 'react';
-
 import Surface, { ISurfaceSize } from '../surface';
-
 import { calcClipPath } from './mask';
 
 export interface ISurfaceWrapperProps {

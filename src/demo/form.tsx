@@ -1,15 +1,12 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
-
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
-
 import { Button, Menu, NavButton, ToggleMenu } from '..';
 import colors from '../colors';
 import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
 import Input from '../input';
-
 import { FocusTopRight } from '../surface/focus';
 import cx from './style.less';
 

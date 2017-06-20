@@ -1,6 +1,5 @@
 // tslint:disable-next-line
 /// <reference path="../material-design-color-palette.d.ts" />
-
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
@@ -14,7 +13,6 @@ import Space from '../space';
 import Surface from '../surface';
 import { FocusCenterLeft, FocusCenterRight, FocusTopLeft, FocusTopRight } from '../surface/focus';
 import cx from './style.less';
-
 import { SurfacePlayground } from './surface';
 
 // tslint:disable max-classes-per-file
