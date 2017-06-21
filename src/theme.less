@@ -1,1 +1,7 @@
 @rem: 16px/1rem;
+@default-font-family: 'Segoe UI';
+@default-line-height: 1.3em;
+
+.font(@weight, @size, @line-height: @default-line-height) {
+  font: @weight @size/@line-height @default-font-family;
+}

@@ -76,6 +76,8 @@
     "./space/surfaceWrapper.tsx",
     "./surface/focus.tsx",
     "./surface/index.tsx",
+    "./text/css.tsx",
+    "./text/index.tsx",
     "./theme/index.tsx",
     "./togglemenu/index.tsx"
   ]
