@@ -1,0 +1,79 @@
+.shadow(@elevation) {
+  &.key {
+    // box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12), 0 @elevation*0.5px @elevation*1px 0 rgba(0,0,0,0.24);
+    // box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12), 0 @elevation*1.0px @elevation*1.5px 0 rgba(0,0,0,0.18);
+    box-shadow:0 0 @elevation*1px @elevation*0.1px rgba(0,0,0,0.16), 0 @elevation*1.0px @elevation*1.5px @elevation*0.1px rgba(0,0,0,0.24);
+  }
+  &.ambient {
+    // box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12);
+    // box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12), 0 @elevation*0.5px @elevation*1px 0 rgba(0,0,0,0.12);
+    // box-shadow: 0 0 @elevation*1px 0 rgba(0,0,0,0.12), 0 @elevation*0.5px @elevation*1.5px 0 rgba(0,0,0,0.18);
+    box-shadow:0 0 @elevation*1px @elevation*0.1px rgba(0,0,0,0.12), 0 @elevation*0.5px @elevation*2.0px @elevation*0.1px rgba(0,0,0,0.16);
+  }
+}
+.psdshadowkey(@opacity, @distance, @spread, @size) {
+  // &.key { box-shadow: 0 @distance*1px @size*1px @spread*0.1px rgba(0,0,0,@opacity); }
+}
+.psdshadowambient(@opacity, @distance, @spread, @size) {
+  // &.ambient { box-shadow: 0 @distance*1px @size*1px @spread*0.1px rgba(0,0,0,@opacity); }
+}
+
+.switch {
+  .shadow(1);
+  .psdshadowkey(0.24, 2, 6, 3);
+  .psdshadowambient(0.16, 1, 2, 4);
+}
+
+.card {
+  .shadow(2);
+  .psdshadowkey(0.24, 3, 6, 5);
+  .psdshadowambient(0.16, 1, 2, 7);
+}
+
+.indicator {
+  .shadow(3);
+  .psdshadowkey(0.24, 5, 6, 7);
+  .psdshadowambient(0.16, 2, 2, 10);
+}
+
+.appbar {
+  .shadow(4);
+  .psdshadowkey(0.24, 7, 6, 10);
+  .psdshadowambient(0.16, 3, 2, 13);
+}
+
+.snackbar {
+  .shadow(6);
+  .psdshadowkey(0.24, 10, 6, 15);
+  .psdshadowambient(0.16, 4, 2, 20);
+}
+
+.menu {
+  .shadow(8);
+  .psdshadowkey(0.24, 13, 6, 20);
+  .psdshadowambient(0.16, 5, 2, 27);
+}
+
+.submenu {
+  .shadow(9);
+  .psdshadowkey(0.24, 18, 6, 27);
+  .psdshadowambient(0.16, 9, 2, 36);
+}
+
+.floating {
+  .shadow(12);
+  .psdshadowkey(0.24, 20, 6, 30);
+  .psdshadowambient(0.16, 8, 2, 41);
+}
+
+.drawer {
+  .shadow(16);
+  .psdshadowkey(0.24, 28, 6, 40);
+  .psdshadowambient(0.16, 11, 2, 53);
+}
+
+.dialog {
+  .shadow(24);
+  .psdshadowkey(0.24, 39, 6, 60);
+  .psdshadowambient(0.16, 15, 2, 81);
+}
