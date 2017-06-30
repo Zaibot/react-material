@@ -77,7 +77,6 @@ class Spring {
         if (this.target === this.current && this.velocity === 0) {
             return this;
         }
-        advance = advance * 0.001;
         const currentToTarget = this.target - this.current;
         const gravity = currentToTarget > 0 ? this.gravity : 2 - this.gravity;
         const springForce = currentToTarget * this.springConstant * gravity;

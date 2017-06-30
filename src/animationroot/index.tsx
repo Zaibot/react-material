@@ -97,7 +97,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
 
     private iterateCore() {
         const time = Date.now();
-        const advance = this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last);
+        const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last)) * 0.001;
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
         this._last = time;
     }
