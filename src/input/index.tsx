@@ -52,9 +52,9 @@ class Input extends React.Component<IInputProps, IInputState> {
 
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
         const { focused } = this.state;
-        const label = state.label.change(focused || this.props.value || state.input.current === 1 ? 0 : 1).iterate(advance * 1.000).constrain(0, 1);
-        const input = state.input.change(focused || (this.props.value && state.label.current === 0) ? 1 : 0).iterate(advance * 1.000).constrain(0, 1);
-        const helper = state.helper.change(focused || this.props.error ? 1 : 0).speed(this.props.error || this.state.input > 0.5 ? 100 : 150).iterate(advance * 1.000).constrain(0, 1);
+        const label = state.label.change(focused || this.props.value || state.input.current === 1 ? 0 : 1).iterate(advance).constrain(0, 1);
+        const input = state.input.change(focused || (this.props.value && state.label.current === 0) ? 1 : 0).iterate(advance).constrain(0, 1);
+        const helper = state.helper.change(focused || this.props.error ? 1 : 0).speed(this.props.error || this.state.input > 0.5 ? 100 : 150).iterate(advance).constrain(0, 1);
         if (this.state.helper !== helper.current
             || this.state.input !== input.current
             || this.state.label !== label.current) {

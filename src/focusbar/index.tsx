@@ -49,12 +49,12 @@ class FocusBar extends React.Component<IFocusBarProps, IFocusBarState> {
     public onAnimate(time: number, advance: number, state: IFocusBarAnimation): IFocusBarAnimation {
         const errorw = state.erroro.current === 0
             ? state.errorw.jump(0)
-            : state.errorw.change(this.props.state === 'error' || state.errorw.current === 1 ? 1 : 0).iterate(advance * 1.000).constrain(0, 1);
+            : state.errorw.change(this.props.state === 'error' || state.errorw.current === 1 ? 1 : 0).iterate(advance).constrain(0, 1);
         const focusw = state.focuso.current === 0
             ? state.focusw.jump(0)
-            : state.focusw.change(this.props.state === 'focus' || state.focusw.current === 1 ? 1 : 0).iterate(advance * 1.000).constrain(0, 1);
-        const erroro = state.erroro.change(this.props.state === 'error' ? 1 : 0).iterate(advance * 1.000).constrain(0, 1);
-        const focuso = state.focuso.change(this.props.state === 'focus' ? 1 : 0).iterate(advance * 1.000).constrain(0, 1);
+            : state.focusw.change(this.props.state === 'focus' || state.focusw.current === 1 ? 1 : 0).iterate(advance).constrain(0, 1);
+        const erroro = state.erroro.change(this.props.state === 'error' ? 1 : 0).iterate(advance).constrain(0, 1);
+        const focuso = state.focuso.change(this.props.state === 'focus' ? 1 : 0).iterate(advance).constrain(0, 1);
         if (erroro.current !== this.state.erroro
             || errorw.current !== this.state.errorw
             || focuso.current !== this.state.focuso

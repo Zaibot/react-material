@@ -144,7 +144,7 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
             // short circuit
             return { ...state, last: time };
         }
-        ripples = ripples.map((x) => x.iterate(advance * 1.000));
+        ripples = ripples.map((x) => x.iterate(advance));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         if (ripples.length === 0) { unregisterRipple(this); }
         const last = time;
