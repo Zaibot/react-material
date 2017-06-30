@@ -1,34 +1,25 @@
-const CachedEmpty = `/`;
+import moize from 'moize';
+import React from 'react';
+import cx from './style.less';
 
-class Offset {
-    public static readonly empty = new Offset(0, 0);
+const dec = 1;
 
-    private _cached = CachedEmpty;
-
-    public constructor(
-        public readonly x: number,
-        public readonly y: number,
-    ) { }
-
-    public alter(
-        x: number,
-        y: number,
-        size: number,
-    ) {
-        if (this.x !== x || this.y !== y) {
-            return new Offset(x, y);
-        }
-        return this;
-    }
-
-    public toTransform() {
-        if (this._cached !== CachedEmpty) { return this._cached; }
-        if (this.x !== 0 || this.y !== 0) {
-            // tslint:disable-next-line max-line-length no-magic-numbersy
-            return this._cached = `translate(${this.x.toFixed(1)}px, ${this.y.toFixed(1)}px)`;
-        }
-        return this._cached = ``;
-    }
+export interface IOffsetProps {
+    className: string;
+    top: number;
+    left: number;
 }
 
-export default Offset;
+export default moize.react(
+    ({ children, className, top: topInput, left: leftInput }: IOffsetProps & { children: React.ReactNode }) => {
+        const top = topInput === undefined ? topInput : topInput.toFixed(dec);
+        const left = leftInput === undefined ? leftInput : leftInput.toFixed(dec);
+        const transform = `translate(${top}px, ${left}px)`;
+
+        return (
+            <div className={cx(`offset`, className)} style={{ transform }}>
+                {children}
+            </div>
+        );
+    },
+);

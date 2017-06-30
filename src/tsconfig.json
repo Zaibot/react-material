@@ -30,6 +30,7 @@
   "files": [
     "./css.d.ts",
     "./material-design-color-palette.d.ts",
+    "./moize.d.ts",
     "./prop-types.d.ts",
     "./style.d.ts",
     "./animated/index.tsx",
@@ -64,12 +65,6 @@
     "./material/ripple.tsx",
     "./menu/index.tsx",
     "./navbutton/index.tsx",
-    "./presentational/borderRadius.tsx",
-    "./presentational/circle.tsx",
-    "./presentational/index.tsx",
-    "./presentational/material.tsx",
-    "./presentational/offset.tsx",
-    "./presentational/surface.tsx",
     "./slider/bar.tsx",
     "./slider/index.tsx",
     "./slider/slider.tsx",
@@ -81,11 +76,19 @@
     "./space/measure.tsx",
     "./space/space.tsx",
     "./space/surfaceWrapper.tsx",
+    "./static/index.tsx",
+    "./static/LegacySurface.tsx",
+    "./static/Material.tsx",
+    "./static/Offset.tsx",
+    "./static/Surface.tsx",
     "./surface/focus.tsx",
     "./surface/index.tsx",
     "./text/css.tsx",
     "./text/index.tsx",
     "./theme/index.tsx",
-    "./togglemenu/index.tsx"
+    "./togglemenu/index.tsx",
+    "./utils/borderRadius.tsx",
+    "./utils/circle.tsx",
+    "./utils/offset.tsx"
   ]
 }
