@@ -28,15 +28,20 @@ export class Static extends React.Component<any, any> {
                         Static
                     </DialogHeader>
                     <DialogContents>
-                        <Material width={100} height={100}>
-                            <Offset width={100} height={100}>
+                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3}>
+                            <Offset width={100} height={100} borderRadius={BorderRadius.round(3)}>
                                 <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
                                     <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
-                            <Offset width={100} height={100} borderRadius={BorderRadius.roundHV(50, 40)}>
+                            <Offset width={100} height={100} borderRadius={BorderRadius.roundHV(50, 50)}>
                                 <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
                                     <span className={mdc(colors.text.white.darker)}>Content</span>
+                                </Surface>
+                            </Offset>
+                            <Offset width={20} height={20} offset={new Position(5, 5)} borderRadius={BorderRadius.roundHV(50, 40)}>
+                                <Surface width={100} height={100} offset={new Position(-5, -5)} className={mdc(colors.bg.grey.n50)} opacity={0.9}>
+                                    <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
                         </Material>

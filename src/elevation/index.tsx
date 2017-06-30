@@ -20,4 +20,4 @@ const elevationToCss = (el: Elevation) => {
     // tslint:enable
 };
 
-export default (elevation: Elevation) => elevation ? cx(elevationToCss(elevation)) : null;
+export default (elevation: Elevation) => elevation ? cx(`key`, elevationToCss(elevation)) : null;
