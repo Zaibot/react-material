@@ -1,7 +1,7 @@
 const CachedEmpty = `/`;
 
-class Offset {
-    public static readonly empty = new Offset(0, 0);
+class Position {
+    public static readonly empty = new Position(0, 0);
 
     private _cached = CachedEmpty;
 
@@ -16,7 +16,7 @@ class Offset {
         size: number,
     ) {
         if (this.x !== x || this.y !== y) {
-            return new Offset(x, y);
+            return new Position(x, y);
         }
         return this;
     }
@@ -31,4 +31,4 @@ class Offset {
     }
 }
 
-export default Offset;
+export default Position;

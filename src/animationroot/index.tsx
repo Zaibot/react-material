@@ -22,8 +22,6 @@ const isTimedOutNow = (last: number, t: number) => Date.now() - last - t > 0;
 
 import Registration from './entry';
 
-let profileTimer = 0;
-
 export interface IAnimationRootProps {
     rate?: number;
 }
@@ -97,6 +95,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
 
     private iterateCore() {
         const time = Date.now();
+        // tslint:disable-next-line no-magic-numbers
         const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last)) * 0.001;
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
         this._last = time;

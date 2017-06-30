@@ -1,0 +1,48 @@
+// tslint:disable-next-line
+/// <reference path="../material-design-color-palette.d.ts" />
+import '@zaibot/css-reset';
+import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
+import React from 'react';
+import { Button, Menu, NavButton, ToggleMenu } from '..';
+import colors from '../colors';
+import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
+import Input from '../input';
+import { Material, Offset, Surface } from '../static';
+import { FocusTopRight } from '../surface/focus';
+import BorderRadius from '../utils/borderRadius';
+import Position from '../utils/position';
+import cx from './style.less';
+
+// tslint:disable max-classes-per-file
+// tslint:disable no-unsafe-any
+// tslint:disable no-magic-numbers
+
+export class Static extends React.Component<any, any> {
+    public state = {
+    };
+    public render() {
+        return (
+            <div className={cx(`form`)}>
+                <Dialog>
+                    <DialogHeader>
+                        Static
+                    </DialogHeader>
+                    <DialogContents>
+                        <Material width={100} height={100}>
+                            <Offset width={100} height={100}>
+                                <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                                    <span className={mdc(colors.text.black.darker)}>Content</span>
+                                </Surface>
+                            </Offset>
+                            <Offset width={100} height={100} borderRadius={BorderRadius.roundHV(50, 40)}>
+                                <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                                    <span className={mdc(colors.text.white.darker)}>Content</span>
+                                </Surface>
+                            </Offset>
+                        </Material>
+                    </DialogContents>
+                </Dialog>
+            </div>
+        );
+    }
+}

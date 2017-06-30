@@ -1,3 +1,6 @@
 declare module 'moize' {
-  export function react<P>(component: (props: P, context?: any) => React.ReactNode): (props: P, context?: any) => React.ReactNode;
+  class Moize {
+    public static react<P>(component: (props: P, context?: any) => React.ReactElement<P>): (props: P, context?: any) => React.ReactElement<P>;
+  }
+  export default Moize;
 }

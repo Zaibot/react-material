@@ -1,9 +1,18 @@
-const CachedEmpty = `/`;
+const dec = 1;
+
+const CachedEmpty: string = `/`;
 
 class BorderRadius {
     public static readonly empty = new BorderRadius(0, 0, 0, 0, 0, 0, 0, 0);
 
-    private _cached = CachedEmpty;
+    public static round(n: number) {
+        return new BorderRadius(n, n, n, n, n, n, n, n);
+    }
+    public static roundHV(h: number, v: number) {
+        return new BorderRadius(h, v, h, v, h, v, h, v);
+    }
+
+    private _cached: string = CachedEmpty;
 
     public constructor(
         public readonly topLeftX: number,
@@ -55,10 +64,17 @@ class BorderRadius {
             || (this.bottomRightX > 0 && this.bottomRightY > 0)
             || (this.bottomLeftX > 0 && this.bottomLeftY > 0)
         ) {
-            // tslint:disable-next-line max-line-length no-magic-numbers
-            return this._cached = `${this.topLeftX.toFixed(1)}px ${this.topLeftY.toFixed(1)}px / ${this.topRightX.toFixed(1)}px ${this.topRightY.toFixed(1)}px ${this.bottomRightX.toFixed(1)}px ${this.bottomRightY.toFixed(1)}px ${this.bottomLeftX.toFixed(1)}px ${this.bottomLeftY.toFixed(1)}px`;
+            const topLeftX = this.topLeftX.toFixed(1);
+            const topRightX = this.topRightX.toFixed(1);
+            const bottomRightX = this.bottomRightX.toFixed(1);
+            const bottomLeftX = this.bottomLeftX.toFixed(1);
+            const topLeftY = this.topLeftY.toFixed(1);
+            const topRightY = this.topRightY.toFixed(1);
+            const bottomRightY = this.bottomRightY.toFixed(1);
+            const bottomLeftY = this.bottomLeftY.toFixed(1);
+            return `${topLeftX}px ${topRightX}px ${bottomRightX}px ${bottomLeftX}px / ${topLeftY}px ${topRightY}px ${bottomRightY}px ${bottomLeftY}px`;
         }
-        return this._cached = ``;
+        return this._cached = null;
     }
 }
 

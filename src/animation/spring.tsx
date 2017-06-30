@@ -81,10 +81,6 @@ class Spring {
         const gravity = currentToTarget > 0 ? this.gravity : 2 - this.gravity;
         const springForce = currentToTarget * this.springConstant * gravity;
         const dampingForce = this.velocity * this.dampingConstant;
-        // const gravity = currentToTarget > 0 ? this.gravity : 0;
-        // const gravityDamping = currentToTarget < 0 ? this.gravity : 0;
-        // const springForce = currentToTarget * this.springConstant * gravity;
-        // const dampingForce = this.velocity * this.dampingConstant * gravityDamping;
         const force = springForce - dampingForce;
         const velocity = this.velocity + force * advance;
         if (currentToTarget > -0.01 && currentToTarget < 0.01) {

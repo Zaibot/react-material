@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import { AnimationRoot } from '..';
 import { CardSurface } from './cardSurface';
 import { Form } from './form';
+import { Static } from './static';
 import { SurfacePlayground } from './surface';
 
 // tslint:disable max-classes-per-file
@@ -15,6 +16,9 @@ import { SurfacePlayground } from './surface';
 const Demo = () => (
     <AnimationRoot>
         <div>
+            <div style={{ margin: '5rem' }}>
+                <Static />
+            </div>
             <div style={{ margin: '5rem' }}>
                 <SurfacePlayground />
             </div>

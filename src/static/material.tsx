@@ -3,7 +3,7 @@ import React from 'react';
 import ElevationCss, { Elevation } from '../elevation';
 import BorderRadius from '../utils/borderRadius';
 import Circle from '../utils/circle';
-import Offset from '../utils/offset';
+import Position from '../utils/position';
 import cx from './style.less';
 
 const dec = 1;
@@ -21,9 +21,8 @@ export default moize.react(
     ({ borderRadius: borderRadiusInput, children, elevation, width: widthInput, height: heightInput, zoom = 1 }: IMaterialProps & { children: React.ReactNode }) => {
         const borderRadius = borderRadiusInput ? borderRadiusInput.toBorderRadius() : ``;
         const transform = zoom !== 1 ? `scale(${zoom.toFixed(decScale)})` : ``;
-        const width = widthInput === undefined ? widthInput : widthInput.toFixed(dec);
-        const height = heightInput === undefined ? heightInput : heightInput.toFixed(dec);
-
+        const width = widthInput === undefined ? undefined : `${widthInput.toFixed(dec)}px`;
+        const height = heightInput === undefined ? undefined : `${heightInput.toFixed(dec)}px`;
         return (
             <div className={cx(`material`, ElevationCss(elevation))} style={{ borderRadius, transform, width, height }}>
                 {children}

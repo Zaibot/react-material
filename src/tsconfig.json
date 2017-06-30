@@ -50,6 +50,7 @@
     "./demo/index.tsx",
     "./demo/login.tsx",
     "./demo/login2.tsx",
+    "./demo/static.tsx",
     "./demo/surface.tsx",
     "./demo/surface2.tsx",
     "./dialog/actions.tsx",
@@ -77,7 +78,6 @@
     "./space/space.tsx",
     "./space/surfaceWrapper.tsx",
     "./static/index.tsx",
-    "./static/LegacySurface.tsx",
     "./static/Material.tsx",
     "./static/Offset.tsx",
     "./static/Surface.tsx",
@@ -89,6 +89,6 @@
     "./togglemenu/index.tsx",
     "./utils/borderRadius.tsx",
     "./utils/circle.tsx",
-    "./utils/offset.tsx"
+    "./utils/position.tsx"
   ]
 }
