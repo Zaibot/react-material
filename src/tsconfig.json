@@ -89,6 +89,7 @@
     "./togglemenu/index.tsx",
     "./utils/borderRadius.tsx",
     "./utils/circle.tsx",
+    "./utils/measure.tsx",
     "./utils/position.tsx"
   ]
 }
