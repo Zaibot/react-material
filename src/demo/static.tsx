@@ -91,7 +91,7 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
                             <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide1)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
                                 <span className={mdc(colors.text.white.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={0.5} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
                         </Material>
