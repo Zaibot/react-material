@@ -107,6 +107,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
             if (reg.component !== component) { continue; }
+            // if (!reg.component.onPreAnimate) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
                     reg.changeState(reg.component.onPreAnimate(time, advance, reg.state));
@@ -143,6 +144,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
+            // if (!reg.component.onPreAnimate) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
                     const nextState = reg.component.onPreAnimate(time, advance, reg.state);

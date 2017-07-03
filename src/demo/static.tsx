@@ -3,7 +3,7 @@
 import '@zaibot/css-reset';
 import mdc from 'material-design-color-palette/css/material-design-color-palette.css';
 import React from 'react';
-import { Button, Menu, NavButton, ToggleMenu } from '..';
+import { Animated, Button, IAnimatable, Menu, NavButton, Presets, Spring, ToggleMenu } from '..';
 import colors from '../colors';
 import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
 import Input from '../input';
@@ -18,10 +18,33 @@ import cx from './style.less';
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
 
-export class Static extends React.Component<any, any> {
+export interface IStaticAnimation {
+    slide1: Spring;
+    slide2: Spring;
+}
+
+@Animated()
+export class Static extends React.Component<any, any> implements IAnimatable<IStaticAnimation> {
     public state = {
+        slide1: 0,
+        slide2: 0,
     };
+
+    public onPreAnimate(time: number, advance: number, state: IStaticAnimation = { slide1: Presets.Spring100, slide2: Presets.Spring100 }) {
+        return state;
+    }
+    public onAnimate(time: number, advance: number, state: IStaticAnimation) {
+        const slide1 = state.slide1.change(Math.round(Date.now() / 2000) % 2).iterate(advance);
+        const slide2 = state.slide2.change(Math.round(Date.now() * .9 / 2000) % 2).iterate(advance);
+        if (slide1.current !== this.state.slide1
+            || slide2.current !== this.state.slide2) {
+            this.setState({ slide1: slide1.current, slide2: slide2.current });
+        }
+        return { slide1, slide2 };
+    }
+
     public render() {
+        const { slide1, slide2 } = this.state;
         return (
             <div className={cx(`form`)}>
                 <Dialog>
@@ -29,33 +52,46 @@ export class Static extends React.Component<any, any> {
                         Static
                     </DialogHeader>
                     <DialogContents>
-                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3}>
+                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
                             <Offset width={100} height={100} borderRadius={BorderRadius.round(3)}>
-                                <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                                <Surface width={100} height={100} offset={Position.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.red.n300)}>
                                     <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
                             <Offset width={100} height={100} borderRadius={BorderRadius.round(50)}>
-                                <Surface width={100} height={100} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                                <Surface width={100} height={100} offset={Position.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.indigo.n300)}>
                                     <span className={mdc(colors.text.white.darker)}>Content</span>
                                 </Surface>
                             </Offset>
                             <Offset width={20} height={20} offset={new Position(5, 5)} borderRadius={BorderRadius.round(50)}>
-                                <Surface width={100} height={100} offset={new Position(-5, -5)} className={mdc(colors.bg.grey.n50)} opacity={0.9}>
+                                <Surface width={100} height={100} offset={new Position(-5, -5)} opacity={0.9} circle={Circle.empty} className={mdc(colors.bg.grey.n50)}>
                                     <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
                         </Material>
                     </DialogContents>
                     <DialogContents>
-                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3}>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.8)} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.8)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
                                 <span className={mdc(colors.text.white.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.6)} offset={Position.empty} className={mdc(colors.bg.grey.n50)} opacity={0.9}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.6)} opacity={0.9} offset={Position.empty} className={mdc(colors.bg.grey.n50)}>
+                                <span className={mdc(colors.text.black.darker)}>Content</span>
+                            </Surface>
+                        </Material>
+                    </DialogContents>
+                    <DialogContents>
+                        <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                                <span className={mdc(colors.text.black.darker)}>Content</span>
+                            </Surface>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide1)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                                <span className={mdc(colors.text.white.darker)}>Content</span>
+                            </Surface>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
                         </Material>

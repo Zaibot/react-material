@@ -16,18 +16,16 @@ export interface ISurfaceProps {
     height: number;
 }
 
-export default moize.react(
-    ({ children, circle, className, offset, opacity, width: widthInput, height: heightInput }: ISurfaceProps & { children: React.ReactNode }) => {
-        const clipPath = circle ? circle.toClipPath() : ``;
-        const transform = offset ? offset.toTransform() : ``;
-        const position: any = offset ? `` : `static`;
-        const WebkitClipPath = clipPath;
-        const width = widthInput === undefined ? undefined : `${widthInput.toFixed(dec)}px`;
-        const height = heightInput === undefined ? undefined : `${heightInput.toFixed(dec)}px`;
-        return (
-            <div className={cx(`surface`, className)} style={{ clipPath, opacity, position, transform, WebkitClipPath, width, height }}>
-                {children}
-            </div>
-        );
-    },
-);
+export default ({ children, circle, className, offset, opacity, width: widthInput, height: heightInput }: ISurfaceProps & { children: React.ReactNode }) => {
+    const clipPath = circle ? circle.toClipPath() : ``;
+    const transform = offset ? offset.toTransform() : ``;
+    const position: any = offset ? `` : `static`;
+    const WebkitClipPath = clipPath;
+    const width = widthInput === undefined ? undefined : `${widthInput.toFixed(dec)}px`;
+    const height = heightInput === undefined ? undefined : `${heightInput.toFixed(dec)}px`;
+    return (
+        <div className={cx(`surface`, className)} style={{ clipPath, opacity, position, transform, WebkitClipPath, width, height }}>
+            {children}
+        </div>
+    );
+};

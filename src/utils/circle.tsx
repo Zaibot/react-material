@@ -26,11 +26,8 @@ class Circle {
 
     public toClipPath() {
         if (this._cached !== CachedEmpty) { return this._cached; }
-        if (this.size > 0) {
-            // tslint:disable-next-line max-line-length no-magic-numbers
-            return this._cached = `ellipse(${this.size.toFixed(1)}px ${this.size.toFixed(1)}px at ${this.xCenter.toFixed(1)}px ${this.yCenter.toFixed(1)}px)`;
-        }
-        return this._cached = ``;
+        // tslint:disable-next-line max-line-length no-magic-numbers
+        return this._cached = `ellipse(${this.size.toFixed(1)}px ${this.size.toFixed(1)}px at ${this.xCenter.toFixed(1)}px ${this.yCenter.toFixed(1)}px)`;
     }
 }
 
