@@ -34,8 +34,8 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
         return state;
     }
     public onAnimate(time: number, advance: number, state: IStaticAnimation) {
-        const slide1 = state.slide1.change(Math.round(Date.now() * .3 / 2000) % 2).iterate(advance);
-        const slide2 = state.slide2.change(Math.round(Date.now() / 2000) % 2).iterate(advance);
+        const slide1 = state.slide1.change(Math.round(Date.now() * 1.5 / 2000) % 2).iterate(advance);
+        const slide2 = state.slide2.change(Math.round(Date.now() * 0.7 / 2000) % 2).iterate(advance);
         if (slide1.current !== this.state.slide1
             || slide2.current !== this.state.slide2) {
             this.setState({ slide1: slide1.current, slide2: slide2.current });
