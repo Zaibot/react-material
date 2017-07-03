@@ -36,7 +36,7 @@ const Demo = ({fps, onChange}: { fps: number, onChange: (duration: number, since
     </AnimationRoot>
 );
 function update(fps: number) {
-  ReactDOM.render(<Demo fps={fps} onChange={(duration, since) => { update((fps * .2 + (1000 / since) * .8) || 0); }} />, document.body);
+  ReactDOM.render(<Demo fps={fps} onChange={(duration, since) => { update((fps * .8 + (1000 / since) * .2) || 0); }} />, document.querySelector('app'));
 }
 document.addEventListener('DOMContentLoaded', () => { update(0); });
 /*

@@ -100,7 +100,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last)) * 0.001;
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
         if (this.props.onFrame) {
-          this.props.onFrame(Date.now() - time, time - this._last);
+            this.props.onFrame(Date.now() - time, time - this._last);
         }
         this._last = time;
     }
@@ -110,11 +110,13 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
+            reg.outPrepAdvance += advance;
+            reg.reset();
             if (reg.component !== component) { continue; }
             // if (!reg.component.onPreAnimate) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    reg.changeState(reg.component.onPreAnimate(time, advance, reg.state));
+                    reg.afterPre(reg.component.onPreAnimate(time, reg.outPrepAdvance, reg.state));
                 } else {
                     if (!AnimationRoot._warned) {
                         AnimationRoot._warned = true;
@@ -127,10 +129,12 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         }
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
+            reg.outAnimateAdvance += advance;
             if (reg.component !== component) { continue; }
             try {
+                if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    reg.changeState(reg.component.onAnimate(time, advance, reg.state));
+                    reg.afterAnimate(reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
                     if (reg.changed && reg.component.applyAnimation) {
                         reg.component.applyAnimation(reg.state);
                         reg.changed = false;
@@ -148,12 +152,12 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
+            reg.outPrepAdvance += advance;
+            reg.reset();
             // if (!reg.component.onPreAnimate) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    const nextState = reg.component.onPreAnimate(time, advance, reg.state);
-                    reg.changed = reg.changed || reg.state !== nextState;
-                    reg.state = nextState;
+                    reg.afterPre(reg.component.onPreAnimate(time, reg.outPrepAdvance, reg.state));
                 } else {
                     if (!AnimationRoot._warned) {
                         AnimationRoot._warned = true;
@@ -166,11 +170,11 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         }
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
+            reg.outAnimateAdvance += advance;
             try {
+                if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    const nextState = reg.component.onAnimate(time, advance, reg.state);
-                    reg.changed = reg.changed || reg.state !== nextState;
-                    reg.state = nextState;
+                    reg.afterAnimate(reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
                     if (reg.changed && reg.component.applyAnimation) {
                         reg.component.applyAnimation(reg.state);
                         reg.changed = false;
