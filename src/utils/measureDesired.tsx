@@ -5,9 +5,9 @@ const fps8 = 1000 / 8;
 
 const emptySize = document.createElement('div').getBoundingClientRect();
 
-class Measure {
-    public static readonly realtime = new Measure(0, 0, null, emptySize, 0, 0);
-    public static readonly slow = new Measure(frame16, fps8, null, emptySize, 0, 0);
+class MeasureDesired {
+    public static readonly realtime = new MeasureDesired(0, 0, null, emptySize, 0, 0);
+    public static readonly slow = new MeasureDesired(frame16, fps8, null, emptySize, 0, 0);
 
     public constructor(
         public readonly iteration: number,
@@ -36,8 +36,20 @@ class Measure {
     }
 
     public update() {
-        if (this.element) {
-            const size = this.element.getBoundingClientRect();
+        const { element } = this;
+        if (element) {
+            const storeWidth = element.style.width;
+            const storeHeight = element.style.height;
+            // Prep
+            element.style.position = 'fixed';
+            element.style.width = '';
+            element.style.height = '';
+            // Measure
+            const size = element.getBoundingClientRect();
+            // Restore
+            element.style.position = '';
+            element.style.width = storeWidth;
+            element.style.height = storeHeight;
             return this.alter(this.iteration, this.interval, this.element, size, this.iteration, this.interval);
         }
         return this;
@@ -57,10 +69,10 @@ class Measure {
             || size !== this.size
             || countDown !== this.countDown
             || timeDown !== this.timeDown) {
-            return new Measure(iteration, interval, element, size, countDown, timeDown);
+            return new MeasureDesired(iteration, interval, element, size, countDown, timeDown);
         }
         return this;
     }
 
 }
-export default Measure;
+export default MeasureDesired;

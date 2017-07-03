@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated from '../animated';
 import Material from '../material';
+import MaterialDesired from '../utils/measureDesired';
 import cx from './style.less';
 
 const staticInterval = 500;
@@ -20,10 +21,21 @@ export interface IContentState {
     // nothing
 }
 export interface IContentAnimation {
-    lastTime: number;
     height: number;
     width: number;
     applied: boolean;
+}
+
+function limitSize(size: { width: number, height: number }) {
+    // tslint:disable
+    if (size.width > 10000 || size.height > 10000) {
+        return {
+            width: Math.min(10000, size.width),
+            height: Math.min(10000, size.height),
+        };
+    }
+    // tslint:enable
+    return size;
 }
 
 @Animated()
@@ -32,31 +44,31 @@ class Content extends React.Component<IContentProps, IContentState> {
         height: 0,
         width: 0,
     };
-    private _div: HTMLDivElement;
+    private _measure = MaterialDesired.slow;
 
-    public onPreAnimate(time: number, advance: number, state: IContentAnimation = { lastTime: 0, width: 0, height: 0, applied: false }): IContentAnimation {
-        if (!this._div) { return state; }
+    public onPreAnimate(time: number, advance: number, state: IContentAnimation = { width: 0, height: 0, applied: false }): IContentAnimation {
+        if (!this._measure.size) { return state; }
         const interval = this.props.hint !== 'dynamic' ? staticInterval : dynamicInterval;
-        if (time < state.lastTime + interval) { return state; }
-        const lastTime = time;
-        const { width, height } = this.measure();
+        this._measure = this._measure.iterate(advance);
+        const { width, height } = limitSize(this._measure.size);
         // Store
         const changed = width !== state.width || height !== state.height;
         if (changed) {
-            state = { width, height, lastTime, applied: false };
+            const applied = false;
+            state = { width, height, applied };
             this.onSize(width, height);
         } else {
             const { applied } = state;
-            state = { width, height, lastTime, applied };
+            state = { width, height, applied };
         }
         return state;
     }
 
     public onAnimate(time: number, advance: number, state: IContentAnimation): IContentAnimation {
         if (state.applied) { return state; }
-        if (!this._div) { return state; }
-        this._div.style.width = `${state.width}px`;
-        this._div.style.height = `${state.height}px`;
+        if (!this._measure.size) { return state; }
+        this._measure.element.style.width = `${state.width}px`;
+        this._measure.element.style.height = `${state.height}px`;
         return { ...state, applied: true };
     }
 
@@ -73,41 +85,18 @@ class Content extends React.Component<IContentProps, IContentState> {
     }
 
     public componentDidMount() {
-        const { width, height } = this.measure();
+        const { width, height } = this._measure.size;
         this.onSize(width, height);
     }
-    // public shouldComponentUpdate(nextProps: IContentProps) {
-    //     return this.props.opacity !== nextProps.opacity
-    //         || this.props.hint !== nextProps.hint;
-    // }
 
     private onDivRef = (div: HTMLDivElement) => {
-        this._div = div;
+        this._measure = this._measure.updateElement(div);
     }
 
     private onSize(x: number, y: number) {
         if (this.props.onSize) {
             this.props.onSize({ x, y });
         }
-    }
-
-    private measure() {
-        if (this.props.size) { return { width: this.props.size.x, height: this.props.size.y }; }
-        const storeWidth = this._div.style.width;
-        const storeHeight = this._div.style.height;
-        // Prep
-        this._div.style.position = 'fixed';
-        this._div.style.width = '';
-        this._div.style.height = '';
-        // Measure
-        let { width, height } = this._div.getBoundingClientRect();
-        if (width > 10000) { width = 10000; }
-        if (height > 10000) { height = 10000; }
-        // Restore
-        this._div.style.position = '';
-        this._div.style.width = storeWidth;
-        this._div.style.height = storeHeight;
-        return { width, height };
     }
 }
 export default Content;

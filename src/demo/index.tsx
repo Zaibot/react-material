@@ -13,9 +13,12 @@ import { SurfacePlayground } from './surface';
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
 
-const Demo = () => (
-    <AnimationRoot>
+const Demo = ({fps, onChange}: { fps: number, onChange: (duration: number, since: number) => void }) => (
+    <AnimationRoot onFrame={onChange}>
         <div>
+            <div>
+              {fps.toFixed(0)}
+            </div>
             <div style={{ margin: '5rem' }}>
                 <Static />
             </div>
@@ -32,6 +35,10 @@ const Demo = () => (
         </div>
     </AnimationRoot>
 );
+function update(fps: number) {
+  ReactDOM.render(<Demo fps={fps} onChange={(duration, since) => { update((fps * .2 + (1000 / since) * .8) || 0); }} />, document.body);
+}
+document.addEventListener('DOMContentLoaded', () => { update(0); });
 /*
 
           <h2>MaterialSurfaceTest</h2>
@@ -182,4 +189,3 @@ const Demo = () => (
   </AnimationRoot>
 );
 /***/
-document.addEventListener('DOMContentLoaded', () => { ReactDOM.render(<Demo />, document.body); });

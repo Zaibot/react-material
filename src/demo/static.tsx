@@ -34,8 +34,8 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
         return state;
     }
     public onAnimate(time: number, advance: number, state: IStaticAnimation) {
-        const slide1 = state.slide1.change(Math.round(Date.now() / 2000) % 2).iterate(advance);
-        const slide2 = state.slide2.change(Math.round(Date.now() * .9 / 2000) % 2).iterate(advance);
+        const slide1 = state.slide1.change(Math.round(Date.now() * .3 / 2000) % 2).iterate(advance);
+        const slide2 = state.slide2.change(Math.round(Date.now() / 2000) % 2).iterate(advance);
         if (slide1.current !== this.state.slide1
             || slide2.current !== this.state.slide2) {
             this.setState({ slide1: slide1.current, slide2: slide2.current });
@@ -91,8 +91,8 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
                             <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide1)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
                                 <span className={mdc(colors.text.white.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={0.5} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
-                                <span className={mdc(colors.text.black.darker)}>Content</span>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={0.75} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
+                                <span style={{ color: 'red' }}>Content</span>
                             </Surface>
                         </Material>
                     </DialogContents>

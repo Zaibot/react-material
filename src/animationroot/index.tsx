@@ -24,6 +24,7 @@ import Registration from './entry';
 
 export interface IAnimationRootProps {
     rate?: number;
+    onFrame?: (duration: number, sinceLast: number) => void;
 }
 export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     public static childContextTypes = {
@@ -36,11 +37,11 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     private _last: number = Date.now();
     // private x = 0;
 
-    public constructor(props?: any, context?: any) {
-        super(props, context);
-        // this.x = ++AnimationRoot.xx;
-        // console.log(`[@zaibot/react-material] animation root ${this.x}`);
-    }
+    // public constructor(props?: any, context?: any) {
+    //     super(props, context);
+    //     // this.x = ++AnimationRoot.xx;
+    //     // console.log(`[@zaibot/react-material] animation root ${this.x}`);
+    // }
 
     public add(component: IAnimatable<any>, always: boolean) {
         if (this._registrations.some((x) => x.component === component)) { return; }
@@ -98,6 +99,9 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         // tslint:disable-next-line no-magic-numbers
         const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last)) * 0.001;
         ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
+        if (this.props.onFrame) {
+          this.props.onFrame(Date.now() - time, time - this._last);
+        }
         this._last = time;
     }
 
