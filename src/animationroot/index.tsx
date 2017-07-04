@@ -61,7 +61,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
             if (reg.component !== component) { continue; }
-            reg.state = callback(reg.state);
+            reg.changeState(callback(reg.state));
         }
     }
 
@@ -110,8 +110,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
-            reg.outPrepAdvance += advance;
-            reg.reset();
+            reg.beforePre(advance);
             if (reg.component !== component) { continue; }
             // if (!reg.component.onPreAnimate) { continue; }
             try {
@@ -129,17 +128,16 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         }
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
-            reg.outAnimateAdvance += advance;
+            reg.beforeAnimate(advance);
             if (reg.component !== component) { continue; }
             try {
                 if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    reg.afterAnimate(reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
+                    reg.afterAnimate(time, reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
                     if (reg.changed && reg.component.applyAnimation) {
                         reg.component.applyAnimation(reg.state);
-                        reg.changed = false;
+                        reg.afterApplied();
                     }
-                    reg.last = time;
                 }
             } catch (ex) {
                 console.error(`Material Animation`, ex);
@@ -152,8 +150,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
-            reg.outPrepAdvance += advance;
-            reg.reset();
+            reg.beforePre(advance);
             // if (!reg.component.onPreAnimate) { continue; }
             try {
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
@@ -170,16 +167,15 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         }
         for (let i = 0; i < ii; i++) {
             const reg = regs[i];
-            reg.outAnimateAdvance += advance;
+            reg.beforeAnimate(advance);
             try {
                 if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
-                    reg.afterAnimate(reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
+                    reg.afterAnimate(time, reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
                     if (reg.changed && reg.component.applyAnimation) {
                         reg.component.applyAnimation(reg.state);
-                        reg.changed = false;
+                        reg.afterApplied();
                     }
-                    reg.last = time;
                 }
             } catch (ex) {
                 console.error(`Material Animation`, ex);

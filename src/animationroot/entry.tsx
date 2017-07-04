@@ -8,41 +8,60 @@ class Entry {
         return new Entry(component, always, undefined, 0, false);
     }
 
-    public status = 0;
-    public outPrepAdvance = 0;
-    public outAnimateAdvance = 0;
+    private _status = 0;
+    private _outPrepAdvance = 0;
+    private _outAnimateAdvance = 0;
+
+    public get status() { return this._status; }
+    public get outPrepAdvance() { return this._outPrepAdvance; }
+    public get outAnimateAdvance() { return this._outAnimateAdvance; }
+    public get state() { return this._state; }
+    public get last() { return this._last; }
+    public get changed() { return this._changed; }
 
     public constructor(
         public readonly component: IAnimatable<any>,
         public readonly always: boolean,
-        public state: any,
-        public last: number,
-        public changed: boolean,
+        private _state: any,
+        private _last: number,
+        private _changed: boolean,
     ) { }
 
-    public afterPre(state: any) {
-      this.status = 1;
-      this.changed = this.changed || this.state !== state;
-      this.state = state;
-      this.outPrepAdvance = 0;
+    public beforePre(advance: number) {
+        this._status = 0;
+        this._outPrepAdvance += advance;
     }
-    public afterAnimate(state: any) {
-      this.status = 0;
-      this.changed = this.state !== state;
-      this.state = state;
-      this.outAnimateAdvance = 0;
+    public afterPre(state: any) {
+        this._status = 1;
+        this._changed = this.changed || this.state !== state;
+        this._state = state;
+        this._outPrepAdvance = 0;
+    }
+    public beforeAnimate(advance: number) {
+        this._outAnimateAdvance += advance;
+    }
+    public afterAnimate(time: number, state: any) {
+        this._status = 0;
+        this._changed = this.state !== state;
+        this._state = state;
+        this._outAnimateAdvance = 0;
+        this._last = time;
+    }
+
+    public afterApplied() {
+        this._changed = false;
     }
 
     public isPrepped() {
-      return this.status === 1;
+        return this.status === 1;
     }
     public reset() {
-      this.status = 0;
+        this._status = 0;
     }
 
     public changeState(state: any) {
-      this.changed = this.changed || this.state !== state;
-      this.state = state;
+        this._changed = this.changed || this.state !== state;
+        this._state = state;
     }
 }
 export default Entry;

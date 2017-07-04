@@ -17,6 +17,7 @@ import cx from './style.less';
 // tslint:disable max-classes-per-file
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
+// tslint:disable max-line-length
 
 export interface IStaticAnimation {
     slide1: Spring;
