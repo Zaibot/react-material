@@ -55,17 +55,6 @@ class FocusBar extends React.Component<IFocusBarProps, IFocusBarState> {
             : state.focusw.change(this.props.state === 'focus' || state.focusw.current === 1 ? 1 : 0).iterate(advance).constrain(0, 1);
         const erroro = state.erroro.change(this.props.state === 'error' ? 1 : 0).iterate(advance).constrain(0, 1);
         const focuso = state.focuso.change(this.props.state === 'focus' ? 1 : 0).iterate(advance).constrain(0, 1);
-        if (erroro.current !== this.state.erroro
-            || errorw.current !== this.state.errorw
-            || focuso.current !== this.state.focuso
-            || focusw.current !== this.state.focusw) {
-            this.setState({
-                erroro: erroro.current,
-                errorw: errorw.current,
-                focuso: focuso.current,
-                focusw: focusw.current,
-            });
-        }
         return { erroro, errorw, focuso, focusw };
     }
 

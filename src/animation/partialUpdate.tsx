@@ -15,17 +15,24 @@ export default function <S extends {}>(state: AnimationCurrentState<S>, animatio
     for (; i < ii; i++) {
         const key = keys[i];
         if (!(animationState[key] instanceof Spring)) { continue; }
+        if (typeof state[key] !== 'number') { continue; }
         if (state[key] !== animationState[key].current) {
+            // atleast one spring property changed.
             break;
         }
     }
-    if (i === ii) { return undefined; }
+    if (i === ii) {
+      // short circuit.
+      return undefined;
+    }
 
     const r: any = {};
     for (; i < ii; i++) {
         const key = keys[i];
         if (!(animationState[key] instanceof Spring)) { continue; }
+        if (typeof state[key] !== 'number') { continue; }
         if (state[key] !== animationState[key].current) {
+            // spring changed
             r[key] = animationState[key].current;
         }
     }

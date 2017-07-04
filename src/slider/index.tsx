@@ -44,12 +44,6 @@ class Input extends React.Component<IInputProps, IInputState> {
     public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
         const value = state.value.change(this.props.value).speed(this.state.changing ? 1000 : 100).iterate(advance);
 
-        if (this.state.value !== value.current) {
-            this.setState({
-                value: value.current,
-            });
-        }
-
         return { value };
     }
 
