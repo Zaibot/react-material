@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import partialUpdate from '../animation/partialUpdate';
 import IAnimatable from '../animationroot/animatable';
 
 // tslint:disable no-magic-numbers
@@ -43,19 +44,19 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     //     // console.log(`[@zaibot/react-material] animation root ${this.x}`);
     // }
 
-    public add(component: IAnimatable<any>, always: boolean) {
+    public add(component: React.Component<any, any> & IAnimatable<any>, always: boolean) {
         if (this._registrations.some((x) => x.component === component)) { return; }
         this._registrations = [...this._registrations, Registration.create(component, always)];
         this.runSingle(component, this.getAnimationTime(), 0);
         // console.log(`[@zaibot/react-material] animation root, adding ${this.x}`);
     }
 
-    public remove(component: IAnimatable<any>) {
+    public remove(component: React.Component<any, any> & IAnimatable<any>) {
         this._registrations = this._registrations.filter((x) => x.component !== component);
         // console.log(`[@zaibot/react-material] animation root, removing ${this.x}`);
     }
 
-    public update<T>(component: IAnimatable<T>, callback: (state: T) => T) {
+    public update<T>(component: React.Component<any, any> & IAnimatable<T>, callback: (state: T) => T) {
         const regs = this._registrations;
         const ii = regs.length;
         for (let i = 0; i < ii; i++) {
@@ -134,9 +135,16 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
                 if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
                     reg.afterAnimate(time, reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
-                    if (reg.changed && reg.component.applyAnimation) {
-                        reg.component.applyAnimation(reg.state);
-                        reg.afterApplied();
+                    if (reg.changed) {
+                        if (reg.component.applyAnimation) {
+                            reg.component.applyAnimation(reg.state);
+                            reg.afterApplied();
+                        } else {
+                            const changes = partialUpdate(reg.component.state, reg.state);
+                            if (changes !== undefined) {
+                                reg.component.setState(changes);
+                            }
+                        }
                     }
                 }
             } catch (ex) {
@@ -172,9 +180,17 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
                 if (!reg.isPrepped()) { continue; }
                 if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
                     reg.afterAnimate(time, reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
-                    if (reg.changed && reg.component.applyAnimation) {
-                        reg.component.applyAnimation(reg.state);
-                        reg.afterApplied();
+                    if (reg.changed) {
+                        if (reg.component.applyAnimation) {
+                            reg.component.applyAnimation(reg.state);
+                            reg.afterApplied();
+                        } else {
+                            const changes = partialUpdate(reg.component.state, reg.state);
+                            if (changes !== undefined) {
+                                reg.component.setState(changes);
+                                reg.afterApplied();
+                            }
+                        }
                     }
                 }
             } catch (ex) {

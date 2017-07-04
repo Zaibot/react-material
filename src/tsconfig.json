@@ -36,6 +36,7 @@
     "./animated/index.tsx",
     "./animation/advance.tsx",
     "./animation/index.tsx",
+    "./animation/partialUpdate.tsx",
     "./animation/point.tsx",
     "./animation/presets.tsx",
     "./animation/spring.tsx",

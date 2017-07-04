@@ -1,8 +1,9 @@
+import React from 'react';
 import IAnimatable from './animatable';
 
 class Entry {
     public static create(
-        component: IAnimatable<any>,
+        component: React.Component<any, any> & IAnimatable<any>,
         always: boolean,
     ) {
         return new Entry(component, always, undefined, 0, false);
@@ -20,7 +21,7 @@ class Entry {
     public get changed() { return this._changed; }
 
     public constructor(
-        public readonly component: IAnimatable<any>,
+        public readonly component: React.Component<any, any> & IAnimatable<any>,
         public readonly always: boolean,
         private _state: any,
         private _last: number,
