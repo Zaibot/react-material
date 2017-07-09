@@ -38,6 +38,7 @@ class MeasureDesired {
     public update() {
         const { element } = this;
         if (element) {
+            const storePosition = element.style.position;
             const storeWidth = element.style.width;
             const storeHeight = element.style.height;
             // Prep
@@ -47,7 +48,7 @@ class MeasureDesired {
             // Measure
             const size = element.getBoundingClientRect();
             // Restore
-            element.style.position = '';
+            element.style.position = storePosition;
             element.style.width = storeWidth;
             element.style.height = storeHeight;
             return this.alter(this.iteration, this.interval, this.element, size, this.iteration, this.interval);

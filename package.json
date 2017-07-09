@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/Zaibot/react-material#readme",
   "devDependencies": {
+    "@types/node": "^8.0.9",
     "@types/react": "^15.0.23",
     "@types/react-dom": "^15.5.0",
     "@zaibot/tslint-preset": "github:zaibot/tslint-preset",

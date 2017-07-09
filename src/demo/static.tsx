@@ -7,7 +7,7 @@ import { Animated, Button, IAnimatable, Menu, NavButton, Presets, Spring, Toggle
 import colors from '../colors';
 import Dialog, { DialogActions, DialogContents, DialogHeader, DialogSubheader } from '../dialog';
 import Input from '../input';
-import { Material, Offset, Surface } from '../static';
+import { Material, Offset, Surface } from '../presentational';
 import { FocusTopRight } from '../surface/focus';
 import BorderRadius from '../utils/borderRadius';
 import Circle from '../utils/circle';

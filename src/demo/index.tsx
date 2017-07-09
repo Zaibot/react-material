@@ -5,6 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { AnimationRoot } from '..';
 import { CardSurface } from './cardSurface';
+import Debug from '../debug';
 import { Form } from './form';
 import { Static } from './static';
 import { SurfacePlayground } from './surface';
@@ -15,31 +16,34 @@ import cx from './style.less';
 // tslint:disable no-magic-numbers
 
 const Demo = ({ fps, core, onChange }: { fps: number, core: number, onChange: (duration: number, since: number) => void }) => (
-    <AnimationRoot onFrame={onChange}>
-        <div>
-            <div className={cx(`stats`)}>
-                <div className={cx(`fps`)}>
-                    {fps.toFixed(0)}fps
+  <AnimationRoot onFrame={onChange}>
+    <div className={cx(`debugged`)}>
+      <div className={cx(`debug`)}>
+        <Debug />
+      </div>
+      <div className={cx(`stats`)}>
+        <div className={cx(`fps`)}>
+          {fps.toFixed(0)}fps
                 </div>
-                <div className={cx(`core`)}>
-                    {core.toFixed(1)}ms (max {(1000 / core).toFixed(1)}fps)
+        <div className={cx(`core`)}>
+          {core.toFixed(1)}ms (max {(1000 / core).toFixed(1)}fps)
                 </div>
-            </div>
-            <div style={{ margin: '5rem' }}>
-                <Static />
-            </div>
-            <div style={{ margin: '5rem' }}>
-                <SurfacePlayground />
-            </div>
-            <div style={{ margin: '5rem' }}>
-                <CardSurface />
-            </div>
-            <div style={{ margin: '5rem' }}>
-                <h2>Form</h2>
-                <Form />
-            </div>
-        </div>
-    </AnimationRoot>
+      </div>
+      <div style={{ margin: '5rem' }}>
+        <Static />
+      </div>
+      <div style={{ margin: '5rem' }}>
+        <SurfacePlayground />
+      </div>
+      <div style={{ margin: '5rem' }}>
+        <CardSurface />
+      </div>
+      <div style={{ margin: '5rem' }}>
+        <h2>Form</h2>
+        <Form />
+      </div>
+    </div>
+  </AnimationRoot>
 );
 const array = (n: number) => { const r = []; while (n--) { r.push(0); } return r; };
 let fpsIndex = 0;
@@ -49,21 +53,23 @@ let coreIndex = 0;
 const coreCount = 10;
 const coreRecords = array(coreCount);
 
+function onChange(duration: number, sinceLast: number) {
+  fpsRecords[fpsIndex++ % fpsCount] = 1000 / sinceLast;
+  coreRecords[coreIndex++ % coreCount] = duration;
+}
+
 function update(fps: number, core: number) {
-    ReactDOM.render(<Demo fps={fps} core={core} onChange={(duration, since) => {
-        fpsRecords[fpsIndex++ % fpsCount] = (1000 / since);
-        coreRecords[coreIndex++ % coreCount] = duration;
-    }} />, document.querySelector('app'));
+  ReactDOM.render(<Demo fps={fps} core={core} onChange={onChange} />, document.querySelector('app'));
 }
 document.addEventListener('DOMContentLoaded', () => {
-    update(0, 0);
-    setInterval(() => {
-        const fps = fpsRecords.reduce((state, cur) => state < cur ? state : cur, fpsRecords[0]);
-        const core = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
-        // const fps = fpsRecords.reduce((state, cur) => state + (cur || 0), 0) / fpsCount;
-        // const core = coreRecords.reduce((state, cur) => state + (cur || 0), 0) / coreCount;
-        update(fps, core);
-    }, 500);
+  update(0, 0);
+  setInterval(() => {
+    const fps = fpsRecords.reduce((state, cur) => state < cur ? state : cur, fpsRecords[0]);
+    const core = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
+    // const fps = fpsRecords.reduce((state, cur) => state + (cur || 0), 0) / fpsCount;
+    // const core = coreRecords.reduce((state, cur) => state + (cur || 0), 0) / coreCount;
+    update(fps, core);
+  }, 500);
 });
 /*
 

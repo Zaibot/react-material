@@ -13,7 +13,7 @@ export interface IOffsetProps {
     offset?: Position;
 }
 
-export default ({ borderRadius: borderRadiusInput, children, offset, width: widthInput, height: heightInput }: IOffsetProps & { children: React.ReactNode }) => {
+export default ({ borderRadius: borderRadiusInput, children, offset, width: widthInput, height: heightInput }: IOffsetProps & { children?: React.ReactNode }) => {
     const borderRadius = borderRadiusInput ? borderRadiusInput.toBorderRadius() : ``;
     const top = offset ? offset.y.toFixed(dec) : 0;
     const left = offset ? offset.x.toFixed(dec) : 0;

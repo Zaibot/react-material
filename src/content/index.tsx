@@ -57,9 +57,6 @@ class Content extends React.Component<IContentProps, IContentState> {
             const applied = false;
             state = { width, height, applied };
             this.onSize(width, height);
-        } else {
-            const { applied } = state;
-            state = { width, height, applied };
         }
         return state;
     }

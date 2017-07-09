@@ -75,11 +75,11 @@ module.exports = {
         alias: {}
     },
     plugins: [
-        prodFn(new webpack.DefinePlugin({
+        new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': `"production"`
+                'NODE_ENV': prodIf(`"production"`, `"development"`),
             }
-        })),
+        }),
         prodFn(new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false

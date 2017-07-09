@@ -16,7 +16,7 @@ export interface ISurfaceProps {
     height: number;
 }
 
-export default ({ children, circle, className, offset, opacity, width: widthInput, height: heightInput }: ISurfaceProps & { children: React.ReactNode }) => {
+export default ({ children, circle, className, offset, opacity, width: widthInput, height: heightInput }: ISurfaceProps & { children?: React.ReactNode }) => {
     const clipPath = circle ? circle.toClipPath() : ``;
     const transform = offset ? offset.toTransform() : ``;
     const position: any = offset ? `` : `static`;

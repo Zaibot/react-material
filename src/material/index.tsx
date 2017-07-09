@@ -105,7 +105,6 @@ const rippleOpacity = 0.36;
 export interface IMaterialAnimation {
     width: number;
     height: number;
-    last: number;
     measured: number;
     pressed: boolean;
     ripples: RippleItem[];
@@ -113,7 +112,6 @@ export interface IMaterialAnimation {
 const emptyAnimation: IMaterialAnimation = {
     width: 0,
     height: 0,
-    last: 0,
     measured: 0,
     pressed: false,
     ripples: [] as RippleItem[],
@@ -142,13 +140,12 @@ class Material extends React.Component<IMaterialProps, IMaterialState> {
         let { ripples } = state;
         if (!ripples.length) {
             // short circuit
-            return { ...state, last: time };
+            return state;
         }
         ripples = ripples.map((x) => x.iterate(advance));
         ripples = pressed ? ripples : ripples.filter((r) => r.z.velocity > 0.1);
         if (ripples.length === 0) { unregisterRipple(this); }
-        const last = time;
-        return { ...state, last, ripples };
+        return { ...state, ripples };
     }
 
     public applyAnimation(state: IMaterialAnimation) {

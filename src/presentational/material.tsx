@@ -17,7 +17,7 @@ export interface IMaterialProps {
     zoom: number;
 }
 
-export default ({ borderRadius: borderRadiusInput, children, elevation, width: widthInput, height: heightInput, zoom = 1 }: IMaterialProps & { children: React.ReactNode }) => {
+export default ({ borderRadius: borderRadiusInput, children, elevation, width: widthInput, height: heightInput, zoom = 1 }: IMaterialProps & { children?: React.ReactNode }) => {
     const borderRadius = borderRadiusInput ? borderRadiusInput.toBorderRadius() : ``;
     const transform = zoom !== 1 ? `scale(${zoom.toFixed(decScale)})` : ``;
     const width = widthInput === undefined ? undefined : `${widthInput.toFixed(dec)}px`;

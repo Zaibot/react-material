@@ -6,7 +6,7 @@ class Entry {
         component: React.Component<any, any> & IAnimatable<any>,
         always: boolean,
     ) {
-        return new Entry(component, always, undefined, 0, false);
+        return new Entry(component, always, undefined, 0, 0, false);
     }
 
     private _status = 0;
@@ -18,6 +18,7 @@ class Entry {
     public get outAnimateAdvance() { return this._outAnimateAdvance; }
     public get state() { return this._state; }
     public get last() { return this._last; }
+    public get lastChange(): number { return this._lastChange; }
     public get changed() { return this._changed; }
 
     public constructor(
@@ -25,6 +26,7 @@ class Entry {
         public readonly always: boolean,
         private _state: any,
         private _last: number,
+        private _lastChange: number,
         private _changed: boolean,
     ) { }
 
@@ -35,8 +37,9 @@ class Entry {
     public afterPre(state: any) {
         this._status = 1;
         this._changed = this.changed || this.state !== state;
-        this._state = state;
+        this._lastChange = this.state !== state ? Date.now() : this._lastChange;
         this._outPrepAdvance = 0;
+        this._state = state;
     }
     public beforeAnimate(advance: number) {
         this._outAnimateAdvance += advance;
@@ -44,9 +47,10 @@ class Entry {
     public afterAnimate(time: number, state: any) {
         this._status = 0;
         this._changed = this.state !== state;
-        this._state = state;
         this._outAnimateAdvance = 0;
         this._last = time;
+        this._lastChange = this.state !== state ? Date.now() : this._lastChange;
+        this._state = state;
     }
 
     public afterApplied() {
@@ -62,6 +66,7 @@ class Entry {
 
     public changeState(state: any) {
         this._changed = this.changed || this.state !== state;
+        this._lastChange = this.state !== state ? Date.now() : this._lastChange;
         this._state = state;
     }
 }

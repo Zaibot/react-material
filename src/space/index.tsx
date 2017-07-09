@@ -92,7 +92,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
         if (sizeWidth.target === 0 && sizeWidth.current === 0) { sizeWidth = sizeWidth.jump(width); }
         sizeHeight = sizeHeight.change(height).iterate(advance);
         sizeWidth = sizeWidth.change(width).iterate(advance);
-        rounding = rounding.change(totalCircle / maxShape).iterate(advance);
+        rounding = rounding.change(100 * totalCircle / maxShape).iterate(advance);
 
         const surfaces = smartUpdate(this.state.surfaces, (x) => x.iterate(advance));
         if (this.state.surfaces !== surfaces) {
@@ -103,12 +103,12 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
 
     public applyAnimation(state: IInputAnimation) {
         const { rounding, sizeHeight, sizeWidth, surfaces } = state;
-        if (this.state.rounding !== rounding.current
+        if (this.state.rounding !== rounding.current / 100
             || this.state.sizeHeight !== sizeHeight.current
             || this.state.sizeWidth !== sizeWidth.current
             || this.state.surfaces !== surfaces) {
             // Update state
-            this.setState({ rounding: rounding.current, sizeHeight: sizeHeight.current, sizeWidth: sizeWidth.current, surfaces });
+            this.setState({ rounding: rounding.current / 100, sizeHeight: sizeHeight.current, sizeWidth: sizeWidth.current, surfaces });
         }
     }
 
@@ -152,7 +152,7 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
                 size.current,
                 reserve.current,
                 front.current,
-                opacity.current * .5,
+                opacity.current,
                 shape.current,
                 circleSize,
             );
