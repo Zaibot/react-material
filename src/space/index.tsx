@@ -103,10 +103,6 @@ class Space extends React.Component<ISpaceProps, ISpaceState> {
       || state.sizeHeight !== sizeHeight
       || state.sizeWidth !== sizeWidth
       || state.surfaces !== surfaces) {
-      // if (sizeHeight.current === 0 && sizeHeight.target === 0) {
-      //   debugger;
-      // }
-      console.log(this.state.sizes.map(x => `${x.width}x${x.height}`).join(', '))
       state = { rounding, sizeHeight, sizeWidth, surfaces };
     }
     return state;
