@@ -13,9 +13,15 @@ const getDisplayName = (component: any) => (
 const borderWidth = (time: number) => 1 - (Math.min(1, (Date.now() - time) * 0.001));
 
 const Group = (obj: any): React.ReactNode[] => {
+  if (!obj) {
+    return null;
+  }
   return Object.keys(obj).map((k) => Field(k, obj[k]));
 };
 const Field = (key: string, value: any) => {
+  // if (key === `children` && value instanceof Array) {
+  //   return <dd className={cx(`item`, `array`)} key={key}><dl>{value.map((x, idx) => [<dt>{key}[{idx}]</dt>, ...Group(x.props)])}</dl></dd>;
+  // }
   if (value instanceof Array) {
     return <dd className={cx(`item`, `array`)} key={key}><dl>{value.map((x, idx) => [<dt>{key}[{idx}]</dt>, ...Group(x)])}</dl></dd>;
   }
@@ -34,12 +40,12 @@ const Field = (key: string, value: any) => {
   return <dd className={cx(`item`, `unknown`)} key={key}>{key}?</dd>;
 };
 
-export default ({ entry }: { entry: Entry }) => {
+export default ({ entry, onHover, onLeave }: { entry: Entry, onHover?: (entry: Entry) => void, onLeave?: (entry: Entry) => void }) => {
   const state = entry.state;
   const props = entry.component.props;
   const borderLeft = `5px solid rgba(255,0,0,${borderWidth(entry.lastChange).toFixed(1)})`;
   return (
-    <div style={{ borderLeft }}>
+    <div style={{ borderLeft }} onMouseEnter={onHover ? () => onHover(entry) : null} onMouseLeave={onLeave ? () => onLeave(entry) : null}>
       <dl>
         <dt className={cx(`name`)}>{getDisplayName(entry.component)}</dt>
         {Group(state)}

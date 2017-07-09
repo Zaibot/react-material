@@ -5,9 +5,14 @@ import Registration from './Registration';
 import View from './View';
 import cx from './style.less';
 
+const getElementByComponent = (component: React.ReactInstance) => {
+  try { return ReactDOM.findDOMNode(component); } catch (ex) { return null; }
+};
+
 class Debug extends React.Component<any, any> {
   public state = {
     scope: null as Element,
+    hovering: null as Element,
     scoping: false,
     update: false,
   };
@@ -22,7 +27,7 @@ class Debug extends React.Component<any, any> {
     this.trigger();
     window.addEventListener('mousedown', (e) => {
       if (this.state.scoping) {
-        this.setState({ update: true, scoping: false, scope: e.target }, () => this.trigger());
+        this.setState({ update: true, scoping: false, scope: e.target, hovering: null }, () => this.trigger());
       }
     }, true);
   }
@@ -32,14 +37,15 @@ class Debug extends React.Component<any, any> {
   }
 
   public componentDidUpdate() {
-    const { scope } = this.state;
-    if (scope) {
-      const rect = scope.getBoundingClientRect();
+    const { scope, hovering } = this.state;
+    const el = hovering || scope;
+    if (el) {
+      const rect = el.getBoundingClientRect();
       this._live.style.position = `fixed`;
-      this._live.style.left = `${rect.left - 2}px`;
-      this._live.style.top = `${rect.top - 2}px`;
-      this._live.style.width = `${rect.width + 4}px`;
-      this._live.style.height = `${rect.height + 4}px`;
+      this._live.style.left = `${rect.left - 1}px`;
+      this._live.style.top = `${rect.top - 1}px`;
+      this._live.style.width = `${rect.width + 2}px`;
+      this._live.style.height = `${rect.height + 2}px`;
     }
   }
 
@@ -49,7 +55,7 @@ class Debug extends React.Component<any, any> {
     if (scope) {
       entries = entries.filter((e) => {
         try {
-          for (let current = ReactDOM.findDOMNode(e.component); current; current = current.parentNode as Element) {
+          for (let current = getElementByComponent(e.component); current; current = current.parentNode as Element) {
             if (current === scope) { return true; }
           }
         } catch (ex) {
@@ -62,7 +68,7 @@ class Debug extends React.Component<any, any> {
       <div>
         <label className={cx(`toggle`, { live: update })}><input type="checkbox" onChange={this.toggle} checked={this.state.update} /> Live</label>
         <label className={cx(`toggle`, { scoping })}><input type="checkbox" onChange={this.onScope} checked={!!this.state.scope} /> {this.state.scoping ? `Scoping` : `Scope`}</label>
-        <View entries={entries} />
+        <View entries={entries} onHover={this.onHover} onLeave={this.onLeave} />
       </div>
     );
   }
@@ -82,6 +88,12 @@ class Debug extends React.Component<any, any> {
   }
   private onScope = () => {
     this.setState({ scoping: true });
+  }
+  private onHover = (entry: Entry) => {
+    this.setState({ hovering: getElementByComponent(entry.component) });
+  }
+  private onLeave = (entry: Entry) => {
+    this.setState({ hovering: null });
   }
 }
 export default Debug;
