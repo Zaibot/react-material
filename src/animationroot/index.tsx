@@ -7,7 +7,7 @@ import Debug from '../debug/Registration';
 
 // tslint:disable no-magic-numbers
 const maximumDelay = 500;
-const maximumCycleTime = 1000 / 60; /* 60fps */
+const maximumCycleTime = 1000 / 15; /* 60fps */
 const timeout = 500;
 // tslint:enable no-magic-numbers
 
@@ -15,12 +15,12 @@ const timeout = 500;
 
 export const RootSymbol = `@zaibot/material/animationroot`;
 
+const getTime = window.performance ? () => window.performance.now() : () => Date.now();
+
 export const GetAnimationRoot = (e: React.Component<any, any>) => e.context[RootSymbol] as AnimationRoot;
 
 const isWithinTime = (time: number, last: number, t: number) => time - last - t <= 0;
-const isWithinTimeNow = (last: number, t: number) => Date.now() - last - t <= 0;
 const isTimedOut = (time: number, last: number, t: number) => time - last - t > 0;
-const isTimedOutNow = (last: number, t: number) => Date.now() - last - t > 0;
 
 import Registration from './entry';
 
@@ -33,8 +33,6 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     [RootSymbol]: PropTypes.any,
   };
   private static _warned = false;
-
-  private static getTime = window.performance ? () => window.performance.now() : () => Date.now();
 
   private _registrations: Registration[] = [];
   private _timer: any = null;
@@ -93,12 +91,12 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
   }
 
   private iterateCore() {
-    const start = AnimationRoot.getTime();
+    const start = getTime();
     // tslint:disable-next-line no-magic-numbers
     const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((start - this._last) * this.props.rate) : (start - this._last)) * 0.001;
     ReactDOM.unstable_batchedUpdates(() => this.run(start, advance));
     if (this.props.onFrame) {
-      const end = AnimationRoot.getTime();
+      const end = getTime();
       const duration = end - start;
       const sinceLast = start - this._last;
       this.props.onFrame(duration, sinceLast);
@@ -132,13 +130,13 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
   private runComponentPre(reg: Registration, time: number, advance: number) {
     reg.beforePre(advance);
     try {
-      if (reg.always || isTimedOutNow(reg.last, maximumDelay) || isWithinTimeNow(time, maximumCycleTime)) {
+      if (reg.always || isTimedOut(getTime(), reg.last, maximumDelay) || isWithinTime(getTime(), time, maximumCycleTime)) {
         // always? component timeout? spare time?
         reg.afterPre(reg.component.onPreAnimate(time, reg.outPrepAdvance, reg.state));
       } else {
         if (!AnimationRoot._warned) {
           AnimationRoot._warned = true;
-          console.warn(`[animation] stopped one or more animations due to low performance`);
+          console.warn(`[animation] stopped one or more animations due to low performance (${getTime() - time}ms)`);
           setTimeout(() => AnimationRoot._warned = false, 1000);
         }
       }
@@ -147,10 +145,10 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     }
   }
   private runComponentAnimation(reg: Registration, time: number, advance: number) {
+    if (!reg.isPrepped()) { return; }
     reg.beforeAnimate(advance);
     try {
-      if (!reg.isPrepped()) { return; }
-      if ((reg.always) || (isWithinTimeNow(time, maximumCycleTime) || isTimedOutNow(reg.last, maximumDelay))) {
+      if (reg.always || isWithinTime(getTime(), time, maximumCycleTime)) {
         reg.afterAnimate(time, reg.component.onAnimate(time, reg.outAnimateAdvance, reg.state));
         if (reg.changed) {
           if (reg.component.applyAnimation) {
@@ -163,6 +161,12 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
               reg.afterApplied();
             }
           }
+        }
+      } else {
+        if (!AnimationRoot._warned) {
+          AnimationRoot._warned = true;
+          console.warn(`[animation] stopped one or more animations due to low performance (${getTime() - time}ms)`);
+          setTimeout(() => AnimationRoot._warned = false, 1000);
         }
       }
     } catch (ex) {

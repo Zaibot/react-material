@@ -44,7 +44,7 @@ class Debug extends React.Component<any, any> {
   }
 
   public render() {
-    const { scope } = this.state;
+    const { scoping, scope, update } = this.state;
     let entries = Registration.entries();
     if (scope) {
       entries = entries.filter((e) => {
@@ -60,8 +60,8 @@ class Debug extends React.Component<any, any> {
     }
     return (
       <div>
-        <label><input type="checkbox" onChange={this.toggle} checked={this.state.update} /> Live</label>
-        <label><input type="checkbox" onChange={this.onScope} checked={!!this.state.scope} /> {this.state.scoping ? `Scoping` : `Scope`}</label>
+        <label className={cx(`toggle`, { live: update })}><input type="checkbox" onChange={this.toggle} checked={this.state.update} /> Live</label>
+        <label className={cx(`toggle`, { scoping })}><input type="checkbox" onChange={this.onScope} checked={!!this.state.scope} /> {this.state.scoping ? `Scoping` : `Scope`}</label>
         <View entries={entries} />
       </div>
     );
