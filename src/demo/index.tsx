@@ -8,16 +8,22 @@ import { CardSurface } from './cardSurface';
 import { Form } from './form';
 import { Static } from './static';
 import { SurfacePlayground } from './surface';
+import cx from './style.less';
 
 // tslint:disable max-classes-per-file
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
 
-const Demo = ({fps, onChange}: { fps: number, onChange: (duration: number, since: number) => void }) => (
+const Demo = ({ fps, core, onChange }: { fps: number, core: number, onChange: (duration: number, since: number) => void }) => (
     <AnimationRoot onFrame={onChange}>
         <div>
-            <div>
-              {fps.toFixed(0)}
+            <div className={cx(`stats`)}>
+                <div className={cx(`fps`)}>
+                    {fps.toFixed(0)}fps
+                </div>
+                <div className={cx(`core`)}>
+                    {core.toFixed(1)}ms (max {(1000 / core).toFixed(1)}fps)
+                </div>
             </div>
             <div style={{ margin: '5rem' }}>
                 <Static />
@@ -35,10 +41,30 @@ const Demo = ({fps, onChange}: { fps: number, onChange: (duration: number, since
         </div>
     </AnimationRoot>
 );
-function update(fps: number) {
-  ReactDOM.render(<Demo fps={fps} onChange={(duration, since) => { update((fps * .8 + (1000 / since) * .2) || 0); }} />, document.querySelector('app'));
+const array = (n: number) => { const r = []; while (n--) { r.push(0); } return r; };
+let fpsIndex = 0;
+const fpsCount = 10;
+const fpsRecords = array(fpsCount);
+let coreIndex = 0;
+const coreCount = 10;
+const coreRecords = array(coreCount);
+
+function update(fps: number, core: number) {
+    ReactDOM.render(<Demo fps={fps} core={core} onChange={(duration, since) => {
+        fpsRecords[fpsIndex++ % fpsCount] = (1000 / since);
+        coreRecords[coreIndex++ % coreCount] = duration;
+    }} />, document.querySelector('app'));
 }
-document.addEventListener('DOMContentLoaded', () => { update(0); });
+document.addEventListener('DOMContentLoaded', () => {
+    update(0, 0);
+    setInterval(() => {
+        const fps = fpsRecords.reduce((state, cur) => state < cur ? state : cur, fpsRecords[0]);
+        const core = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
+        // const fps = fpsRecords.reduce((state, cur) => state + (cur || 0), 0) / fpsCount;
+        // const core = coreRecords.reduce((state, cur) => state + (cur || 0), 0) / coreCount;
+        update(fps, core);
+    }, 500);
+});
 /*
 
           <h2>MaterialSurfaceTest</h2>

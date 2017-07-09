@@ -32,6 +32,9 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         [RootSymbol]: PropTypes.any,
     };
     private static _warned = false;
+
+    private static getTime = window.performance ? () => window.performance.now() : () => Date.now();
+
     // private static xx = 0;
     private _registrations: Registration[] = [];
     private _timer: any = null;
@@ -96,14 +99,15 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     // }
 
     private iterateCore() {
-        const time = Date.now();
+        const start = AnimationRoot.getTime();
         // tslint:disable-next-line no-magic-numbers
-        const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((time - this._last) * this.props.rate) : (time - this._last)) * 0.001;
-        ReactDOM.unstable_batchedUpdates(() => this.run(time, advance));
+        const advance = (this.props.rate > 0 && this.props.rate < 10 ? ((start - this._last) * this.props.rate) : (start - this._last)) * 0.001;
+        ReactDOM.unstable_batchedUpdates(() => this.run(start, advance));
+        const end = AnimationRoot.getTime();
         if (this.props.onFrame) {
-            this.props.onFrame(Date.now() - time, time - this._last);
+            this.props.onFrame(end - start, start - this._last);
         }
-        this._last = time;
+        this._last = start;
     }
 
     private runSingle(component: IAnimatable<any>, time: number, advance: number) {
