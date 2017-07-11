@@ -50,7 +50,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
 
   public remove(component: React.Component<any, any> & IAnimatable<any>) {
     if (process.env.NODE_ENV === 'development') {
-      Debug.register(this._registrations.filter((x) => x.component === component)[0]);
+      Debug.unregister(this._registrations.filter((x) => x.component === component)[0]);
     }
     this._registrations = this._registrations.filter((x) => x.component !== component);
   }

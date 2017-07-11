@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Entry from '../animationroot/entry';
+import DebugEntry from './Entry';
 import Registration from './Registration';
 import View from './View';
 import cx from './style.less';
@@ -28,6 +29,22 @@ class Debug extends React.Component<any, any> {
     window.addEventListener('mousedown', (e) => {
       if (this.state.scoping) {
         this.setState({ update: true, scoping: false, scope: e.target, hovering: null }, () => this.trigger());
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    }, true);
+    window.addEventListener('mouseover', (e) => {
+      if (this.state.scoping) {
+        this.setState({ hovering: e.target }, () => this.trigger());
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    }, true);
+    window.addEventListener('mouseout', (e) => {
+      if (this.state.scoping) {
+        this.setState({ hovering: null }, () => this.trigger());
+        e.stopImmediatePropagation();
+        e.preventDefault();
       }
     }, true);
   }
@@ -51,11 +68,12 @@ class Debug extends React.Component<any, any> {
 
   public render() {
     const { scoping, scope, update } = this.state;
-    let entries = Registration.entries();
+    const inputEntries = Registration.entries();
+    let entries = inputEntries;
     if (scope) {
       entries = entries.filter((e) => {
         try {
-          for (let current = getElementByComponent(e.component); current; current = current.parentNode as Element) {
+          for (let current = getElementByComponent(e.entry.component); current; current = current.parentNode as Element) {
             if (current === scope) { return true; }
           }
         } catch (ex) {
@@ -66,8 +84,8 @@ class Debug extends React.Component<any, any> {
     }
     return (
       <div>
-        <label className={cx(`toggle`, { live: update })}><input type="checkbox" onChange={this.toggle} checked={this.state.update} /> Live</label>
-        <label className={cx(`toggle`, { scoping })}><input type="checkbox" onChange={this.onScope} checked={!!this.state.scope} /> {this.state.scoping ? `Scoping` : `Scope`}</label>
+        <label className={cx(`toggle`, { live: update })}><input type="checkbox" onChange={this.toggle} checked={this.state.update} /> Live ({inputEntries.length})</label>
+        <label className={cx(`toggle`, { scoping })}><input type="checkbox" onChange={this.onScope} checked={!!this.state.scope} /> {this.state.scoping ? `Scoping` : `Scope`} ({entries.length})</label>
         <View entries={entries} onHover={this.onHover} onLeave={this.onLeave} />
       </div>
     );
@@ -89,10 +107,10 @@ class Debug extends React.Component<any, any> {
   private onScope = () => {
     this.setState({ scoping: true });
   }
-  private onHover = (entry: Entry) => {
-    this.setState({ hovering: getElementByComponent(entry.component) });
+  private onHover = (entry: DebugEntry) => {
+    this.setState({ hovering: getElementByComponent(entry.entry.component) });
   }
-  private onLeave = (entry: Entry) => {
+  private onLeave = (entry: DebugEntry) => {
     this.setState({ hovering: null });
   }
 }

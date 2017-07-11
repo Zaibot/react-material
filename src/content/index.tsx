@@ -60,10 +60,13 @@ class Content extends React.Component<IContentProps, IContentState> {
   }
 
   public onAnimate(time: number, advance: number, state: IContentAnimation): IContentAnimation {
-    if (state.applied || !state.valid) { return state; }
-    this._measure.element.style.width = `${state.width}px`;
-    this._measure.element.style.height = `${state.height}px`;
-    return { ...state, applied: true };
+    if (!state.valid) { return state; }
+    if (!state.applied) {
+      this._measure.element.style.width = `${state.width}px`;
+      this._measure.element.style.height = `${state.height}px`;
+      state = { ...state, applied: true };
+    }
+    return state;
   }
 
   public render() {
