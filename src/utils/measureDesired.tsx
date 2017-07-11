@@ -66,7 +66,10 @@ class MeasureDesired {
     if (iteration !== this.iteration
       || interval !== this.interval
       || element !== this.element
-      || size !== this.size
+      || size.left !== this.size.left
+      || size.top !== this.size.top
+      || size.right !== this.size.right
+      || size.bottom !== this.size.bottom
       || countDown !== this.countDown
       || timeDown !== this.timeDown) {
       return new MeasureDesired(iteration, interval, element, size, countDown, timeDown);

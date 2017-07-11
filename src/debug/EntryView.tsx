@@ -31,7 +31,7 @@ const Field = (key: string, value: any) => {
     }
   }
   if (value instanceof Spring) {
-    return <dd className={cx(`item`, `spring`)} key={key}>{key} {value.target.toFixed(2)} @{value.velocity.toFixed(2)} ({(value.current).toFixed(2)})</dd>;
+    return <dd className={cx(`item`, `spring`, { idle: value.velocity === 0.0 })} key={key}>{key} {value.target.toFixed(2)} @{value.velocity.toFixed(2)} ({(value.current).toFixed(2)})</dd>;
   }
   if (typeof value === 'string') {
     return <dd className={cx(`item`, `string`)} key={key}>{key} {value}</dd>;

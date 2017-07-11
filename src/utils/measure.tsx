@@ -53,8 +53,10 @@ class Measure {
     if (iteration !== this.iteration
       || interval !== this.interval
       || element !== this.element
-      || size !== this.size
-      || countDown !== this.countDown
+      || size.left !== this.size.left
+      || size.top !== this.size.top
+      || size.right !== this.size.right
+      || size.bottom !== this.size.bottom
       || timeDown !== this.timeDown) {
       return new Measure(iteration, interval, element, size, countDown, timeDown);
     }
