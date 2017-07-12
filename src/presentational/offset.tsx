@@ -1,7 +1,7 @@
 import moize from 'moize';
 import React from 'react';
 import BorderRadius from '../utils/borderRadius';
-import Position from '../utils/position';
+import Translate from '../utils/translate';
 import cx from './style.less';
 
 const dec = 1;
@@ -10,7 +10,7 @@ export interface IOffsetProps {
     borderRadius?: BorderRadius;
     width: number;
     height: number;
-    offset?: Position;
+    offset?: Translate;
 }
 
 export default ({ borderRadius: borderRadiusInput, children, offset, width: widthInput, height: heightInput }: IOffsetProps & { children?: React.ReactNode }) => {

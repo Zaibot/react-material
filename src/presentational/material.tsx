@@ -3,7 +3,7 @@ import React from 'react';
 import ElevationCss, { Elevation } from '../elevation';
 import BorderRadius from '../utils/borderRadius';
 import Circle from '../utils/circle';
-import Position from '../utils/position';
+import Translate from '../utils/translate';
 import cx from './style.less';
 
 const dec = 1;

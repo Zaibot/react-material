@@ -2,7 +2,7 @@ import moize from 'moize';
 import React from 'react';
 import BorderRadius from '../utils/borderRadius';
 import Circle from '../utils/circle';
-import Position from '../utils/position';
+import Translate from '../utils/translate';
 import cx from './style.less';
 
 const dec = 1;
@@ -10,7 +10,7 @@ const dec = 1;
 export interface ISurfaceProps {
     circle: Circle;
     className: string;
-    offset: Position;
+    offset: Translate;
     opacity: number;
     width: number;
     height: number;

@@ -1,3 +1,6 @@
+// tslint:disable no-magic-numbers
+
+const Precision = 1;
 const CachedEmpty = `/`;
 
 class Circle {
@@ -26,8 +29,10 @@ class Circle {
 
     public toClipPath() {
         if (this._cached !== CachedEmpty) { return this._cached; }
-        // tslint:disable-next-line max-line-length no-magic-numbers
-        return this._cached = `ellipse(${this.size.toFixed(1)}px ${this.size.toFixed(1)}px at ${this.xCenter.toFixed(1)}px ${this.yCenter.toFixed(1)}px)`;
+        const r = this.size.toFixed(Precision);
+        const x = this.xCenter.toFixed(Precision);
+        const y = this.yCenter.toFixed(Precision);
+        return this._cached = `ellipse(${r}px ${r}px at ${x}px ${y}px)`;
     }
 }
 

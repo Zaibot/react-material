@@ -11,7 +11,7 @@ import { Material, Offset, Surface } from '../presentational';
 import { FocusTopRight } from '../surface/focus';
 import BorderRadius from '../utils/borderRadius';
 import Circle from '../utils/circle';
-import Position from '../utils/position';
+import Translate from '../utils/translate';
 import cx from './style.less';
 
 // tslint:disable max-classes-per-file
@@ -51,17 +51,17 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
                     <DialogContents>
                         <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
                             <Offset width={100} height={100} borderRadius={BorderRadius.round(3)}>
-                                <Surface width={100} height={100} offset={Position.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.red.n300)}>
+                                <Surface width={100} height={100} offset={Translate.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.red.n300)}>
                                     <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
                             <Offset width={100} height={100} borderRadius={BorderRadius.round(50)}>
-                                <Surface width={100} height={100} offset={Position.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.indigo.n300)}>
+                                <Surface width={100} height={100} offset={Translate.empty} opacity={1} circle={Circle.empty} className={mdc(colors.bg.indigo.n300)}>
                                     <span className={mdc(colors.text.white.darker)}>Content</span>
                                 </Surface>
                             </Offset>
-                            <Offset width={20} height={20} offset={new Position(5, 5)} borderRadius={BorderRadius.round(50)}>
-                                <Surface width={100} height={100} offset={new Position(-5, -5)} opacity={0.9} circle={Circle.empty} className={mdc(colors.bg.grey.n50)}>
+                            <Offset width={20} height={20} offset={new Translate(5, 5)} borderRadius={BorderRadius.round(50)}>
+                                <Surface width={100} height={100} offset={new Translate(-5, -5)} opacity={0.9} circle={Circle.empty} className={mdc(colors.bg.grey.n50)}>
                                     <span className={mdc(colors.text.black.darker)}>Content</span>
                                 </Surface>
                             </Offset>
@@ -69,26 +69,26 @@ export class Static extends React.Component<any, any> implements IAnimatable<ISt
                     </DialogContents>
                     <DialogContents>
                         <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Translate.empty} className={mdc(colors.bg.red.n300)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.8)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.8)} opacity={1} offset={Translate.empty} className={mdc(colors.bg.indigo.n300)}>
                                 <span className={mdc(colors.text.white.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.6)} opacity={0.9} offset={Position.empty} className={mdc(colors.bg.grey.n50)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 0.6)} opacity={0.9} offset={Translate.empty} className={mdc(colors.bg.grey.n50)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
                         </Material>
                     </DialogContents>
                     <DialogContents>
                         <Material width={100} height={100} borderRadius={BorderRadius.round(3)} elevation={3} zoom={1}>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Position.empty} className={mdc(colors.bg.red.n300)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * 1.0)} opacity={1} offset={Translate.empty} className={mdc(colors.bg.red.n300)}>
                                 <span className={mdc(colors.text.black.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide1)} opacity={1} offset={Position.empty} className={mdc(colors.bg.indigo.n300)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide1)} opacity={1} offset={Translate.empty} className={mdc(colors.bg.indigo.n300)}>
                                 <span className={mdc(colors.text.white.darker)}>Content</span>
                             </Surface>
-                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={0.75} offset={Position.empty} className={mdc(colors.bg.indigo.n50)}>
+                            <Surface width={100} height={100} circle={new Circle(50, 50, Math.sqrt(50 * 50 + 50 * 50) * slide2 * .6)} opacity={0.75} offset={Translate.empty} className={mdc(colors.bg.indigo.n50)}>
                                 <span style={{ color: 'red' }}>Content</span>
                             </Surface>
                         </Material>
