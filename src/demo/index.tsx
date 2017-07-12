@@ -15,7 +15,7 @@ import cx from './style.less';
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
 
-const Demo = ({ fps, core, onChange }: { fps: number, core: number, onChange: (duration: number, since: number) => void }) => (
+const Demo = ({ fps, core, coreJitter, onChange }: { fps: number, core: number, coreJitter: number, onChange: (duration: number, since: number) => void }) => (
   <AnimationRoot onFrame={onChange}>
     <div className={cx(`debugged`)}>
       <div className={cx(`debug`)}>
@@ -26,7 +26,7 @@ const Demo = ({ fps, core, onChange }: { fps: number, core: number, onChange: (d
           {fps.toFixed(0)}fps
                 </div>
         <div className={cx(`core`)}>
-          {core.toFixed(1)}ms (max {(1000 / core).toFixed(1)}fps)
+          {core.toFixed(1)}ms &plusmn;{(100 * coreJitter).toFixed(2)}% (max {(1000 / core).toFixed(1)}fps)
                 </div>
       </div>
       <div style={{ margin: '5rem' }}>
@@ -47,10 +47,10 @@ const Demo = ({ fps, core, onChange }: { fps: number, core: number, onChange: (d
 );
 const array = (n: number) => { const r = []; while (n--) { r.push(0); } return r; };
 let fpsIndex = 0;
-const fpsCount = 10;
+const fpsCount = 5;
 const fpsRecords = array(fpsCount);
 let coreIndex = 0;
-const coreCount = 10;
+const coreCount = 120;
 const coreRecords = array(coreCount);
 
 function onChange(duration: number, sinceLast: number) {
@@ -58,17 +58,20 @@ function onChange(duration: number, sinceLast: number) {
   coreRecords[coreIndex++ % coreCount] = duration;
 }
 
-function update(fps: number, core: number) {
-  ReactDOM.render(<Demo fps={fps} core={core} onChange={onChange} />, document.querySelector('app'));
+function update(fps: number, core: number, jitter: number) {
+  ReactDOM.render(<Demo fps={fps} core={core} coreJitter={jitter} onChange={onChange} />, document.querySelector('app'));
 }
 document.addEventListener('DOMContentLoaded', () => {
-  update(0, 0);
+  update(0, 0, 0);
   setInterval(() => {
     const fps = fpsRecords.reduce((state, cur) => state < cur ? state : cur, fpsRecords[0]);
-    const core = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
+    const core = coreRecords.reduce((state, cur) => state + cur, 0) / coreCount;
+    const coreMin = coreRecords.reduce((state, cur) => state < cur ? state : cur, coreRecords[0]);
+    const coreMax = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
+    const coreJitter = ((coreMax - coreMin) / core);
     // const fps = fpsRecords.reduce((state, cur) => state + (cur || 0), 0) / fpsCount;
     // const core = coreRecords.reduce((state, cur) => state + (cur || 0), 0) / coreCount;
-    update(fps, core);
+    update(fps, core, coreJitter);
   }, 500);
 });
 /*
