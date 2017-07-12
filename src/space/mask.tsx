@@ -1,5 +1,8 @@
 // tslint:disable no-magic-numbers
 
+import BorderRadius from '../utils/borderRadius';
+import Circle from '../utils/circle';
+
 export const calcRadius = (width: number, height: number, size: number) => {
     // const max = Math.sqrt(width * width + height * height);
     const max = Math.min(width, height);
@@ -31,22 +34,7 @@ export const calcBorderRadius = (width: number, height: number, size: number, ce
     const x = circleX(width, height, rounding);
     const y = circleY(width, height, rounding);
 
-    // console.log(`${width} ${Math.max(0, r * r - y * y)} ${r} ${y} ${x} ${z}`)
-
-    const topLeftX = x;
-    const topLeftY = y;
-    const topRightX = x;
-    const topRightY = y;
-    const bottomRightX = x;
-    const bottomRightY = y;
-    const bottomLeftX = x;
-    const bottomLeftY = y;
-    return {
-        borderBottomLeftRadius: `${bottomLeftX}px ${bottomLeftY}px`,
-        borderBottomRightRadius: `${bottomRightX}px ${bottomRightY}px`,
-        borderTopLeftRadius: `${topLeftX}px ${topLeftY}px`,
-        borderTopRightRadius: `${topRightX}px ${topRightY}px`,
-    };
+    return { borderRadius: new BorderRadius(x, y, x, y, x, y, x, y).toBorderRadius() };
 };
 export const calcSize = (width: number, height: number, size: number, centerX: number, centerY: number, rounding: number) => {
     const snap = width > height ? height : width;
@@ -62,11 +50,7 @@ export const calcSize = (width: number, height: number, size: number, centerX: n
 };
 export const calcClipPath = (width: number, height: number, size: number, centerX: number, centerY: number) => {
     const max = Math.sqrt(width * width + height * height);
-    // const mulOffCenter = 1;
-    // const circle = max * size * .5 * mulOffCenter;
     const mul = max /  Math.min(width, height);
     const r = calcRadius(width, height, size * mul);
-    const circleX = centerX;
-    const circleY = centerY;
-    return `ellipse(${r}px ${r}px at ${circleX}px ${circleY}px)`;
+    return new Circle(centerX, centerY, r).toClipPath();
 };
