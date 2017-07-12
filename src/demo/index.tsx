@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const core = coreRecords.reduce((state, cur) => state + cur, 0) / coreCount;
     const coreMin = coreRecords.reduce((state, cur) => state < cur ? state : cur, coreRecords[0]);
     const coreMax = coreRecords.reduce((state, cur) => state > cur ? state : cur, coreRecords[0]);
-    const coreJitter = ((coreMax - coreMin) / core);
+    const coreJitter = ((coreMax - coreMin) / core) - 1;
     // const fps = fpsRecords.reduce((state, cur) => state + (cur || 0), 0) / fpsCount;
     // const core = coreRecords.reduce((state, cur) => state + (cur || 0), 0) / coreCount;
     update(fps, core, coreJitter);
