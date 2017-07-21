@@ -50,7 +50,13 @@ class Input extends React.Component<IInputProps, IInputState> {
 
   public onAnimate(time: number, advance: number, state: IInputAnimation): IInputAnimation {
     const first = state.first;
-    const value = state.value.change(this.props.value).speed(this.state.changing ? 1000 : 100).iterate(advance);
+    let value = state.value;
+    const smallChange = this.state.changing && (Math.abs(value.current - this.props.value) / (this.props.max - this.props.min)) < 0.1;
+    if (smallChange) {
+      value = value.jump(this.props.value);
+    } else {
+      value = value.change(this.props.value).iterate(advance);
+    }
     if (state.first !== first || state.value !== value) {
       return { first, value };
     }
