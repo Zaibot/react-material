@@ -15,7 +15,8 @@
     "tslint": "tslint --config tslint.json --project src/tsconfig.json --type-check",
     "tslint:fix": "tslint --config tslint.json --project src/tsconfig.json --type-check --fix",
     "lint": "npm run tslint",
-    "lint:fix": "npm run tslint:fix"
+    "lint:fix": "npm run tslint:fix",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
   },
   "homepage": "https://github.com/Zaibot/react-material#readme",
   "devDependencies": {
+  },
+  "dependencies": {
     "@types/node": "^8.0.9",
     "@types/react": "^15.0.23",
     "@types/react-dom": "^15.5.0",
@@ -59,9 +62,7 @@
     "uglifyjs": "^2.4.10",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5",
-    "webpack-node-externals": "^1.5.4"
-  },
-  "dependencies": {
+    "webpack-node-externals": "^1.5.4",
     "@zaibot/css-reset": "^1.0.6",
     "classnames": "^2.2.5",
     "moize": "^2.4.1"
