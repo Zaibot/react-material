@@ -16,7 +16,7 @@ import cx from './style.less';
 // tslint:disable no-unsafe-any
 // tslint:disable no-magic-numbers
 
-const Demo = ({ fps, core, coreJitter, onChange }: { fps: number, core: number, coreJitter: number, onChange: (duration: number, since: number) => void }) => (
+const Demo = ({ fps, core, coreJitter, dropped, onChange }: { fps: number, core: number, coreJitter: number, dropped: number, onChange: (duration: number, since: number, dropped: number) => void }) => (
   <AnimationRoot onFrame={onChange} rate={2.5}>
     <div className={cx(`debugged`)}>
       <div className={cx(`debug`)}>
@@ -27,7 +27,7 @@ const Demo = ({ fps, core, coreJitter, onChange }: { fps: number, core: number, 
           {fps.toFixed(0)}fps
         </div>
         <div className={cx(`core`)}>
-          {core.toFixed(1)}ms &plusmn;{(100 * coreJitter).toFixed(2)}% (max {(1000 / core).toFixed(1)}fps)
+          {core.toFixed(1)}ms &plusmn;{(100 * coreJitter).toFixed(2)}% (max {(1000 / core).toFixed(1)}fps, {dropped} dropped)
         </div>
       </div>
       <div style={{ margin: '5rem' }}>
@@ -56,14 +56,16 @@ const fpsRecords = array(fpsCount);
 let coreIndex = 0;
 const coreCount = 120;
 const coreRecords = array(coreCount);
+let lastDropped = 0;
 
-function onChange(duration: number, sinceLast: number) {
+function onChange(duration: number, sinceLast: number, dropped: number) {
   fpsRecords[fpsIndex++ % fpsCount] = 1000 / sinceLast;
   coreRecords[coreIndex++ % coreCount] = duration;
+  lastDropped = dropped;
 }
 
 function update(fps: number, core: number, jitter: number) {
-  ReactDOM.render(<Demo fps={fps} core={core} coreJitter={jitter} onChange={onChange} />, document.querySelector('app'));
+  ReactDOM.render(<Demo fps={fps} core={core} coreJitter={jitter} dropped={lastDropped} onChange={onChange} />, document.querySelector('app'));
 }
 document.addEventListener('DOMContentLoaded', () => {
   update(0, 0, 0);

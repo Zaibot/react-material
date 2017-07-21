@@ -7,7 +7,7 @@ import Debug from '../debug/Registration';
 
 // tslint:disable no-magic-numbers
 const maximumDelay = 500;
-const maximumCycleTime = 1000 / 15; /* 60fps */
+const maximumCycleTime = 1000 / 15; /* 15fps */
 const timeout = 500;
 // tslint:enable no-magic-numbers
 
@@ -26,7 +26,7 @@ import Registration from './entry';
 
 export interface IAnimationRootProps {
   rate?: number;
-  onFrame?: (duration: number, sinceLast: number) => void;
+  onFrame?: (duration: number, sinceLast: number, dropped: number) => void;
 }
 export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
   public static childContextTypes = {
@@ -37,6 +37,7 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
   private _registrations: Registration[] = [];
   private _timer: any = null;
   private _last: number = Date.now();
+  private _dropped: number = 0;
 
   public add(component: React.Component<any, any> & IAnimatable<any>, always: boolean) {
     if (this._registrations.some((x) => x.component === component)) { return; }
@@ -99,7 +100,8 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
       const end = getTime();
       const duration = end - start;
       const sinceLast = start - this._last;
-      this.props.onFrame(duration, sinceLast);
+      const dropped = this._dropped;
+      this.props.onFrame(duration, sinceLast, dropped);
     }
     this._last = start;
   }
@@ -134,9 +136,10 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
         // always? component timeout? spare time?
         reg.afterPre(reg.component.onPreAnimate(time, reg.outPrepAdvance, reg.state));
       } else {
+        this._dropped++;
         if (!AnimationRoot._warned) {
           AnimationRoot._warned = true;
-          console.warn(`[animation] stopped one or more animations due to low performance (${getTime() - time}ms)`);
+          console.warn(`[animation] stopped one or more animations due to low performance (${(getTime() - time).toFixed(1)}ms)`);
           setTimeout(() => AnimationRoot._warned = false, 1000);
         }
       }
@@ -163,9 +166,10 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
           }
         }
       } else {
+        this._dropped++;
         if (!AnimationRoot._warned) {
           AnimationRoot._warned = true;
-          console.warn(`[animation] stopped one or more animations due to low performance (${getTime() - time}ms)`);
+          console.warn(`[animation] stopped one or more animations due to low performance (${(getTime() - time).toFixed(1)}ms)`);
           setTimeout(() => AnimationRoot._warned = false, 1000);
         }
       }
