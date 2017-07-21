@@ -16,7 +16,7 @@
     "tslint:fix": "tslint --config tslint.json --project src/tsconfig.json --type-check --fix",
     "lint": "npm run tslint",
     "lint:fix": "npm run tslint:fix",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/Zaibot/react-material#readme",
   "devDependencies": {
+    "dts-bundle": "^0.7.3"
   },
   "dependencies": {
     "@types/node": "^8.0.9",

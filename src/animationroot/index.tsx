@@ -79,15 +79,15 @@ export class AnimationRoot extends React.Component<IAnimationRootProps, {}> {
     this.beginTrigger();
   }
 
-  protected getChildContext() {
+  public getChildContext() {
     return { [RootSymbol]: this as AnimationRoot };
   }
 
-  protected componentDidMount() {
+  public componentDidMount() {
     this.beginTrigger();
   }
 
-  protected componentWillUnmount() {
+  public componentWillUnmount() {
     this.cancelTrigger();
   }
 
