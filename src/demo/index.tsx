@@ -17,7 +17,7 @@ import cx from './style.less';
 // tslint:disable no-magic-numbers
 
 const Demo = ({ fps, core, coreJitter, onChange }: { fps: number, core: number, coreJitter: number, onChange: (duration: number, since: number) => void }) => (
-  <AnimationRoot onFrame={onChange}>
+  <AnimationRoot onFrame={onChange} rate={2.5}>
     <div className={cx(`debugged`)}>
       <div className={cx(`debug`)}>
         <Debug />
