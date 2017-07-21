@@ -1,6 +1,7 @@
 // tslint:disable no-magic-numbers
+const snapDistance = 0.001;
 const snapVelocity = 0.001;
-const fpsSpring = 1000 / 200;
+const msFrameTime = 0.010; // 10ms / 100fps
 
 class Spring {
   public static generic(
@@ -89,17 +90,18 @@ class Spring {
     let current = this.current;
     while (advance > 0) {
       // Split into multiple frames (prevent jumps)
-      const frameAdvance = advance >= fpsSpring ? fpsSpring : advance;
+      const frameAdvance = advance >= msFrameTime ? msFrameTime : advance;
       advance -= frameAdvance;
-      currentToTarget = this.target - this.current;
+      currentToTarget = this.target - current;
       gravity = currentToTarget > 0 ? this.gravity : 2 - this.gravity;
       springForce = currentToTarget * this.springConstant * gravity;
-      dampingForce = this.velocity * this.dampingConstant;
+      dampingForce = velocity * this.dampingConstant;
       force = springForce - dampingForce;
       velocity = velocity + force * frameAdvance;
       current = current + velocity * frameAdvance;
     }
-    if (currentToTarget > snapVelocity * -1 && currentToTarget < snapVelocity) {
+    if (currentToTarget > snapDistance * -1 && currentToTarget < snapDistance
+        && velocity > snapVelocity * -1 && velocity < snapVelocity) {
       // snap
       return this.altered(this.target, this.target, 0, this.gravity, this.springConstant, this.dampingConstant);
     }

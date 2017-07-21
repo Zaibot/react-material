@@ -8,6 +8,7 @@ import { CardSurface } from './cardSurface';
 import Debug from '../debug';
 import { Form } from './form';
 import { Static } from './static';
+import { Breakdown } from './breakdown';
 import { SurfacePlayground } from './surface';
 import cx from './style.less';
 
@@ -24,10 +25,13 @@ const Demo = ({ fps, core, coreJitter, onChange }: { fps: number, core: number, 
       <div className={cx(`stats`)}>
         <div className={cx(`fps`)}>
           {fps.toFixed(0)}fps
-                </div>
+        </div>
         <div className={cx(`core`)}>
           {core.toFixed(1)}ms &plusmn;{(100 * coreJitter).toFixed(2)}% (max {(1000 / core).toFixed(1)}fps)
-                </div>
+        </div>
+      </div>
+      <div style={{ margin: '5rem' }}>
+        <Breakdown />
       </div>
       <div style={{ margin: '5rem' }}>
         <Static />
